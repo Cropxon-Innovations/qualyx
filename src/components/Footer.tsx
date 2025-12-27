@@ -1,26 +1,31 @@
 import { Github, Twitter, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
+import { QualyxLogo } from "./QualyxLogo";
 
 const footerLinks = {
   Product: [
-    { label: "UI Automation", href: "#" },
-    { label: "API Automation", href: "#" },
-    { label: "Session Replay", href: "#" },
-    { label: "Auto-Healing", href: "#" },
+    { label: "UI Automation", href: "/product/ui-automation" },
+    { label: "API Automation", href: "/product/api-automation" },
+    { label: "Session Replay", href: "/product/session-replay" },
+    { label: "Auto-Healing", href: "/product/auto-healing" },
+    { label: "AI Test Engine", href: "/product/ai-test-engine" },
   ],
   Platform: [
-    { label: "Hybrid Execution", href: "#" },
-    { label: "Security", href: "#" },
-    { label: "Integrations", href: "#" },
+    { label: "Hybrid Execution", href: "/platform/hybrid-execution" },
+    { label: "Security", href: "/platform/security" },
+    { label: "Integrations", href: "/platform/integrations" },
+    { label: "Architecture", href: "/platform/architecture" },
   ],
   Resources: [
-    { label: "Documentation", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Changelog", href: "#" },
+    { label: "Documentation", href: "/docs/getting-started" },
+    { label: "Blog", href: "/resources/blog" },
+    { label: "Changelog", href: "/resources/changelog" },
+    { label: "Roadmap", href: "/resources/roadmap" },
   ],
   Company: [
-    { label: "About", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "About", href: "/company/about" },
+    { label: "Careers", href: "/company/careers" },
+    { label: "Contact", href: "/company/contact" },
   ],
 };
 
@@ -31,12 +36,10 @@ export const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
           {/* Brand */}
           <div className="col-span-2">
-            <a href="#" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">Q</span>
-              </div>
-              <span className="text-foreground font-semibold text-lg">QUALYX</span>
-            </a>
+            <Link to="/" className="flex items-center gap-2.5 mb-4">
+              <QualyxLogo size="small" />
+              <span className="text-foreground font-semibold text-lg tracking-tight">QUALYX</span>
+            </Link>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs">
               Autonomous QA-as-a-Service. AI-powered testing for modern engineering teams.
             </p>
@@ -60,12 +63,12 @@ export const Footer = () => {
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
+                    <Link
+                      to={link.href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -79,12 +82,12 @@ export const Footer = () => {
             © {new Date().getFullYear()} QUALYX by Cropxon Innovations Pvt. Ltd. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            </Link>
+            <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

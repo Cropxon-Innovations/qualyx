@@ -1,8 +1,28 @@
-import { DocsLayout } from "@/components/docs/DocsLayout";
-import { DocPage, DocSection, DocCallout } from "@/components/docs/DocPage";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Wand2, AlertTriangle, CheckCircle2, RefreshCw, Sparkles } from "lucide-react";
-import { useState, useEffect } from "react";
+import { 
+  Wand2, 
+  AlertTriangle, 
+  CheckCircle2, 
+  RefreshCw, 
+  Sparkles,
+  Shield,
+  Target,
+  Layers,
+  ArrowRight,
+  Play
+} from "lucide-react";
+import { 
+  FeaturePageLayout, 
+  FeatureHero, 
+  FeatureCard, 
+  FeatureSection, 
+  LivePreview,
+  StatCard,
+  Testimonial
+} from "@/components/FeaturePageLayout";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 // Auto-Healing Demo Component
 const AutoHealingDemo = () => {
@@ -20,14 +40,22 @@ const AutoHealingDemo = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const strategies = [
+    { label: "Attribute matching", status: phase === "healing" ? "checking" : phase === "healed" ? "done" : "pending" },
+    { label: "Text content analysis", status: phase === "healing" ? "checking" : phase === "healed" ? "done" : "pending" },
+    { label: "Visual position", status: phase === "healed" ? "done" : "pending" },
+    { label: "DOM structure", status: phase === "healed" ? "done" : "pending" },
+  ];
+
   return (
-    <div className="glass-card-glow rounded-2xl overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/50">
-        <div className="flex items-center gap-3">
-          <Wand2 className="w-5 h-5 text-primary" />
-          <span className="text-sm font-medium text-foreground">Self-Healing in Action</span>
+    <div className="space-y-4">
+      {/* Status indicator */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Wand2 className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium text-foreground">Self-Healing Status</span>
         </div>
-        <span className={`text-xs px-2 py-1 rounded-full ${
+        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
           phase === "broken" ? "bg-destructive/20 text-destructive" :
           phase === "healing" ? "bg-yellow-500/20 text-yellow-500" :
           "bg-success/20 text-success"
@@ -38,89 +66,68 @@ const AutoHealingDemo = () => {
         </span>
       </div>
 
-      <div className="p-6">
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Original Selector */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">Original Selector</h4>
-            <div className={`p-4 rounded-lg border font-mono text-sm transition-all ${
-              phase === "broken" ? "border-destructive/50 bg-destructive/5" : "border-border bg-muted/30"
-            }`}>
-              <span className="text-muted-foreground">#submit-button-v1</span>
-            </div>
-            {phase === "broken" && (
-              <div className="flex items-center gap-2 text-destructive text-sm animate-fade-in">
-                <AlertTriangle className="w-4 h-4" />
-                <span>Element not found in DOM</span>
-              </div>
-            )}
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* Original Selector */}
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Original Selector</h4>
+          <div className={`p-3 rounded-lg border font-mono text-sm transition-all ${
+            phase === "broken" ? "border-destructive/50 bg-destructive/5" : "border-border bg-muted/30"
+          }`}>
+            <span className="text-muted-foreground">#submit-button-v1</span>
           </div>
-
-          {/* Healed Selector */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">Healed Selector</h4>
-            <div className={`p-4 rounded-lg border font-mono text-sm transition-all ${
-              phase === "healed" ? "border-success/50 bg-success/5" : 
-              phase === "healing" ? "border-yellow-500/50 bg-yellow-500/5" :
-              "border-border bg-muted/30"
-            }`}>
-              {phase === "healing" ? (
-                <span className="text-yellow-500 flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  Searching for match...
-                </span>
-              ) : phase === "healed" ? (
-                <span className="text-success">button[data-testid=&quot;submit&quot;]</span>
-              ) : (
-                <span className="text-muted-foreground">—</span>
-              )}
+          {phase === "broken" && (
+            <div className="flex items-center gap-2 text-destructive text-xs animate-fade-in">
+              <AlertTriangle className="w-3 h-3" />
+              <span>Element not found in DOM</span>
             </div>
-            {phase === "healed" && (
-              <div className="flex items-center gap-2 text-success text-sm animate-fade-in">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>98% confidence match</span>
-              </div>
-            )}
-          </div>
+          )}
         </div>
 
-        {/* Healing Strategy */}
-        {phase === "healing" && (
-          <div className="mt-6 p-4 rounded-lg bg-yellow-500/5 border border-yellow-500/20 animate-fade-in">
-            <h4 className="text-sm font-semibold text-foreground mb-3">AI Analysis</h4>
-            <div className="space-y-2">
-              {[
-                { label: "Attribute matching", status: "checking" },
-                { label: "Text content analysis", status: "checking" },
-                { label: "Visual position", status: "pending" },
-                { label: "DOM structure", status: "pending" },
-              ].map((strategy, i) => (
-                <div key={strategy.label} className="flex items-center gap-3">
-                  {strategy.status === "checking" ? (
-                    <RefreshCw className="w-4 h-4 text-yellow-500 animate-spin" />
-                  ) : (
-                    <div className="w-4 h-4 rounded-full border border-border" />
-                  )}
-                  <span className="text-sm text-muted-foreground">{strategy.label}</span>
-                </div>
-              ))}
-            </div>
+        {/* Healed Selector */}
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Healed Selector</h4>
+          <div className={`p-3 rounded-lg border font-mono text-sm transition-all ${
+            phase === "healed" ? "border-success/50 bg-success/5" : 
+            phase === "healing" ? "border-yellow-500/50 bg-yellow-500/5" :
+            "border-border bg-muted/30"
+          }`}>
+            {phase === "healing" ? (
+              <span className="text-yellow-500 flex items-center gap-2">
+                <RefreshCw className="w-3 h-3 animate-spin" />
+                Searching...
+              </span>
+            ) : phase === "healed" ? (
+              <span className="text-success">button[data-testid="submit"]</span>
+            ) : (
+              <span className="text-muted-foreground/50">—</span>
+            )}
           </div>
-        )}
+          {phase === "healed" && (
+            <div className="flex items-center gap-2 text-success text-xs animate-fade-in">
+              <CheckCircle2 className="w-3 h-3" />
+              <span>98% confidence match</span>
+            </div>
+          )}
+        </div>
+      </div>
 
-        {phase === "healed" && (
-          <div className="mt-6 p-4 rounded-lg bg-success/5 border border-success/20 animate-fade-in">
-            <div className="flex items-start gap-3">
-              <Sparkles className="w-5 h-5 text-success mt-0.5" />
-              <div>
-                <h4 className="text-sm font-semibold text-foreground">Healing Applied</h4>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Found matching element using data-testid attribute. Test will continue with updated selector.
-                </p>
-              </div>
+      {/* Strategies */}
+      <div className="p-3 rounded-lg bg-muted/20 border border-border/40">
+        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">AI Analysis</h4>
+        <div className="grid grid-cols-2 gap-2">
+          {strategies.map((strategy) => (
+            <div key={strategy.label} className="flex items-center gap-2">
+              {strategy.status === "checking" ? (
+                <RefreshCw className="w-3 h-3 text-yellow-500 animate-spin" />
+              ) : strategy.status === "done" ? (
+                <CheckCircle2 className="w-3 h-3 text-success" />
+              ) : (
+                <div className="w-3 h-3 rounded-full border border-border/50" />
+              )}
+              <span className="text-xs text-muted-foreground">{strategy.label}</span>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -128,118 +135,152 @@ const AutoHealingDemo = () => {
 
 const AutoHealing = () => {
   return (
-    <DocsLayout>
+    <FeaturePageLayout>
       <Helmet>
         <title>Auto-Healing - QUALYX</title>
         <meta name="description" content="Self-healing selectors that automatically adapt to UI changes. Reduce test maintenance by 90%." />
       </Helmet>
 
-      <DocPage
+      <FeatureHero
+        badge="Zero Maintenance"
+        subtitle="Product"
         title="Auto-Healing"
         description="AI-powered self-healing selectors that automatically adapt when your UI changes, eliminating test maintenance overhead."
-        breadcrumbs={[
-          { label: "Product", href: "/product/auto-healing" },
-          { label: "Auto-Healing" },
-        ]}
-        lastUpdated="December 2024"
+        primaryCta={{ label: "Start Free Trial", href: "/#waitlist" }}
+        secondaryCta={{ label: "Watch Demo", href: "/demo" }}
       >
-        <DocSection>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            When your application&apos;s UI changes, traditional tests break. QUALYX Auto-Healing uses 
-            AI to automatically find and update selectors, keeping your tests running without manual intervention.
-          </p>
-        </DocSection>
-
-        <DocSection title="Live Demo: Self-Healing in Action">
-          <p className="text-muted-foreground mb-6">
-            Watch how QUALYX automatically heals broken selectors in real-time using AI-powered element matching.
-          </p>
+        <LivePreview title="QUALYX Auto-Healing — Live">
           <AutoHealingDemo />
-        </DocSection>
+        </LivePreview>
+      </FeatureHero>
 
-        <DocSection title="How It Works">
-          <div className="space-y-4 not-prose">
-            {[
-              {
-                step: 1,
-                title: "Element Fingerprinting",
-                description: "QUALYX creates a multi-attribute fingerprint of each element including ID, classes, text, position, and surrounding context.",
-              },
-              {
-                step: 2,
-                title: "Change Detection",
-                description: "When a selector fails, the AI analyzes the DOM to find elements matching the original fingerprint.",
-              },
-              {
-                step: 3,
-                title: "Confidence Scoring",
-                description: "Multiple matching strategies are combined to produce a confidence score for each candidate element.",
-              },
-              {
-                step: 4,
-                title: "Automatic Update",
-                description: "If confidence exceeds the threshold, the selector is automatically updated and the test continues.",
-              },
-            ].map((item) => (
-              <div key={item.step} className="flex gap-4 p-4 rounded-xl border border-border bg-card/30">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 text-sm font-semibold text-primary">
-                  {item.step}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-foreground">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                </div>
+      {/* Stats */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 border-y border-border/30 bg-muted/10">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+          <StatCard value="90%" label="Less Maintenance" trend="Verified" />
+          <StatCard value="98%" label="Healing Accuracy" />
+          <StatCard value="<100ms" label="Healing Time" />
+          <StatCard value="0" label="Flaky Tests" />
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <FeatureSection
+        title="Healing Strategies"
+        description="Multiple AI-powered approaches to find the right element"
+      >
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <FeatureCard
+            icon={Target}
+            title="Attribute Matching"
+            description="Match by ID, data-testid, name, or other stable attributes. Prioritizes attributes that are less likely to change."
+          />
+          <FeatureCard
+            icon={Layers}
+            title="Text Content"
+            description="Match by visible text content or aria-label. Great for buttons and links with stable text."
+          />
+          <FeatureCard
+            icon={Wand2}
+            title="Visual Position"
+            description="Use relative position on the page when other strategies fail. Understands layout changes."
+          />
+          <FeatureCard
+            icon={Shield}
+            title="DOM Structure"
+            description="Analyze parent and sibling relationships to locate elements in changed DOM trees."
+          />
+          <FeatureCard
+            icon={Sparkles}
+            title="AI Vision"
+            description="Visual recognition of element appearance when all other methods fail. Last resort but powerful."
+          />
+          <FeatureCard
+            icon={RefreshCw}
+            title="Confidence Scoring"
+            description="Each strategy contributes to a confidence score. Only high-confidence matches are applied."
+          />
+        </div>
+      </FeatureSection>
+
+      {/* How It Works */}
+      <FeatureSection
+        title="How It Works"
+        description="Intelligent healing in real-time"
+        className="bg-muted/10"
+      >
+        <div className="grid md:grid-cols-4 gap-6">
+          {[
+            {
+              step: "01",
+              title: "Fingerprint",
+              description: "Creates multi-attribute fingerprint of each element"
+            },
+            {
+              step: "02",
+              title: "Detect",
+              description: "Identifies when a selector fails to find its element"
+            },
+            {
+              step: "03",
+              title: "Analyze",
+              description: "AI searches DOM for matching candidates"
+            },
+            {
+              step: "04",
+              title: "Heal",
+              description: "Updates selector and continues test execution"
+            }
+          ].map((item) => (
+            <div key={item.step} className="relative text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/30 mb-4">
+                <span className="text-xl font-bold text-primary">{item.step}</span>
               </div>
-            ))}
-          </div>
-        </DocSection>
+              <h3 className="text-lg font-semibold text-foreground mb-2">{item.title}</h3>
+              <p className="text-sm text-muted-foreground">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </FeatureSection>
 
-        <DocCallout type="success" title="90% Reduction in Maintenance">
-          Teams using Auto-Healing spend 90% less time fixing broken selectors, freeing them to focus on new test coverage.
-        </DocCallout>
+      {/* Testimonial */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <Testimonial
+            quote="We went from spending 20 hours a week fixing broken selectors to almost zero. Auto-healing is like having an extra engineer on the team."
+            author="David Kim"
+            role="Test Automation Lead"
+            company="ShopBase"
+          />
+        </div>
+      </section>
 
-        <DocSection title="Healing Strategies">
-          <div className="overflow-x-auto not-prose">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-4 text-foreground font-semibold">Strategy</th>
-                  <th className="text-left py-3 px-4 text-foreground font-semibold">Description</th>
-                  <th className="text-left py-3 px-4 text-foreground font-semibold">Weight</th>
-                </tr>
-              </thead>
-              <tbody className="text-muted-foreground">
-                <tr className="border-b border-border/50">
-                  <td className="py-3 px-4 font-medium text-foreground">Attribute Match</td>
-                  <td className="py-3 px-4">Match by ID, data-testid, name, or other attributes</td>
-                  <td className="py-3 px-4">High</td>
-                </tr>
-                <tr className="border-b border-border/50">
-                  <td className="py-3 px-4 font-medium text-foreground">Text Content</td>
-                  <td className="py-3 px-4">Match by visible text or aria-label</td>
-                  <td className="py-3 px-4">High</td>
-                </tr>
-                <tr className="border-b border-border/50">
-                  <td className="py-3 px-4 font-medium text-foreground">Visual Position</td>
-                  <td className="py-3 px-4">Match by relative position on the page</td>
-                  <td className="py-3 px-4">Medium</td>
-                </tr>
-                <tr className="border-b border-border/50">
-                  <td className="py-3 px-4 font-medium text-foreground">DOM Structure</td>
-                  <td className="py-3 px-4">Match by parent/sibling relationships</td>
-                  <td className="py-3 px-4">Medium</td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-4 font-medium text-foreground">AI Vision</td>
-                  <td className="py-3 px-4">Visual recognition of element appearance</td>
-                  <td className="py-3 px-4">Low</td>
-                </tr>
-              </tbody>
-            </table>
+      {/* CTA */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+            <span className="gradient-text-white">Say goodbye to flaky tests</span>
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Let AI handle the maintenance while you focus on coverage.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/#waitlist">
+              <Button variant="hero" size="lg" className="group">
+                Get Started Free
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link to="/demo">
+              <Button variant="outline" size="lg">
+                <Play className="w-4 h-4 mr-2" />
+                Watch Demo
+              </Button>
+            </Link>
           </div>
-        </DocSection>
-      </DocPage>
-    </DocsLayout>
+        </div>
+      </section>
+    </FeaturePageLayout>
   );
 };
 
