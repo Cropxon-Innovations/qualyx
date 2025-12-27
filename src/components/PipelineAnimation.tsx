@@ -6,8 +6,10 @@ import {
   FileText, 
   CheckCircle2,
   Activity,
-  Hexagon
+  Hexagon,
+  ArrowRight
 } from "lucide-react";
+import { useParallax } from "./FloatingParticles";
 
 const inputNodes = [
   { id: "ui", icon: Monitor, label: "UI Tests" },
@@ -25,16 +27,17 @@ export const PipelineAnimation = () => {
   const [activeInput, setActiveInput] = useState(0);
   const [engineActive, setEngineActive] = useState(false);
   const [outputsVisible, setOutputsVisible] = useState(false);
+  const parallaxRef = useParallax(0.015);
 
   useEffect(() => {
-    // Slow, deliberate cycling through input nodes
+    // Slow, deliberate cycling - cinematic pacing
     const inputCycle = setInterval(() => {
       setActiveInput((prev) => (prev + 1) % inputNodes.length);
-    }, 3000);
+    }, 4000);
 
     // Staggered activation
-    const engineTimer = setTimeout(() => setEngineActive(true), 1500);
-    const outputTimer = setTimeout(() => setOutputsVisible(true), 2500);
+    const engineTimer = setTimeout(() => setEngineActive(true), 2000);
+    const outputTimer = setTimeout(() => setOutputsVisible(true), 3500);
 
     return () => {
       clearInterval(inputCycle);
@@ -45,41 +48,37 @@ export const PipelineAnimation = () => {
 
   return (
     <div className="relative w-full aspect-[4/3] max-w-xl mx-auto">
-      {/* Ambient glow - subtle blue */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-72 h-72 bg-[hsl(217,91%,60%,0.1)] rounded-full blur-[100px]" />
+      {/* Parallax ambient glow */}
+      <div ref={parallaxRef} className="absolute inset-0 flex items-center justify-center pointer-events-none transition-transform duration-700 ease-out">
+        <div className="w-80 h-80 bg-[hsl(217,91%,60%,0.08)] rounded-full blur-[100px]" />
       </div>
 
       {/* Glassmorphism container */}
-      <div className="absolute inset-4 rounded-2xl border border-border/20 bg-card/20 backdrop-blur-sm overflow-hidden">
-        {/* Subtle inner grid */}
-        <div className="absolute inset-0 grid-bg-subtle opacity-30" />
+      <div className="absolute inset-4 rounded-2xl border border-border/15 bg-card/15 backdrop-blur-sm overflow-hidden">
+        <div className="absolute inset-0 grid-bg-subtle opacity-20" />
       </div>
 
-      {/* SVG Connection Lines & Data Particles */}
+      {/* SVG Connection Lines & Data Particles - Cinematic motion */}
       <svg 
         className="absolute inset-0 w-full h-full" 
         viewBox="0 0 560 420"
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          {/* Subtle blue gradient for input lines */}
           <linearGradient id="inputGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="hsl(217,91%,60%)" stopOpacity="0.05" />
-            <stop offset="50%" stopColor="hsl(217,91%,60%)" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="hsl(217,91%,60%)" stopOpacity="0.35" />
             <stop offset="100%" stopColor="hsl(217,91%,60%)" stopOpacity="0.05" />
           </linearGradient>
           
-          {/* Success gradient for output lines */}
           <linearGradient id="outputGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="hsl(142,76%,45%)" stopOpacity="0.05" />
-            <stop offset="50%" stopColor="hsl(142,76%,45%)" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="hsl(142,76%,45%)" stopOpacity="0.35" />
             <stop offset="100%" stopColor="hsl(142,76%,45%)" stopOpacity="0.05" />
           </linearGradient>
 
-          {/* Subtle glow filter */}
           <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -93,24 +92,24 @@ export const PipelineAnimation = () => {
           stroke="url(#inputGrad)"
           strokeWidth="1"
           fill="none"
-          className="transition-opacity duration-1000"
-          opacity={engineActive ? 0.8 : 0.3}
+          className="transition-opacity duration-1500"
+          opacity={engineActive ? 0.7 : 0.2}
         />
         <path
           d="M 90 210 L 280 210"
           stroke="url(#inputGrad)"
           strokeWidth="1"
           fill="none"
-          className="transition-opacity duration-1000"
-          opacity={engineActive ? 0.8 : 0.3}
+          className="transition-opacity duration-1500"
+          opacity={engineActive ? 0.7 : 0.2}
         />
         <path
           d="M 90 305 C 160 305, 200 210, 280 210"
           stroke="url(#inputGrad)"
           strokeWidth="1"
           fill="none"
-          className="transition-opacity duration-1000"
-          opacity={engineActive ? 0.8 : 0.3}
+          className="transition-opacity duration-1500"
+          opacity={engineActive ? 0.7 : 0.2}
         />
 
         {/* Output paths */}
@@ -119,59 +118,99 @@ export const PipelineAnimation = () => {
           stroke="url(#outputGrad)"
           strokeWidth="1"
           fill="none"
-          className="transition-opacity duration-1000"
-          opacity={outputsVisible ? 0.8 : 0}
+          className="transition-opacity duration-1500"
+          opacity={outputsVisible ? 0.7 : 0}
         />
         <path
           d="M 280 210 L 470 210"
           stroke="url(#outputGrad)"
           strokeWidth="1"
           fill="none"
-          className="transition-opacity duration-1000"
-          opacity={outputsVisible ? 0.8 : 0}
+          className="transition-opacity duration-1500"
+          opacity={outputsVisible ? 0.7 : 0}
         />
         <path
           d="M 280 210 C 360 210, 400 305, 470 305"
           stroke="url(#outputGrad)"
           strokeWidth="1"
           fill="none"
-          className="transition-opacity duration-1000"
-          opacity={outputsVisible ? 0.8 : 0}
+          className="transition-opacity duration-1500"
+          opacity={outputsVisible ? 0.7 : 0}
         />
 
-        {/* Slow-moving data particles - Input */}
+        {/* Slow-moving data particles - cinematic easing */}
         {engineActive && (
           <>
-            <circle r="3" fill="hsl(217,91%,60%)" opacity="0.8" filter="url(#softGlow)">
-              <animateMotion dur="4s" repeatCount="indefinite" path="M 90 115 C 160 115, 200 210, 280 210" />
+            <circle r="2.5" fill="hsl(217,91%,60%)" opacity="0.7" filter="url(#softGlow)">
+              <animateMotion 
+                dur="5s" 
+                repeatCount="indefinite" 
+                path="M 90 115 C 160 115, 200 210, 280 210" 
+                calcMode="spline"
+                keySplines="0.4 0 0.2 1"
+              />
             </circle>
-            <circle r="3" fill="hsl(217,91%,60%)" opacity="0.8" filter="url(#softGlow)">
-              <animateMotion dur="3.5s" repeatCount="indefinite" path="M 90 210 L 280 210" begin="0.5s" />
+            <circle r="2.5" fill="hsl(217,91%,60%)" opacity="0.7" filter="url(#softGlow)">
+              <animateMotion 
+                dur="4.5s" 
+                repeatCount="indefinite" 
+                path="M 90 210 L 280 210" 
+                begin="0.8s" 
+                calcMode="spline"
+                keySplines="0.4 0 0.2 1"
+              />
             </circle>
-            <circle r="3" fill="hsl(217,91%,60%)" opacity="0.8" filter="url(#softGlow)">
-              <animateMotion dur="4.2s" repeatCount="indefinite" path="M 90 305 C 160 305, 200 210, 280 210" begin="1s" />
+            <circle r="2.5" fill="hsl(217,91%,60%)" opacity="0.7" filter="url(#softGlow)">
+              <animateMotion 
+                dur="5.5s" 
+                repeatCount="indefinite" 
+                path="M 90 305 C 160 305, 200 210, 280 210" 
+                begin="1.5s" 
+                calcMode="spline"
+                keySplines="0.4 0 0.2 1"
+              />
             </circle>
           </>
         )}
 
-        {/* Slow-moving data particles - Output */}
+        {/* Output particles - green validation */}
         {outputsVisible && (
           <>
-            <circle r="3" fill="hsl(142,76%,45%)" opacity="0.8" filter="url(#softGlow)">
-              <animateMotion dur="3.5s" repeatCount="indefinite" path="M 280 210 C 360 210, 400 115, 470 115" />
+            <circle r="2.5" fill="hsl(142,76%,45%)" opacity="0.7" filter="url(#softGlow)">
+              <animateMotion 
+                dur="4.5s" 
+                repeatCount="indefinite" 
+                path="M 280 210 C 360 210, 400 115, 470 115" 
+                calcMode="spline"
+                keySplines="0.4 0 0.2 1"
+              />
             </circle>
-            <circle r="3" fill="hsl(142,76%,45%)" opacity="0.8" filter="url(#softGlow)">
-              <animateMotion dur="3s" repeatCount="indefinite" path="M 280 210 L 470 210" begin="0.7s" />
+            <circle r="2.5" fill="hsl(142,76%,45%)" opacity="0.7" filter="url(#softGlow)">
+              <animateMotion 
+                dur="4s" 
+                repeatCount="indefinite" 
+                path="M 280 210 L 470 210" 
+                begin="1s" 
+                calcMode="spline"
+                keySplines="0.4 0 0.2 1"
+              />
             </circle>
-            <circle r="3" fill="hsl(142,76%,45%)" opacity="0.8" filter="url(#softGlow)">
-              <animateMotion dur="3.8s" repeatCount="indefinite" path="M 280 210 C 360 210, 400 305, 470 305" begin="1.2s" />
+            <circle r="2.5" fill="hsl(142,76%,45%)" opacity="0.7" filter="url(#softGlow)">
+              <animateMotion 
+                dur="5s" 
+                repeatCount="indefinite" 
+                path="M 280 210 C 360 210, 400 305, 470 305" 
+                begin="1.8s" 
+                calcMode="spline"
+                keySplines="0.4 0 0.2 1"
+              />
             </circle>
           </>
         )}
       </svg>
 
       {/* Input Nodes - Glassmorphism cards */}
-      <div className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 flex flex-col gap-8 sm:gap-12">
+      <div className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 flex flex-col gap-10 sm:gap-14">
         {inputNodes.map((node, index) => {
           const Icon = node.icon;
           const isActive = activeInput === index;
@@ -180,23 +219,24 @@ export const PipelineAnimation = () => {
               key={node.id}
               className={`
                 relative px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg 
-                bg-card/40 backdrop-blur-md border 
-                transition-all duration-700 ease-out
+                bg-card/30 backdrop-blur-md border 
+                transition-all duration-1000 ease-out
                 ${isActive 
-                  ? "border-secondary/50 shadow-[0_0_25px_hsl(217,91%,60%,0.15)]" 
-                  : "border-border/30"
+                  ? "border-secondary/40 shadow-[0_0_20px_hsl(217,91%,60%,0.12)]" 
+                  : "border-border/20"
                 }
               `}
             >
               <div className="flex items-center gap-2.5">
                 <Icon 
-                  className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-500 ${
-                    isActive ? "text-secondary" : "text-muted-foreground/60"
+                  className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-700 ${
+                    isActive ? "text-secondary/80" : "text-muted-foreground/40"
                   }`} 
+                  strokeWidth={1.5}
                 />
                 <span 
-                  className={`text-xs sm:text-sm font-medium transition-colors duration-500 ${
-                    isActive ? "text-foreground/90" : "text-muted-foreground/60"
+                  className={`text-xs sm:text-sm font-medium transition-colors duration-700 ${
+                    isActive ? "text-foreground/80" : "text-muted-foreground/40"
                   }`}
                 >
                   {node.label}
@@ -207,41 +247,38 @@ export const PipelineAnimation = () => {
         })}
       </div>
 
-      {/* QUALYX Engine - Central core */}
+      {/* QUALYX Engine - AI Orb */}
       <div 
         className={`
           absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
-          transition-all duration-1000 ease-out
-          ${engineActive ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+          transition-all duration-1500 ease-out
+          ${engineActive ? "opacity-100 scale-100" : "opacity-0 scale-90"}
         `}
       >
         <div className="relative">
-          {/* Outer subtle glow */}
-          <div className="absolute -inset-8 bg-[hsl(217,91%,60%,0.08)] rounded-full blur-2xl" />
+          {/* Outer glow orb */}
+          <div className="absolute -inset-10 bg-[hsl(217,91%,60%,0.06)] rounded-full blur-2xl" />
           
-          {/* Rotating rings - very slow, subtle */}
+          {/* Rotating rings - very slow */}
           <div 
-            className="absolute -inset-6 border border-secondary/10 rounded-full"
-            style={{ animation: "spin 40s linear infinite" }}
+            className="absolute -inset-7 border border-secondary/10 rounded-full"
+            style={{ animation: "spin 50s linear infinite" }}
           />
           <div 
-            className="absolute -inset-10 border border-secondary/5 rounded-full"
-            style={{ animation: "spin 60s linear infinite reverse" }}
+            className="absolute -inset-11 border border-secondary/5 rounded-full"
+            style={{ animation: "spin 70s linear infinite reverse" }}
           />
           
-          {/* Core glassmorphism card */}
-          <div className="relative px-5 py-4 sm:px-6 sm:py-5 rounded-xl bg-card/50 backdrop-blur-lg border border-border/40 shadow-[0_0_40px_hsl(217,91%,60%,0.1)]">
-            <div className="flex flex-col items-center gap-2">
+          {/* Core card */}
+          <div className="relative px-5 py-4 sm:px-6 sm:py-5 rounded-xl bg-card/40 backdrop-blur-lg border border-border/30 shadow-[0_0_35px_hsl(217,91%,60%,0.08)]">
+            <div className="flex flex-col items-center gap-2.5">
               <div className="relative">
-                <Hexagon className="w-8 h-8 sm:w-10 sm:h-10 text-secondary/80" strokeWidth={1.5} />
-                {/* Inner subtle pulse */}
+                <Hexagon className="w-9 h-9 sm:w-11 sm:h-11 text-secondary/70" strokeWidth={1} />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-3 h-3 bg-secondary/60 rounded-full animate-pulse" />
+                  <div className="w-2.5 h-2.5 bg-secondary/50 rounded-full" style={{ animation: "pulse 3s ease-in-out infinite" }} />
                 </div>
               </div>
-              <div className="text-center">
-                <span className="text-xs sm:text-sm font-semibold text-foreground/90 tracking-wide">QUALYX Engine</span>
-              </div>
+              <span className="text-xs sm:text-sm font-semibold text-foreground/80 tracking-wide">QUALYX Engine</span>
             </div>
           </div>
         </div>
@@ -250,8 +287,8 @@ export const PipelineAnimation = () => {
       {/* Output Nodes */}
       <div 
         className={`
-          absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 flex flex-col gap-8 sm:gap-12
-          transition-all duration-1000 ease-out
+          absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 flex flex-col gap-10 sm:gap-14
+          transition-all duration-1500 ease-out
           ${outputsVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"}
         `}
       >
@@ -260,22 +297,22 @@ export const PipelineAnimation = () => {
           return (
             <div
               key={node.id}
-              className="relative px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg bg-card/40 backdrop-blur-md border border-success/20 transition-all duration-300 hover:border-success/40 hover:shadow-[0_0_20px_hsl(142,76%,45%,0.1)]"
+              className="relative px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg bg-card/30 backdrop-blur-md border border-success/20 transition-all duration-500 hover:border-success/30 hover:shadow-[0_0_15px_hsl(142,76%,45%,0.08)]"
             >
               <div className="flex items-center gap-2.5">
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-success/80" />
-                <span className="text-xs sm:text-sm font-medium text-muted-foreground/70">{node.label}</span>
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-success/60" strokeWidth={1.5} />
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground/50">{node.label}</span>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Bottom labels - minimal */}
-      <div className="absolute bottom-6 left-8 right-8 flex justify-between text-[10px] text-muted-foreground/40 uppercase tracking-[0.15em] font-medium">
-        <span>Input</span>
-        <span>Processing</span>
-        <span>Output</span>
+      {/* Directional arrows */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 text-muted-foreground/20">
+        <ArrowRight className="w-4 h-4" />
+        <span className="text-[10px] uppercase tracking-[0.2em]">Data Flow</span>
+        <ArrowRight className="w-4 h-4" />
       </div>
     </div>
   );

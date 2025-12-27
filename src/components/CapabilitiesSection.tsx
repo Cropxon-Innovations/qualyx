@@ -2,97 +2,102 @@ import {
   MonitorPlay, 
   Code2, 
   History, 
-  Flag, 
   Wand2, 
-  FileSpreadsheet,
-  FileCode,
   GitBranch,
-  Users
+  FileCode,
+  Shield,
+  ClipboardList
 } from "lucide-react";
 
 const capabilities = [
   {
     icon: MonitorPlay,
-    title: "UI Recorder + Player",
-    description: "Capture user interactions with intelligent event detection and playback",
+    title: "UI Recorder",
+    description: "Capture user interactions with intelligent event detection",
   },
   {
     icon: Code2,
-    title: "API Automation Studio",
-    description: "Visual builder for REST and GraphQL endpoint testing",
+    title: "API Testing",
+    description: "Visual builder for REST and GraphQL endpoint validation",
   },
   {
     icon: History,
-    title: "Session Replay + Time Travel",
-    description: "Debug failures with full session recordings and step-by-step replay",
-  },
-  {
-    icon: Flag,
-    title: "Checkpoints + Resume",
-    description: "Save and resume test state for faster iteration cycles",
+    title: "Session Replay",
+    description: "Debug failures with full session recordings",
   },
   {
     icon: Wand2,
-    title: "Self-Healing Selectors",
-    description: "AI-powered selector repair that adapts to UI changes automatically",
-  },
-  {
-    icon: FileSpreadsheet,
-    title: "Excel → Automation Builder",
-    description: "Convert spreadsheet test cases into executable automation",
-  },
-  {
-    icon: FileCode,
-    title: "Export Playwright & Selenium",
-    description: "Generate portable scripts in industry-standard frameworks",
+    title: "Self-Healing",
+    description: "AI-powered selector repair that adapts automatically",
   },
   {
     icon: GitBranch,
-    title: "CI/CD Integrations",
-    description: "Native plugins for GitHub, GitLab, Jenkins, and more",
+    title: "CI/CD Integration",
+    description: "Native plugins for GitHub, GitLab, and Jenkins",
   },
   {
-    icon: Users,
-    title: "RBAC + Audit Logging",
-    description: "Enterprise access control with comprehensive audit trails",
+    icon: FileCode,
+    title: "Exportable Playwright",
+    description: "Generate portable scripts in standard frameworks",
+  },
+  {
+    icon: Shield,
+    title: "RBAC",
+    description: "Role-based access control for enterprise teams",
+  },
+  {
+    icon: ClipboardList,
+    title: "Audit Logs",
+    description: "Comprehensive audit trails for compliance",
   },
 ];
 
 export const CapabilitiesSection = () => {
   return (
-    <section className="section-padding relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-muted/20 via-background to-background" />
+    <section className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[hsl(220,15%,5%)]" />
+      <div className="absolute inset-0 grid-bg-subtle opacity-10" />
       
-      <div className="relative z-10 max-w-7xl mx-auto">
+      {/* Ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[400px] bg-[hsl(217,91%,60%,0.03)] rounded-full blur-[120px]" />
+      
+      <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5 tracking-tight">
             <span className="gradient-text-white">Key Capabilities</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to build, run, and maintain enterprise-grade test automation
+          <p className="text-base sm:text-lg text-muted-foreground/70 max-w-xl mx-auto">
+            Enterprise-grade tools for comprehensive test automation
           </p>
         </div>
 
         {/* Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-          {capabilities.map((capability, index) => {
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {capabilities.map((capability) => {
             const Icon = capability.icon;
             return (
               <div
                 key={capability.title}
-                className="group glass-card p-6 rounded-xl transition-all duration-300 hover:border-primary/30 hover:bg-card/60"
+                className="group relative p-5 rounded-xl bg-card/30 backdrop-blur-sm border border-border/30 transition-all duration-500 hover:border-secondary/40 hover:shadow-[0_0_30px_hsl(217,91%,60%,0.08)]"
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
-                    <Icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                {/* Glow border effect on hover */}
+                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-secondary/10 via-transparent to-primary/10" />
+                </div>
+                
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-lg bg-muted/50 flex items-center justify-center mb-4 transition-colors duration-500 group-hover:bg-secondary/10">
+                    <Icon 
+                      className="w-5 h-5 text-muted-foreground/60 transition-colors duration-500 group-hover:text-secondary/80" 
+                      strokeWidth={1.5}
+                    />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">{capability.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {capability.description}
-                    </p>
-                  </div>
+                  <h3 className="text-sm font-semibold text-foreground/90 mb-2">{capability.title}</h3>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed">
+                    {capability.description}
+                  </p>
                 </div>
               </div>
             );

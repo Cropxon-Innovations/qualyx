@@ -5,7 +5,7 @@ import { TrustSection } from "@/components/TrustSection";
 import { HybridSection } from "@/components/HybridSection";
 import { CapabilitiesSection } from "@/components/CapabilitiesSection";
 import { QaAsServiceSection } from "@/components/QaAsServiceSection";
-import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { TestPreviewSimulation } from "@/components/TestPreviewSimulation";
 import { PricingSection } from "@/components/PricingSection";
 import { WaitlistSection } from "@/components/WaitlistSection";
 import { Footer } from "@/components/Footer";
@@ -37,7 +37,7 @@ const Index = () => {
           <HybridSection />
           <CapabilitiesSection />
           <QaAsServiceSection />
-          <TestimonialsSection />
+          <TestPreviewSimulation />
           <PricingSection />
           <WaitlistSection />
         </main>
