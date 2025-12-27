@@ -1,56 +1,49 @@
 import { useEffect, useRef, useState } from "react";
 import { 
-  Circle, 
+  CircleDot, 
   Sparkles, 
   Play, 
   Wrench, 
   RotateCcw, 
-  Download,
-  ArrowRight
+  FileOutput
 } from "lucide-react";
 
 const steps = [
   {
     id: "record",
-    icon: Circle,
+    icon: CircleDot,
     label: "Record",
-    description: "Capture user interactions with intelligent session recording",
-    color: "primary",
+    caption: "Capture interactions",
   },
   {
     id: "generate",
     icon: Sparkles,
     label: "Generate",
-    description: "AI creates comprehensive test suites automatically",
-    color: "primary",
+    caption: "AI creates tests",
   },
   {
     id: "run",
     icon: Play,
     label: "Run",
-    description: "Execute tests in cloud or on-premise environments",
-    color: "primary",
+    caption: "Execute anywhere",
   },
   {
     id: "heal",
     icon: Wrench,
-    label: "Auto-heal",
-    description: "Self-repairing selectors adapt to UI changes",
-    color: "primary",
+    label: "Auto-Heal",
+    caption: "Self-repair selectors",
   },
   {
     id: "replay",
     icon: RotateCcw,
     label: "Replay",
-    description: "Time-travel debugging with full session replay",
-    color: "primary",
+    caption: "Time-travel debug",
   },
   {
     id: "export",
-    icon: Download,
+    icon: FileOutput,
     label: "Export",
-    description: "Generate Playwright, Selenium, or custom scripts",
-    color: "success",
+    caption: "Generate scripts",
   },
 ];
 
@@ -66,7 +59,7 @@ export const TimelineSection = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.3 }
     );
 
     if (sectionRef.current) {
@@ -81,128 +74,187 @@ export const TimelineSection = () => {
     
     const interval = setInterval(() => {
       setActiveStep((prev) => (prev + 1) % steps.length);
-    }, 3000);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [isVisible]);
 
   return (
-    <section ref={sectionRef} className="section-padding relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 grid-bg-subtle opacity-20" />
+    <section ref={sectionRef} className="py-32 md:py-40 px-4 md:px-8 relative overflow-hidden">
+      {/* Subtle background */}
+      <div className="absolute inset-0 bg-[hsl(220,15%,5%)]" />
+      <div className="absolute inset-0 grid-bg-subtle opacity-10" />
       
-      <div className="relative z-10 max-w-7xl mx-auto">
+      {/* Ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-[hsl(217,91%,60%,0.03)] rounded-full blur-[100px]" />
+      
+      <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+        <div className="text-center mb-20">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5 tracking-tight">
             <span className="gradient-text-white">What QUALYX Does</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-muted-foreground/70 max-w-xl mx-auto">
             A complete autonomous QA lifecycle — from recording to deployment
           </p>
         </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Desktop Timeline */}
-          <div className="hidden lg:block">
-            {/* Progress line */}
-            <div className="absolute top-16 left-0 right-0 h-0.5 bg-border/50">
-              <div 
-                className="h-full bg-gradient-to-r from-primary to-success transition-all duration-500"
-                style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
-              />
-            </div>
-
-            {/* Steps */}
-            <div className="grid grid-cols-6 gap-4">
-              {steps.map((step, index) => {
-                const Icon = step.icon;
-                const isActive = index === activeStep;
-                const isPast = index < activeStep;
-                const isLast = index === steps.length - 1;
-
-                return (
-                  <div
-                    key={step.id}
-                    className={`flex flex-col items-center text-center transition-all duration-500 ${
-                      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                    }`}
-                    style={{ transitionDelay: `${index * 100}ms` }}
-                    onClick={() => setActiveStep(index)}
-                  >
-                    {/* Node */}
-                    <div className="relative mb-4 cursor-pointer group">
-                      <div
-                        className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                          isActive
-                            ? "bg-primary text-primary-foreground glow-cyan scale-110"
-                            : isPast
-                            ? "bg-primary/20 text-primary border border-primary/30"
-                            : "bg-card border border-border text-muted-foreground group-hover:border-primary/50"
-                        }`}
-                      >
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      {isActive && (
-                        <div className="absolute -inset-2 rounded-2xl border border-primary/30 animate-pulse" />
-                      )}
-                    </div>
-
-                    {/* Label */}
-                    <h3 className={`font-semibold mb-2 transition-colors ${
-                      isActive ? "text-foreground" : "text-muted-foreground"
-                    }`}>
-                      {step.label}
-                    </h3>
-
-                    {/* Description */}
-                    <p className={`text-xs leading-relaxed transition-all duration-300 ${
-                      isActive ? "text-muted-foreground opacity-100" : "opacity-60"
-                    }`}>
-                      {step.description}
-                    </p>
-
-                    {/* Arrow between steps */}
-                    {!isLast && (
-                      <ArrowRight className="absolute top-6 -right-4 w-4 h-4 text-border hidden xl:block" />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+        {/* Horizontal Timeline - Desktop */}
+        <div className="hidden lg:block">
+          {/* Progress line background */}
+          <div className="relative mx-12 mb-8">
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-border/30 -translate-y-1/2" />
+            {/* Active progress */}
+            <div 
+              className="absolute top-1/2 left-0 h-px bg-gradient-to-r from-secondary to-success -translate-y-1/2 transition-all duration-700 ease-out"
+              style={{ width: `${(activeStep / (steps.length - 1)) * 100}%` }}
+            />
           </div>
 
-          {/* Mobile Timeline */}
-          <div className="lg:hidden space-y-4">
+          {/* Steps */}
+          <div className="grid grid-cols-6 gap-6">
             {steps.map((step, index) => {
               const Icon = step.icon;
               const isActive = index === activeStep;
+              const isPast = index < activeStep;
 
               return (
                 <div
                   key={step.id}
-                  className={`glass-card p-4 rounded-xl transition-all duration-300 ${
-                    isActive ? "border-primary/50 glow-cyan" : "border-border/30"
-                  } ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
+                  className={`flex flex-col items-center text-center transition-all duration-700 ease-out cursor-pointer group ${
+                    isVisible 
+                      ? "opacity-100 translate-y-0" 
+                      : "opacity-0 translate-y-6"
+                  }`}
+                  style={{ transitionDelay: `${index * 80}ms` }}
                   onClick={() => setActiveStep(index)}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                      isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                    }`}>
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground">{step.label}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{step.description}</p>
+                  {/* Icon node */}
+                  <div className="relative mb-5">
+                    {/* Glow ring for active */}
+                    {isActive && (
+                      <div className="absolute -inset-3 rounded-full bg-secondary/20 blur-md animate-pulse" />
+                    )}
+                    
+                    <div
+                      className={`
+                        relative w-14 h-14 rounded-xl flex items-center justify-center 
+                        transition-all duration-500 ease-out
+                        ${isActive
+                          ? "bg-secondary/20 border border-secondary/50 shadow-[0_0_30px_hsl(217,91%,60%,0.2)] scale-110"
+                          : isPast
+                            ? "bg-success/10 border border-success/30"
+                            : "bg-card/50 border border-border/40 group-hover:border-secondary/30"
+                        }
+                      `}
+                    >
+                      <Icon 
+                        className={`w-6 h-6 transition-colors duration-500 ${
+                          isActive 
+                            ? "text-secondary" 
+                            : isPast 
+                              ? "text-success/70" 
+                              : "text-muted-foreground/50 group-hover:text-muted-foreground"
+                        }`} 
+                        strokeWidth={1.5}
+                      />
                     </div>
                   </div>
+
+                  {/* Label */}
+                  <h3 
+                    className={`text-sm font-semibold mb-1.5 transition-colors duration-500 ${
+                      isActive ? "text-foreground" : "text-muted-foreground/70"
+                    }`}
+                  >
+                    {step.label}
+                  </h3>
+
+                  {/* Caption */}
+                  <p 
+                    className={`text-xs transition-all duration-500 ${
+                      isActive 
+                        ? "text-muted-foreground/80 opacity-100" 
+                        : "text-muted-foreground/40 opacity-70"
+                    }`}
+                  >
+                    {step.caption}
+                  </p>
                 </div>
               );
             })}
           </div>
+        </div>
+
+        {/* Mobile Timeline - Vertical cards */}
+        <div className="lg:hidden space-y-3">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            const isActive = index === activeStep;
+
+            return (
+              <div
+                key={step.id}
+                className={`
+                  relative px-5 py-4 rounded-xl 
+                  bg-card/30 backdrop-blur-sm border 
+                  transition-all duration-500 ease-out cursor-pointer
+                  ${isActive 
+                    ? "border-secondary/40 shadow-[0_0_25px_hsl(217,91%,60%,0.1)]" 
+                    : "border-border/20"
+                  }
+                  ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}
+                `}
+                style={{ transitionDelay: `${index * 60}ms` }}
+                onClick={() => setActiveStep(index)}
+              >
+                <div className="flex items-center gap-4">
+                  <div 
+                    className={`
+                      w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0
+                      transition-all duration-500
+                      ${isActive 
+                        ? "bg-secondary/20 border border-secondary/40" 
+                        : "bg-muted/50 border border-border/30"
+                      }
+                    `}
+                  >
+                    <Icon 
+                      className={`w-5 h-5 transition-colors duration-500 ${
+                        isActive ? "text-secondary" : "text-muted-foreground/50"
+                      }`} 
+                      strokeWidth={1.5}
+                    />
+                  </div>
+                  <div>
+                    <h3 className={`text-sm font-semibold transition-colors duration-500 ${
+                      isActive ? "text-foreground" : "text-muted-foreground/70"
+                    }`}>
+                      {step.label}
+                    </h3>
+                    <p className="text-xs text-muted-foreground/50 mt-0.5">{step.caption}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Step indicator dots */}
+        <div className="flex justify-center gap-2 mt-12">
+          {steps.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveStep(index)}
+              className={`
+                w-1.5 h-1.5 rounded-full transition-all duration-300
+                ${index === activeStep 
+                  ? "bg-secondary w-6" 
+                  : "bg-muted-foreground/20 hover:bg-muted-foreground/40"
+                }
+              `}
+            />
+          ))}
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import { PipelineAnimation } from "./PipelineAnimation";
+import { FloatingParticles } from "./FloatingParticles";
 
 export const HeroSection = () => {
   return (
@@ -10,6 +11,9 @@ export const HeroSection = () => {
       
       {/* Subtle grid overlay */}
       <div className="absolute inset-0 grid-bg opacity-20" />
+      
+      {/* Floating particles */}
+      <FloatingParticles />
       
       {/* Ambient glow effects - subtle blue neon */}
       <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[hsl(217,91%,60%,0.08)] rounded-full blur-[150px]" />
