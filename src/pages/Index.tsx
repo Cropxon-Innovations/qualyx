@@ -9,6 +9,7 @@ import { TestPreviewSimulation } from "@/components/TestPreviewSimulation";
 import { ComparisonSection } from "@/components/ComparisonSection";
 import { PricingSection } from "@/components/PricingSection";
 import { WaitlistSection } from "@/components/WaitlistSection";
+import { BrandMotionSection } from "@/components/BrandMotionSection";
 import { Footer } from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Helmet } from "react-helmet";
@@ -65,6 +66,10 @@ const Index = () => {
           
           <ScrollReveal delay={100}>
             <PricingSection />
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
+            <BrandMotionSection />
           </ScrollReveal>
           
           <ScrollReveal delay={100}>

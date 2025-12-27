@@ -52,7 +52,7 @@ const HybridRunner = () => {
                   <span>Outbound Only</span>
                 </div>
                 <div className="w-full h-1 bg-gradient-to-r from-primary via-success to-primary rounded-full relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-flow" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/30 to-transparent animate-flow" />
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">TLS 1.3 Encrypted</p>
               </div>

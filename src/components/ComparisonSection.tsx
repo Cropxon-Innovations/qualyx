@@ -80,7 +80,7 @@ export const ComparisonSection = () => {
               onClick={() => setActiveTab("qualyx")}
               className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ${
                 activeTab === "qualyx"
-                  ? "bg-secondary/20 text-foreground shadow-[0_0_20px_hsl(217,91%,60%,0.15)]"
+                  ? "bg-secondary/20 text-foreground shadow-md"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >

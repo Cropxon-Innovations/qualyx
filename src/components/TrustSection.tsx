@@ -45,7 +45,7 @@ export const TrustSection = () => {
             return (
               <div
                 key={card.title}
-                className="group glass-card-glow p-8 rounded-2xl transition-all duration-500 hover:shadow-[0_0_40px_hsl(var(--neon-cyan)/0.15)]"
+                className="group glass-card-glow p-8 rounded-2xl transition-all duration-500 hover:shadow-lg"
               >
                 {/* Icon */}
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">

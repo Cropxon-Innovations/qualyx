@@ -80,7 +80,7 @@ export const CapabilitiesSection = () => {
             return (
               <div
                 key={capability.title}
-                className="group relative p-5 rounded-xl bg-card/30 backdrop-blur-sm border border-border/30 transition-all duration-500 hover:border-secondary/40 hover:shadow-[0_0_30px_hsl(217,91%,60%,0.08)]"
+                className="group relative p-5 rounded-xl bg-card/30 backdrop-blur-sm border border-border/30 transition-all duration-500 hover:border-secondary/40 hover:shadow-lg"
               >
                 {/* Glow border effect on hover */}
                 <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">

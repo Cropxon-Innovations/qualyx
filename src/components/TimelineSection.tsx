@@ -246,13 +246,13 @@ export const TimelineSection = () => {
                             bg-card/25 backdrop-blur-md border 
                             transition-all duration-300 ease-out
                             ${isActive
-                              ? "border-secondary/50 shadow-[0_0_30px_hsl(217,91%,60%,0.15),0_4px_20px_hsl(0,0%,0%,0.3)]"
+                              ? "border-secondary/50 shadow-lg"
                               : isPast
-                                ? "border-success/25 shadow-[0_4px_20px_hsl(0,0%,0%,0.2)]"
-                                : "border-border/25 shadow-[0_4px_20px_hsl(0,0%,0%,0.15)]"
+                                ? "border-success/25 shadow-md"
+                                : "border-border/25 shadow-sm"
                             }
                             ${isHovered && !isActive
-                              ? "border-secondary/30 shadow-[0_0_20px_hsl(217,91%,60%,0.1),0_4px_20px_hsl(0,0%,0%,0.25)]"
+                              ? "border-secondary/30 shadow-md"
                               : ""
                             }
                           `}
@@ -371,7 +371,7 @@ export const TimelineSection = () => {
                             ${isActive 
                               ? "bg-secondary text-secondary-foreground" 
                               : isPast
-                                ? "bg-success/80 text-white"
+                                ? "bg-success/80 text-success-foreground"
                                 : "bg-muted text-muted-foreground"
                             }
                           `}>
@@ -463,9 +463,9 @@ export const TimelineSection = () => {
           }
           
           @keyframes heal-fix {
-            0%, 40% { border-color: hsl(0, 84%, 60%, 0.5); transform: scale(1); }
+            0%, 40% { border-color: hsl(var(--destructive) / 0.5); transform: scale(1); }
             50% { transform: scale(1.1); }
-            60%, 100% { border-color: hsl(142, 76%, 45%, 0.5); transform: scale(1); }
+            60%, 100% { border-color: hsl(var(--success) / 0.5); transform: scale(1); }
           }
           .animate-heal-fix {
             animation: heal-fix 3s ease-in-out infinite;
