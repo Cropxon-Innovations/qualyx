@@ -31,7 +31,7 @@ export const HeroSection = () => {
             </h1>
             
             <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8 opacity-0 animate-fade-in delay-200">
-              AI-powered, self-healing automation with session replay, hybrid execution, and enterprise security.
+              AI-powered automation with session replay, hybrid execution, and enterprise-grade security.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start opacity-0 animate-fade-in delay-300">
@@ -41,7 +41,7 @@ export const HeroSection = () => {
               </Button>
               <Button variant="hero-secondary" size="lg" className="group">
                 <Play className="w-4 h-4" />
-                See how it works
+                Watch Demo
               </Button>
             </div>
             
