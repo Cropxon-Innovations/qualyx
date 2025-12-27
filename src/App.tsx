@@ -61,6 +61,10 @@ import FlakinessExplorer from "./pages/console/analyze/FlakinessExplorer";
 import AuditLogs from "./pages/console/govern/AuditLogs";
 import SuitesPage from "./pages/console/organize/SuitesPage";
 import ProjectsPage from "./pages/console/organize/ProjectsPage";
+import EnvironmentsPage from "./pages/console/organize/EnvironmentsPage";
+import DataSetsPage from "./pages/console/organize/DataSetsPage";
+import SchedulesPage from "./pages/console/execute/SchedulesPage";
+import CICDTriggersPage from "./pages/console/execute/CICDTriggersPage";
 
 const queryClient = new QueryClient();
 
@@ -124,8 +128,12 @@ const App = () => (
             <Route path="/console/analyze/flakiness" element={<FlakinessExplorer />} />
             <Route path="/console/execute/run-center" element={<RunCenter />} />
             <Route path="/console/execute/runners" element={<RunnersPage />} />
+            <Route path="/console/execute/schedules" element={<SchedulesPage />} />
+            <Route path="/console/execute/cicd" element={<CICDTriggersPage />} />
             <Route path="/console/organize/suites" element={<SuitesPage />} />
             <Route path="/console/organize/projects" element={<ProjectsPage />} />
+            <Route path="/console/organize/environments" element={<EnvironmentsPage />} />
+            <Route path="/console/organize/data" element={<DataSetsPage />} />
             <Route path="/console/govern/access" element={<AccessControl />} />
             <Route path="/console/govern/audit-logs" element={<AuditLogs />} />
             <Route path="/console/integrations" element={<IntegrationsPage />} />
