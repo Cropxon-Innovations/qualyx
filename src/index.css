@@ -50,7 +50,12 @@
     --neon-cyan: 187 100% 50%;
     --neon-blue: 217 91% 60%;
     --success: 142 76% 45%;
+    --success-foreground: 0 0% 100%;
     --warning: 45 93% 47%;
+
+    /* Overlay tokens */
+    --overlay: 220 20% 4%;
+    --overlay-opacity: 0.8;
   }
 
   /* ========================================
@@ -95,7 +100,12 @@
     --neon-cyan: 199 89% 40%;
     --neon-blue: 217 91% 50%;
     --success: 142 71% 35%;
+    --success-foreground: 0 0% 100%;
     --warning: 38 92% 45%;
+
+    /* Overlay tokens */
+    --overlay: 0 0% 0%;
+    --overlay-opacity: 0.6;
   }
 
   /* ========================================

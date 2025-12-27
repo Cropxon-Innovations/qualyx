@@ -69,7 +69,7 @@ const NavDropdown = ({
       {trigger}
     </NavigationMenuTrigger>
     <NavigationMenuContent>
-      <ul className="grid w-[400px] gap-1 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-card/95 backdrop-blur-xl border border-border/40 rounded-xl shadow-[0_10px_40px_hsl(0,0%,0%,0.3)]">
+      <ul className="grid w-[400px] gap-1 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-card/95 backdrop-blur-xl border border-border/40 rounded-xl shadow-lg">
         {items.map((item) => (
           <li key={item.title}>
             <NavigationMenuLink asChild>

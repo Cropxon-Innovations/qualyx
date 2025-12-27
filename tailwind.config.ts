@@ -73,7 +73,11 @@ export default {
           glass: "hsl(var(--surface-glass))",
           elevated: "hsl(var(--surface-elevated))",
         },
-        success: "hsl(var(--success))",
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        overlay: "hsl(var(--overlay))",
       },
       borderRadius: {
         lg: "var(--radius)",

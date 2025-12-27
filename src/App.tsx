@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Index from "./pages/Index";
+import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
 
 // Docs pages
@@ -49,6 +50,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/demo" element={<Demo />} />
             
             {/* Docs */}
             <Route path="/docs/getting-started" element={<GettingStarted />} />
