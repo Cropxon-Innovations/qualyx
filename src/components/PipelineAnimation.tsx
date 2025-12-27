@@ -6,7 +6,7 @@ import {
   FileText, 
   CheckCircle2,
   Activity,
-  Hexagon
+  Cpu
 } from "lucide-react";
 import {
   Tooltip,
@@ -86,12 +86,7 @@ export const PipelineAnimation = () => {
 
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="relative w-full h-[340px] sm:h-[400px]">
-        {/* Background glow */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-48 h-48 bg-secondary/8 rounded-full blur-[80px]" />
-        </div>
-
+      <div className="relative w-full h-[300px] sm:h-[340px] md:h-[380px]">
         {/* SVG Connection Lines */}
         <svg 
           className="absolute inset-0 w-full h-full pointer-events-none"
@@ -100,53 +95,50 @@ export const PipelineAnimation = () => {
         >
           <defs>
             <linearGradient id="inputLine" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(217,91%,60%)" stopOpacity="0.5" />
+              <stop offset="0%" stopColor="hsl(217,91%,60%)" stopOpacity="0.4" />
               <stop offset="100%" stopColor="hsl(217,91%,60%)" stopOpacity="0.1" />
             </linearGradient>
             <linearGradient id="outputLine" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="hsl(142,76%,45%)" stopOpacity="0.1" />
-              <stop offset="100%" stopColor="hsl(142,76%,45%)" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="hsl(142,76%,45%)" stopOpacity="0.4" />
             </linearGradient>
           </defs>
           
-          {/* Input connection lines */}
-          <line x1="28" y1="20" x2="44" y2="50" stroke="url(#inputLine)" strokeWidth="0.3" 
+          {/* Input lines */}
+          <line x1="30" y1="20" x2="44" y2="50" stroke="url(#inputLine)" strokeWidth="0.25" 
             className={`transition-opacity duration-500 ${engineActive ? 'opacity-100' : 'opacity-0'}`} />
-          <line x1="28" y1="50" x2="44" y2="50" stroke="url(#inputLine)" strokeWidth="0.3"
+          <line x1="30" y1="50" x2="44" y2="50" stroke="url(#inputLine)" strokeWidth="0.25"
             className={`transition-opacity duration-500 ${engineActive ? 'opacity-100' : 'opacity-0'}`} />
-          <line x1="28" y1="80" x2="44" y2="50" stroke="url(#inputLine)" strokeWidth="0.3"
+          <line x1="30" y1="80" x2="44" y2="50" stroke="url(#inputLine)" strokeWidth="0.25"
             className={`transition-opacity duration-500 ${engineActive ? 'opacity-100' : 'opacity-0'}`} />
           
-          {/* Output connection lines */}
-          <line x1="56" y1="50" x2="72" y2="20" stroke="url(#outputLine)" strokeWidth="0.3"
+          {/* Output lines */}
+          <line x1="56" y1="50" x2="70" y2="20" stroke="url(#outputLine)" strokeWidth="0.25"
             className={`transition-opacity duration-500 ${outputsVisible ? 'opacity-100' : 'opacity-0'}`} />
-          <line x1="56" y1="50" x2="72" y2="50" stroke="url(#outputLine)" strokeWidth="0.3"
+          <line x1="56" y1="50" x2="70" y2="50" stroke="url(#outputLine)" strokeWidth="0.25"
             className={`transition-opacity duration-500 ${outputsVisible ? 'opacity-100' : 'opacity-0'}`} />
-          <line x1="56" y1="50" x2="72" y2="80" stroke="url(#outputLine)" strokeWidth="0.3"
+          <line x1="56" y1="50" x2="70" y2="80" stroke="url(#outputLine)" strokeWidth="0.25"
             className={`transition-opacity duration-500 ${outputsVisible ? 'opacity-100' : 'opacity-0'}`} />
         </svg>
 
-        {/* Animated particles on lines */}
+        {/* Animated particles */}
         {engineActive && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* Input particles */}
-            <div className="absolute w-1.5 h-1.5 bg-secondary rounded-full blur-[1px] animate-particle-in-1" />
-            <div className="absolute w-1.5 h-1.5 bg-secondary rounded-full blur-[1px] animate-particle-in-2" />
-            <div className="absolute w-1.5 h-1.5 bg-secondary rounded-full blur-[1px] animate-particle-in-3" />
-            
-            {/* Output particles */}
+            <div className="absolute w-1.5 h-1.5 bg-secondary/60 rounded-full blur-[1px] animate-particle-in-1" />
+            <div className="absolute w-1.5 h-1.5 bg-secondary/60 rounded-full blur-[1px] animate-particle-in-2" />
+            <div className="absolute w-1.5 h-1.5 bg-secondary/60 rounded-full blur-[1px] animate-particle-in-3" />
             {outputsVisible && (
               <>
-                <div className="absolute w-1.5 h-1.5 bg-success rounded-full blur-[1px] animate-particle-out-1" />
-                <div className="absolute w-1.5 h-1.5 bg-success rounded-full blur-[1px] animate-particle-out-2" />
-                <div className="absolute w-1.5 h-1.5 bg-success rounded-full blur-[1px] animate-particle-out-3" />
+                <div className="absolute w-1.5 h-1.5 bg-success/60 rounded-full blur-[1px] animate-particle-out-1" />
+                <div className="absolute w-1.5 h-1.5 bg-success/60 rounded-full blur-[1px] animate-particle-out-2" />
+                <div className="absolute w-1.5 h-1.5 bg-success/60 rounded-full blur-[1px] animate-particle-out-3" />
               </>
             )}
           </div>
         )}
 
-        {/* INPUT NODES - Left Column */}
-        <div className="absolute left-0 top-0 bottom-0 w-[28%] flex flex-col justify-center gap-4 sm:gap-5 py-6">
+        {/* INPUT NODES */}
+        <div className="absolute left-0 top-0 bottom-0 w-[30%] flex flex-col justify-center gap-3 sm:gap-4 py-4">
           {inputNodes.map((node, index) => {
             const Icon = node.icon;
             const isActive = activeInput === index;
@@ -159,35 +151,35 @@ export const PipelineAnimation = () => {
                     onMouseEnter={() => setHoveredNode(node.id)}
                     onMouseLeave={() => setHoveredNode(null)}
                     className={`
-                      relative px-3 py-2.5 rounded-xl cursor-pointer
-                      bg-card/50 backdrop-blur-sm border transition-all duration-300 ease-out
+                      relative px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg cursor-pointer
+                      bg-card/40 backdrop-blur-sm border transition-all duration-300 ease-out
                       ${isActive || isHovered
-                        ? "border-secondary/50 shadow-[0_0_20px_hsl(217,91%,60%,0.15)]" 
-                        : "border-border/30"
+                        ? "border-secondary/40 shadow-[0_0_15px_hsl(217,91%,60%,0.12)]" 
+                        : "border-border/25"
                       }
                       ${isHovered ? "scale-[1.02]" : "scale-100"}
                     `}
                   >
-                    <div className="flex items-start gap-2.5">
+                    <div className="flex items-center gap-2">
                       <div className={`
-                        w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0
+                        w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center flex-shrink-0
                         transition-colors duration-300
-                        ${isActive || isHovered ? "bg-secondary/15" : "bg-muted/30"}
+                        ${isActive || isHovered ? "bg-secondary/15" : "bg-muted/20"}
                       `}>
                         <Icon 
-                          className={`w-4 h-4 transition-colors duration-300 ${
+                          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 transition-colors duration-300 ${
                             isActive || isHovered ? "text-secondary" : "text-muted-foreground/50"
                           }`} 
                           strokeWidth={1.5}
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`text-xs sm:text-sm font-medium block transition-colors duration-300 ${
+                        <span className={`text-[10px] sm:text-xs font-medium block transition-colors duration-300 ${
                           isActive || isHovered ? "text-foreground" : "text-muted-foreground/70"
                         }`}>
                           {node.label}
                         </span>
-                        <span className="text-[9px] sm:text-[10px] text-muted-foreground/50 leading-tight block mt-0.5">
+                        <span className="text-[8px] sm:text-[9px] text-muted-foreground/40 leading-tight block mt-0.5 hidden sm:block">
                           {node.caption}
                         </span>
                       </div>
@@ -196,7 +188,7 @@ export const PipelineAnimation = () => {
                 </TooltipTrigger>
                 <TooltipContent 
                   side="left" 
-                  className="max-w-[200px] bg-card/95 backdrop-blur-xl border-border/50 text-xs"
+                  className="max-w-[180px] bg-card/95 backdrop-blur-xl border-border/50 text-[11px]"
                 >
                   {node.tooltip}
                 </TooltipContent>
@@ -205,7 +197,7 @@ export const PipelineAnimation = () => {
           })}
         </div>
 
-        {/* AI CORE - Center */}
+        {/* AI CORE - Clean chip design */}
         <Tooltip>
           <TooltipTrigger asChild>
             <div 
@@ -218,52 +210,59 @@ export const PipelineAnimation = () => {
                 ${hoveredNode === "engine" ? "scale-[1.02]" : ""}
               `}
             >
-              {/* Outer glow */}
+              {/* Outer glow - no box */}
               <div className={`
-                absolute -inset-8 rounded-full blur-2xl transition-all duration-500
-                ${hoveredNode === "engine" ? "bg-secondary/15" : "bg-secondary/8"}
+                absolute -inset-10 rounded-full blur-3xl transition-all duration-500 pointer-events-none
+                ${hoveredNode === "engine" ? "bg-secondary/12" : "bg-secondary/6"}
               `} />
               
               {/* Orbiting particles */}
-              <div className="absolute -inset-6 pointer-events-none">
-                <div className="absolute w-1 h-1 bg-secondary/50 rounded-full animate-orbit-1" />
-                <div className="absolute w-1.5 h-1.5 bg-secondary/40 rounded-full animate-orbit-2" />
-                <div className="absolute w-1 h-1 bg-secondary/30 rounded-full animate-orbit-3" />
+              <div className="absolute -inset-8 pointer-events-none">
+                <div className="absolute w-1 h-1 bg-secondary/40 rounded-full animate-orbit-1" />
+                <div className="absolute w-1 h-1 bg-secondary/30 rounded-full animate-orbit-2" />
+                <div className="absolute w-0.5 h-0.5 bg-secondary/25 rounded-full animate-orbit-3" />
               </div>
               
-              {/* Rotating rings */}
+              {/* Rotating ring */}
               <div 
-                className={`absolute -inset-5 border rounded-full transition-colors duration-500 ${
-                  hoveredNode === "engine" ? "border-secondary/25" : "border-secondary/10"
+                className={`absolute -inset-6 border rounded-full transition-colors duration-500 ${
+                  hoveredNode === "engine" ? "border-secondary/20" : "border-secondary/8"
                 }`}
-                style={{ animation: "spin 40s linear infinite" }}
-              />
-              <div 
-                className={`absolute -inset-8 border rounded-full transition-colors duration-500 ${
-                  hoveredNode === "engine" ? "border-secondary/15" : "border-secondary/5"
-                }`}
-                style={{ animation: "spin 60s linear infinite reverse" }}
+                style={{ animation: "spin 50s linear infinite" }}
               />
               
-              {/* Core card */}
+              {/* Core - Clean chip style */}
               <div className={`
-                relative px-5 py-4 rounded-xl bg-card/60 backdrop-blur-md border transition-all duration-300
-                ${hoveredNode === "engine" 
-                  ? "border-secondary/40 shadow-[0_0_30px_hsl(217,91%,60%,0.15)]"
-                  : "border-border/40 shadow-[0_0_20px_hsl(217,91%,60%,0.08)]"
+                relative px-4 py-3 sm:px-5 sm:py-4 rounded-xl transition-all duration-300
+                bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-md
+                border ${hoveredNode === "engine" 
+                  ? "border-secondary/35 shadow-[0_0_25px_hsl(217,91%,60%,0.12)]"
+                  : "border-border/30 shadow-[0_0_15px_hsl(217,91%,60%,0.06)]"
                 }
               `}>
                 <div className="flex flex-col items-center gap-2">
+                  {/* Chip icon */}
                   <div className="relative">
-                    <Hexagon className="w-10 h-10 text-secondary/60" strokeWidth={1} />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-3 h-3 bg-secondary/50 rounded-full animate-pulse-slow" />
+                    <div className={`
+                      w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center
+                      bg-gradient-to-br from-secondary/20 to-secondary/5
+                      border transition-colors duration-300
+                      ${hoveredNode === "engine" ? "border-secondary/40" : "border-secondary/20"}
+                    `}>
+                      <Cpu className="w-5 h-5 sm:w-6 sm:h-6 text-secondary/80" strokeWidth={1.5} />
+                      {/* Pulse indicator */}
+                      <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
                     </div>
+                    {/* Circuit lines */}
+                    <div className="absolute -left-2 top-1/2 w-2 h-px bg-secondary/20" />
+                    <div className="absolute -right-2 top-1/2 w-2 h-px bg-secondary/20" />
+                    <div className="absolute left-1/2 -top-2 w-px h-2 bg-secondary/20" />
+                    <div className="absolute left-1/2 -bottom-2 w-px h-2 bg-secondary/20" />
                   </div>
                   <div className="text-center">
-                    <span className="text-sm font-semibold text-foreground/90 block">QUALYX Engine</span>
-                    <span className="text-[9px] text-muted-foreground/50 block mt-0.5 max-w-[120px]">
-                      AI-assisted, deterministic automation core
+                    <span className="text-xs sm:text-sm font-semibold text-foreground/90 block">QUALYX Engine</span>
+                    <span className="text-[8px] sm:text-[9px] text-muted-foreground/50 block mt-0.5 max-w-[100px] sm:max-w-[120px] leading-tight">
+                      AI-assisted automation
                     </span>
                   </div>
                 </div>
@@ -272,15 +271,15 @@ export const PipelineAnimation = () => {
           </TooltipTrigger>
           <TooltipContent 
             side="bottom" 
-            className="max-w-[220px] bg-card/95 backdrop-blur-xl border-border/50 text-xs"
+            className="max-w-[200px] bg-card/95 backdrop-blur-xl border-border/50 text-[11px]"
           >
-            The QUALYX Engine processes test inputs using AI-assisted analysis to produce reliable, deterministic automation results.
+            The QUALYX Engine processes test inputs using AI-assisted analysis to produce reliable, deterministic automation.
           </TooltipContent>
         </Tooltip>
 
-        {/* OUTPUT NODES - Right Column */}
+        {/* OUTPUT NODES */}
         <div className={`
-          absolute right-0 top-0 bottom-0 w-[28%] flex flex-col justify-center gap-4 sm:gap-5 py-6
+          absolute right-0 top-0 bottom-0 w-[30%] flex flex-col justify-center gap-3 sm:gap-4 py-4
           transition-all duration-500 ease-out
           ${outputsVisible ? "opacity-100" : "opacity-0 translate-x-4"}
         `}>
@@ -295,34 +294,34 @@ export const PipelineAnimation = () => {
                     onMouseEnter={() => setHoveredNode(node.id)}
                     onMouseLeave={() => setHoveredNode(null)}
                     className={`
-                      relative px-3 py-2.5 rounded-xl cursor-pointer
-                      bg-card/50 backdrop-blur-sm border transition-all duration-300 ease-out
+                      relative px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg cursor-pointer
+                      bg-card/40 backdrop-blur-sm border transition-all duration-300 ease-out
                       ${isHovered 
-                        ? "border-success/50 shadow-[0_0_20px_hsl(142,76%,45%,0.15)] scale-[1.02]" 
-                        : "border-success/25"
+                        ? "border-success/40 shadow-[0_0_15px_hsl(142,76%,45%,0.12)] scale-[1.02]" 
+                        : "border-success/20"
                       }
                     `}
                   >
-                    <div className="flex items-start gap-2.5">
+                    <div className="flex items-center gap-2">
                       <div className={`
-                        w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0
+                        w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center flex-shrink-0
                         transition-colors duration-300
                         ${isHovered ? "bg-success/15" : "bg-success/5"}
                       `}>
                         <Icon 
-                          className={`w-4 h-4 transition-colors duration-300 ${
+                          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 transition-colors duration-300 ${
                             isHovered ? "text-success" : "text-success/60"
                           }`} 
                           strokeWidth={1.5} 
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className={`text-xs sm:text-sm font-medium block transition-colors duration-300 ${
+                        <span className={`text-[10px] sm:text-xs font-medium block transition-colors duration-300 ${
                           isHovered ? "text-foreground" : "text-muted-foreground/70"
                         }`}>
                           {node.label}
                         </span>
-                        <span className="text-[9px] sm:text-[10px] text-muted-foreground/50 leading-tight block mt-0.5">
+                        <span className="text-[8px] sm:text-[9px] text-muted-foreground/40 leading-tight block mt-0.5 hidden sm:block">
                           {node.caption}
                         </span>
                       </div>
@@ -331,7 +330,7 @@ export const PipelineAnimation = () => {
                 </TooltipTrigger>
                 <TooltipContent 
                   side="right" 
-                  className="max-w-[200px] bg-card/95 backdrop-blur-xl border-border/50 text-xs"
+                  className="max-w-[180px] bg-card/95 backdrop-blur-xl border-border/50 text-[11px]"
                 >
                   {node.tooltip}
                 </TooltipContent>
@@ -340,111 +339,82 @@ export const PipelineAnimation = () => {
           })}
         </div>
 
-        {/* Flow indicator */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-3 text-muted-foreground/35">
-          <span className="text-[9px] uppercase tracking-[0.15em] font-medium">Input</span>
-          <div className="w-6 h-px bg-gradient-to-r from-secondary/40 to-transparent" />
-          <span className="text-[9px] uppercase tracking-[0.15em] font-medium">AI Core</span>
-          <div className="w-6 h-px bg-gradient-to-r from-transparent to-success/40" />
-          <span className="text-[9px] uppercase tracking-[0.15em] font-medium">Output</span>
+        {/* Flow label */}
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-2 text-muted-foreground/30">
+          <span className="text-[8px] uppercase tracking-widest font-medium">Input</span>
+          <div className="w-4 h-px bg-gradient-to-r from-secondary/30 to-transparent" />
+          <span className="text-[8px] uppercase tracking-widest font-medium">AI</span>
+          <div className="w-4 h-px bg-gradient-to-r from-transparent to-success/30" />
+          <span className="text-[8px] uppercase tracking-widest font-medium">Output</span>
         </div>
       </div>
 
       <style>{`
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.1); }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
-        }
-        
         @keyframes orbit-1 {
-          from { transform: rotate(0deg) translateX(24px) rotate(0deg); }
-          to { transform: rotate(360deg) translateX(24px) rotate(-360deg); }
+          from { transform: rotate(0deg) translateX(28px) rotate(0deg); }
+          to { transform: rotate(360deg) translateX(28px) rotate(-360deg); }
         }
-        .animate-orbit-1 {
-          animation: orbit-1 15s linear infinite;
-          top: 50%; left: 50%;
-        }
+        .animate-orbit-1 { animation: orbit-1 20s linear infinite; top: 50%; left: 50%; }
         
         @keyframes orbit-2 {
-          from { transform: rotate(120deg) translateX(28px) rotate(-120deg); }
-          to { transform: rotate(480deg) translateX(28px) rotate(-480deg); }
+          from { transform: rotate(120deg) translateX(32px) rotate(-120deg); }
+          to { transform: rotate(480deg) translateX(32px) rotate(-480deg); }
         }
-        .animate-orbit-2 {
-          animation: orbit-2 20s linear infinite reverse;
-          top: 50%; left: 50%;
-        }
+        .animate-orbit-2 { animation: orbit-2 28s linear infinite reverse; top: 50%; left: 50%; }
         
         @keyframes orbit-3 {
-          from { transform: rotate(240deg) translateX(20px) rotate(-240deg); }
-          to { transform: rotate(600deg) translateX(20px) rotate(-600deg); }
+          from { transform: rotate(240deg) translateX(24px) rotate(-240deg); }
+          to { transform: rotate(600deg) translateX(24px) rotate(-600deg); }
         }
-        .animate-orbit-3 {
-          animation: orbit-3 25s linear infinite;
-          top: 50%; left: 50%;
-        }
+        .animate-orbit-3 { animation: orbit-3 35s linear infinite; top: 50%; left: 50%; }
         
         @keyframes particle-in-1 {
-          0% { top: 15%; left: 24%; opacity: 0; }
-          20% { opacity: 0.8; }
-          80% { opacity: 0.8; }
+          0% { top: 18%; left: 26%; opacity: 0; }
+          15% { opacity: 0.7; }
+          85% { opacity: 0.7; }
           100% { top: 48%; left: 42%; opacity: 0; }
         }
-        .animate-particle-in-1 {
-          animation: particle-in-1 3s ease-in-out infinite;
-        }
+        .animate-particle-in-1 { animation: particle-in-1 3.5s ease-in-out infinite; }
         
         @keyframes particle-in-2 {
-          0% { top: 48%; left: 24%; opacity: 0; }
-          20% { opacity: 0.8; }
-          80% { opacity: 0.8; }
+          0% { top: 48%; left: 26%; opacity: 0; }
+          15% { opacity: 0.7; }
+          85% { opacity: 0.7; }
           100% { top: 48%; left: 42%; opacity: 0; }
         }
-        .animate-particle-in-2 {
-          animation: particle-in-2 3.5s ease-in-out infinite 0.5s;
-        }
+        .animate-particle-in-2 { animation: particle-in-2 4s ease-in-out infinite 0.6s; }
         
         @keyframes particle-in-3 {
-          0% { top: 80%; left: 24%; opacity: 0; }
-          20% { opacity: 0.8; }
-          80% { opacity: 0.8; }
+          0% { top: 78%; left: 26%; opacity: 0; }
+          15% { opacity: 0.7; }
+          85% { opacity: 0.7; }
           100% { top: 48%; left: 42%; opacity: 0; }
         }
-        .animate-particle-in-3 {
-          animation: particle-in-3 4s ease-in-out infinite 1s;
-        }
+        .animate-particle-in-3 { animation: particle-in-3 4.5s ease-in-out infinite 1.2s; }
         
         @keyframes particle-out-1 {
           0% { top: 48%; left: 56%; opacity: 0; }
-          20% { opacity: 0.8; }
-          80% { opacity: 0.8; }
-          100% { top: 15%; left: 74%; opacity: 0; }
+          15% { opacity: 0.7; }
+          85% { opacity: 0.7; }
+          100% { top: 18%; left: 72%; opacity: 0; }
         }
-        .animate-particle-out-1 {
-          animation: particle-out-1 3s ease-in-out infinite 0.3s;
-        }
+        .animate-particle-out-1 { animation: particle-out-1 3.5s ease-in-out infinite 0.4s; }
         
         @keyframes particle-out-2 {
           0% { top: 48%; left: 56%; opacity: 0; }
-          20% { opacity: 0.8; }
-          80% { opacity: 0.8; }
-          100% { top: 48%; left: 74%; opacity: 0; }
+          15% { opacity: 0.7; }
+          85% { opacity: 0.7; }
+          100% { top: 48%; left: 72%; opacity: 0; }
         }
-        .animate-particle-out-2 {
-          animation: particle-out-2 3.5s ease-in-out infinite 0.8s;
-        }
+        .animate-particle-out-2 { animation: particle-out-2 4s ease-in-out infinite 1s; }
         
         @keyframes particle-out-3 {
           0% { top: 48%; left: 56%; opacity: 0; }
-          20% { opacity: 0.8; }
-          80% { opacity: 0.8; }
-          100% { top: 80%; left: 74%; opacity: 0; }
+          15% { opacity: 0.7; }
+          85% { opacity: 0.7; }
+          100% { top: 78%; left: 72%; opacity: 0; }
         }
-        .animate-particle-out-3 {
-          animation: particle-out-3 4s ease-in-out infinite 1.3s;
-        }
+        .animate-particle-out-3 { animation: particle-out-3 4.5s ease-in-out infinite 1.6s; }
       `}</style>
     </TooltipProvider>
   );

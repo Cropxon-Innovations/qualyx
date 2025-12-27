@@ -10,6 +10,7 @@ import { ComparisonSection } from "@/components/ComparisonSection";
 import { PricingSection } from "@/components/PricingSection";
 import { WaitlistSection } from "@/components/WaitlistSection";
 import { Footer } from "@/components/Footer";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Helmet } from "react-helmet";
 
 const Index = () => {
@@ -28,23 +29,52 @@ const Index = () => {
         <link rel="canonical" href="https://qualyx.com" />
       </Helmet>
 
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <Navigation />
         
         <main>
           <HeroSection />
-          <TimelineSection />
-          <TrustSection />
-          <HybridSection />
-          <CapabilitiesSection />
-          <QaAsServiceSection />
-          <TestPreviewSimulation />
-          <ComparisonSection />
-          <PricingSection />
-          <WaitlistSection />
+          
+          <ScrollReveal>
+            <TimelineSection />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <TrustSection />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <HybridSection />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <CapabilitiesSection />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <QaAsServiceSection />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <TestPreviewSimulation />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <ComparisonSection />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <PricingSection />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={100}>
+            <WaitlistSection />
+          </ScrollReveal>
         </main>
         
-        <Footer />
+        <ScrollReveal>
+          <Footer />
+        </ScrollReveal>
       </div>
     </>
   );
