@@ -1,30 +1,34 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import { PipelineAnimation } from "./PipelineAnimation";
 import { FloatingParticles } from "./FloatingParticles";
+import { VideoModal } from "./VideoModal";
 
 export const HeroSection = () => {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background */}
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute inset-0 grid-bg opacity-10" />
+      <div className="absolute inset-0 grid-bg opacity-8" />
       
       {/* Floating particles - reduced */}
-      <FloatingParticles count={20} />
+      <FloatingParticles count={15} />
       
       {/* Ambient glow */}
-      <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-1/3 right-1/4 w-[300px] h-[300px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/4 w-[350px] h-[350px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[280px] h-[280px] bg-primary/4 rounded-full blur-[100px] pointer-events-none" />
       
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           {/* Left: Text content */}
           <div className="text-center lg:text-left">
             {/* Status badge */}
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-border/40 bg-card/30 backdrop-blur-sm mb-8 opacity-0 animate-fade-in">
-              <span className="w-1.5 h-1.5 rounded-full bg-success" />
+              <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
               <span className="text-xs text-muted-foreground font-medium tracking-wide">Now accepting early access requests</span>
             </div>
             
@@ -47,16 +51,21 @@ export const HeroSection = () => {
                 Join Waitlist
                 <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
-              <Button variant="hero-secondary" size="lg" className="group">
+              <Button 
+                variant="hero-secondary" 
+                size="lg" 
+                className="group"
+                onClick={() => setIsVideoOpen(true)}
+              >
                 <Play className="w-4 h-4 mr-1" />
                 Watch Demo
               </Button>
             </div>
             
             {/* Trust indicators */}
-            <div className="mt-14 pt-8 border-t border-border/30 opacity-0 animate-fade-in delay-500">
+            <div className="mt-12 pt-8 border-t border-border/30 opacity-0 animate-fade-in delay-500">
               <p className="text-[11px] text-muted-foreground/50 mb-5 uppercase tracking-[0.2em] font-medium">Trusted by engineering teams</p>
-              <div className="flex items-center gap-10 justify-center lg:justify-start">
+              <div className="flex items-center gap-8 justify-center lg:justify-start flex-wrap">
                 {["Enterprise", "Startup", "Agency", "SaaS"].map((company) => (
                   <span key={company} className="text-sm font-medium text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors duration-300">
                     {company}
@@ -67,8 +76,8 @@ export const HeroSection = () => {
           </div>
           
           {/* Right: Pipeline Animation */}
-          <div className="relative opacity-0 animate-fade-in delay-300">
-            <div className="relative rounded-2xl border border-border/20 bg-card/20 backdrop-blur-sm p-4 sm:p-6">
+          <div className="relative opacity-0 animate-fade-in delay-200">
+            <div className="relative rounded-2xl border border-border/25 bg-card/15 backdrop-blur-sm p-3 sm:p-5">
               <PipelineAnimation />
             </div>
           </div>
@@ -76,7 +85,10 @@ export const HeroSection = () => {
       </div>
       
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-background to-transparent" />
+
+      {/* Video Modal */}
+      <VideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
     </section>
   );
 };
