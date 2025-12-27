@@ -14,6 +14,8 @@ import HybridRunner from "./pages/docs/HybridRunner";
 import SDKGuide from "./pages/docs/SDKGuide";
 import ExportScripts from "./pages/docs/ExportScripts";
 import CICD from "./pages/docs/CICD";
+import RecorderGuide from "./pages/docs/RecorderGuide";
+import Troubleshooting from "./pages/docs/Troubleshooting";
 
 // Product pages
 import UIAutomation from "./pages/product/UIAutomation";
@@ -37,11 +39,13 @@ import Blog from "./pages/resources/Blog";
 import CaseStudies from "./pages/resources/CaseStudies";
 import Roadmap from "./pages/resources/Roadmap";
 import Changelog from "./pages/resources/Changelog";
+import ReleaseNotes from "./pages/resources/ReleaseNotes";
 
 // Company pages
 import About from "./pages/company/About";
 import Careers from "./pages/company/Careers";
 import Contact from "./pages/company/Contact";
+import Partners from "./pages/company/Partners";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +67,8 @@ const App = () => (
             <Route path="/docs/sdk-guide" element={<SDKGuide />} />
             <Route path="/docs/export-scripts" element={<ExportScripts />} />
             <Route path="/docs/cicd" element={<CICD />} />
+            <Route path="/docs/recorder-guide" element={<RecorderGuide />} />
+            <Route path="/docs/troubleshooting" element={<Troubleshooting />} />
             
             {/* Product */}
             <Route path="/product/ui-automation" element={<UIAutomation />} />
@@ -86,11 +92,13 @@ const App = () => (
             <Route path="/resources/case-studies" element={<CaseStudies />} />
             <Route path="/resources/roadmap" element={<Roadmap />} />
             <Route path="/resources/changelog" element={<Changelog />} />
+            <Route path="/resources/release-notes" element={<ReleaseNotes />} />
             
             {/* Company */}
             <Route path="/company/about" element={<About />} />
             <Route path="/company/careers" element={<Careers />} />
             <Route path="/company/contact" element={<Contact />} />
+            <Route path="/company/partners" element={<Partners />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
