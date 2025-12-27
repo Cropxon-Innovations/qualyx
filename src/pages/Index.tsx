@@ -1,13 +1,50 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Navigation } from "@/components/Navigation";
+import { HeroSection } from "@/components/HeroSection";
+import { TimelineSection } from "@/components/TimelineSection";
+import { TrustSection } from "@/components/TrustSection";
+import { HybridSection } from "@/components/HybridSection";
+import { CapabilitiesSection } from "@/components/CapabilitiesSection";
+import { QaAsServiceSection } from "@/components/QaAsServiceSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { PricingSection } from "@/components/PricingSection";
+import { WaitlistSection } from "@/components/WaitlistSection";
+import { Footer } from "@/components/Footer";
+import { Helmet } from "react-helmet";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <>
+      <Helmet>
+        <title>QUALYX — Autonomous QA-as-a-Service | AI-Powered Test Automation</title>
+        <meta 
+          name="description" 
+          content="QUALYX delivers autonomous QA with AI-powered self-healing automation, session replay, hybrid execution, and enterprise security. Join the waitlist today." 
+        />
+        <meta name="keywords" content="QA automation, test automation, AI testing, self-healing tests, session replay, enterprise QA" />
+        <meta property="og:title" content="QUALYX — Autonomous QA-as-a-Service" />
+        <meta property="og:description" content="AI-powered, self-healing automation with session replay, hybrid execution, and enterprise security." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://qualyx.com" />
+      </Helmet>
+
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        <main>
+          <HeroSection />
+          <TimelineSection />
+          <TrustSection />
+          <HybridSection />
+          <CapabilitiesSection />
+          <QaAsServiceSection />
+          <TestimonialsSection />
+          <PricingSection />
+          <WaitlistSection />
+        </main>
+        
+        <Footer />
       </div>
-    </div>
+    </>
   );
 };
 
