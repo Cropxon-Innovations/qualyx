@@ -231,40 +231,34 @@ export const PipelineAnimation = () => {
                 style={{ animation: "spin 50s linear infinite" }}
               />
               
-              {/* Core - Clean chip style */}
-              <div className={`
-                relative px-4 py-3 sm:px-5 sm:py-4 rounded-xl transition-all duration-300
-                bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-md
-                border ${hoveredNode === "engine" 
-                  ? "border-secondary/35 shadow-[0_0_25px_hsl(217,91%,60%,0.12)]"
-                  : "border-border/30 shadow-[0_0_15px_hsl(217,91%,60%,0.06)]"
-                }
-              `}>
-                <div className="flex flex-col items-center gap-2">
-                  {/* Chip icon */}
-                  <div className="relative">
-                    <div className={`
-                      w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center
-                      bg-gradient-to-br from-secondary/20 to-secondary/5
-                      border transition-colors duration-300
-                      ${hoveredNode === "engine" ? "border-secondary/40" : "border-secondary/20"}
-                    `}>
-                      <Cpu className="w-5 h-5 sm:w-6 sm:h-6 text-secondary/80" strokeWidth={1.5} />
-                      {/* Pulse indicator */}
-                      <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
-                    </div>
-                    {/* Circuit lines */}
-                    <div className="absolute -left-2 top-1/2 w-2 h-px bg-secondary/20" />
-                    <div className="absolute -right-2 top-1/2 w-2 h-px bg-secondary/20" />
-                    <div className="absolute left-1/2 -top-2 w-px h-2 bg-secondary/20" />
-                    <div className="absolute left-1/2 -bottom-2 w-px h-2 bg-secondary/20" />
+              {/* Core - Clean design without box */}
+              <div className="relative flex flex-col items-center gap-2">
+                {/* Chip icon */}
+                <div className="relative">
+                  <div className={`
+                    w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center
+                    bg-gradient-to-br from-secondary/15 to-secondary/5
+                    border transition-all duration-300
+                    ${hoveredNode === "engine" 
+                      ? "border-secondary/40 shadow-[0_0_25px_hsl(217,91%,60%,0.15)]" 
+                      : "border-secondary/20 shadow-[0_0_15px_hsl(217,91%,60%,0.08)]"
+                    }
+                  `}>
+                    <Cpu className="w-6 h-6 sm:w-7 sm:h-7 text-secondary/80" strokeWidth={1.5} />
+                    {/* Pulse indicator */}
+                    <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
                   </div>
-                  <div className="text-center">
-                    <span className="text-xs sm:text-sm font-semibold text-foreground/90 block">QUALYX Engine</span>
-                    <span className="text-[8px] sm:text-[9px] text-muted-foreground/50 block mt-0.5 max-w-[100px] sm:max-w-[120px] leading-tight">
-                      AI-assisted automation
-                    </span>
-                  </div>
+                  {/* Circuit lines */}
+                  <div className="absolute -left-3 top-1/2 w-3 h-px bg-secondary/25" />
+                  <div className="absolute -right-3 top-1/2 w-3 h-px bg-secondary/25" />
+                  <div className="absolute left-1/2 -top-3 w-px h-3 bg-secondary/25" />
+                  <div className="absolute left-1/2 -bottom-3 w-px h-3 bg-secondary/25" />
+                </div>
+                <div className="text-center mt-1">
+                  <span className="text-xs sm:text-sm font-semibold text-foreground/90 block">QUALYX Engine</span>
+                  <span className="text-[8px] sm:text-[9px] text-muted-foreground/50 block mt-0.5 max-w-[100px] sm:max-w-[120px] leading-tight">
+                    AI-assisted automation
+                  </span>
                 </div>
               </div>
             </div>
