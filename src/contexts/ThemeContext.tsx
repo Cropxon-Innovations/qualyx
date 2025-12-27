@@ -3,9 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 export type ThemeName = 
   | "dark-enterprise" 
   | "light-enterprise" 
-  | "gradient-tech" 
-  | "neumorphism" 
-  | "material";
+  | "gradient-tech";
 
 interface ThemeContextType {
   theme: ThemeName;
@@ -19,9 +17,9 @@ const themeClassMap: Record<ThemeName, string> = {
   "dark-enterprise": "",
   "light-enterprise": "theme-light-enterprise",
   "gradient-tech": "theme-gradient-tech",
-  "neumorphism": "theme-neumorphism",
-  "material": "theme-material",
 };
+
+const STORAGE_KEY = "qualyx-theme";
 
 export const ThemeProvider = ({ 
   children, 
@@ -30,7 +28,24 @@ export const ThemeProvider = ({
   children: React.ReactNode; 
   defaultTheme?: ThemeName;
 }) => {
-  const [theme, setTheme] = useState<ThemeName>(defaultTheme);
+  const [theme, setThemeState] = useState<ThemeName>(() => {
+    // Try to load from localStorage on initial render
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(STORAGE_KEY) as ThemeName | null;
+      if (stored && Object.keys(themeClassMap).includes(stored)) {
+        return stored;
+      }
+    }
+    return defaultTheme;
+  });
+
+  const setTheme = (newTheme: ThemeName) => {
+    setThemeState(newTheme);
+    // Persist to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, newTheme);
+    }
+  };
 
   useEffect(() => {
     const root = document.documentElement;
@@ -67,32 +82,38 @@ export const useTheme = () => {
 // Theme info for display purposes
 export const themeInfo: Record<ThemeName, { 
   name: string; 
-  description: string; 
-  bestFor: string;
+  description: string;
+  colors: {
+    bg: string;
+    accent: string;
+    text: string;
+  };
 }> = {
   "dark-enterprise": {
     name: "Dark Enterprise",
-    description: "Premium, secure, technical",
-    bestFor: "Landing page, dashboard, analytics",
+    description: "Premium charcoal with cyan accents",
+    colors: {
+      bg: "#0a0d12",
+      accent: "#0ea5e9",
+      text: "#f1f5f9"
+    }
   },
   "light-enterprise": {
-    name: "Light Enterprise",
-    description: "Clean, modern, trustworthy",
-    bestFor: "Docs, blog, pricing pages",
+    name: "Light Enterprise", 
+    description: "Clean off-white with navy accents",
+    colors: {
+      bg: "#f8fafc",
+      accent: "#1d4ed8",
+      text: "#1e293b"
+    }
   },
   "gradient-tech": {
     name: "Gradient Tech",
-    description: "Cutting-edge, tech-focused",
-    bestFor: "Hero visuals, feature highlights",
-  },
-  "neumorphism": {
-    name: "Neumorphism Lite",
-    description: "Soft layers, approachable",
-    bestFor: "Internal dashboard, tool panels",
-  },
-  "material": {
-    name: "Material IA",
-    description: "Professional, accessible",
-    bestFor: "Docs, tables, forms, comparison UI",
+    description: "Deep indigo with cyan glow",
+    colors: {
+      bg: "#0f172a",
+      accent: "#06b6d4",
+      text: "#f1f5f9"
+    }
   },
 };

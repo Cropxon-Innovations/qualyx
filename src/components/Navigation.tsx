@@ -122,7 +122,7 @@ export const Navigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <ThemeSwitcher compact />
+            <ThemeSwitcher />
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               Login
             </Button>
