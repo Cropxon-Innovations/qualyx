@@ -14,24 +14,52 @@ import {
   Loader2,
   Network,
   FileCheck,
-  GripVertical
+  GripVertical,
+  Maximize2,
+  X,
+  Copy,
+  Trash2,
+  Plus,
+  MousePointerClick,
+  FormInput,
+  Eye,
+  Navigation,
+  Timer
 } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 interface Step {
   id: number;
   name: string;
   duration: string;
   status: "done" | "running" | "pending";
+  type: string;
 }
+
+// Step templates for drag and drop
+const stepTemplates = [
+  { type: "click", name: "Click Element", icon: MousePointerClick, color: "text-primary" },
+  { type: "input", name: "Fill Input", icon: FormInput, color: "text-secondary" },
+  { type: "assert", name: "Assert Visible", icon: Eye, color: "text-success" },
+  { type: "navigate", name: "Navigate To", icon: Navigation, color: "text-warning" },
+  { type: "wait", name: "Wait For", icon: Timer, color: "text-muted-foreground" },
+];
 
 // Initial test steps data
 const initialSteps: Step[] = [
-  { id: 1, name: "Navigate to /login", duration: "0.42s", status: "done" },
-  { id: 2, name: "Enter email credential", duration: "0.89s", status: "done" },
-  { id: 3, name: "Enter password", duration: "0.76s", status: "done" },
-  { id: 4, name: "Click 'Sign In' button", duration: "—", status: "running" },
-  { id: 5, name: "Assert dashboard visible", duration: "—", status: "pending" },
-  { id: 6, name: "Capture session snapshot", duration: "—", status: "pending" },
+  { id: 1, name: "Navigate to /login", duration: "0.42s", status: "done", type: "navigate" },
+  { id: 2, name: "Enter email credential", duration: "0.89s", status: "done", type: "input" },
+  { id: 3, name: "Enter password", duration: "0.76s", status: "done", type: "input" },
+  { id: 4, name: "Click 'Sign In' button", duration: "—", status: "running", type: "click" },
+  { id: 5, name: "Assert dashboard visible", duration: "—", status: "pending", type: "assert" },
+  { id: 6, name: "Capture session snapshot", duration: "—", status: "pending", type: "wait" },
 ];
 
 // Console logs with types
@@ -79,7 +107,12 @@ const reusableFlows = [
 
 type ConsoleTab = "logs" | "network" | "assertions";
 
-export const HeroLiveDemo = () => {
+interface HeroLiveDemoProps {
+  isFullscreen?: boolean;
+  onClose?: () => void;
+}
+
+export const HeroLiveDemo = ({ isFullscreen = false, onClose }: HeroLiveDemoProps) => {
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [activeStep, setActiveStep] = useState(3);
   const [visibleLogs, setVisibleLogs] = useState(consoleLogs.slice(0, 4));
@@ -88,21 +121,32 @@ export const HeroLiveDemo = () => {
   const [cursorPos, setCursorPos] = useState({ x: 50, y: 60 });
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [draggedTemplate, setDraggedTemplate] = useState<string | null>(null);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [nextId, setNextId] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
   const consoleRef = useRef<HTMLDivElement>(null);
 
-  // Drag and drop handlers
+  // Drag and drop handlers for steps
   const handleDragStart = useCallback((e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
+    setDraggedTemplate(null);
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", index.toString());
   }, []);
 
+  const handleTemplateDragStart = useCallback((e: React.DragEvent, templateType: string) => {
+    setDraggedTemplate(templateType);
+    setDraggedIndex(null);
+    e.dataTransfer.effectAllowed = "copy";
+    e.dataTransfer.setData("text/plain", templateType);
+  }, []);
+
   const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+    e.dataTransfer.dropEffect = draggedTemplate ? "copy" : "move";
     setDragOverIndex(index);
-  }, []);
+  }, [draggedTemplate]);
 
   const handleDragLeave = useCallback(() => {
     setDragOverIndex(null);
@@ -110,8 +154,31 @@ export const HeroLiveDemo = () => {
 
   const handleDrop = useCallback((e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
-    const dragIndex = draggedIndex;
     
+    // Handle template drop
+    if (draggedTemplate) {
+      const template = stepTemplates.find(t => t.type === draggedTemplate);
+      if (template) {
+        const newStep: Step = {
+          id: nextId,
+          name: `${template.name} (new)`,
+          duration: "—",
+          status: "pending",
+          type: template.type
+        };
+        setNextId(prev => prev + 1);
+        
+        const newSteps = [...steps];
+        newSteps.splice(dropIndex, 0, newStep);
+        setSteps(newSteps);
+      }
+      setDraggedTemplate(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    // Handle step reorder
+    const dragIndex = draggedIndex;
     if (dragIndex === null || dragIndex === dropIndex) {
       setDraggedIndex(null);
       setDragOverIndex(null);
@@ -122,7 +189,6 @@ export const HeroLiveDemo = () => {
     const [draggedStep] = newSteps.splice(dragIndex, 1);
     newSteps.splice(dropIndex, 0, draggedStep);
     
-    // Update statuses based on new positions
     const updatedSteps = newSteps.map((step, idx) => ({
       ...step,
       status: idx < activeStep ? "done" as const : idx === activeStep ? "running" as const : "pending" as const
@@ -131,12 +197,38 @@ export const HeroLiveDemo = () => {
     setSteps(updatedSteps);
     setDraggedIndex(null);
     setDragOverIndex(null);
-  }, [draggedIndex, steps, activeStep]);
+  }, [draggedIndex, draggedTemplate, steps, activeStep, nextId]);
 
   const handleDragEnd = useCallback(() => {
     setDraggedIndex(null);
     setDragOverIndex(null);
+    setDraggedTemplate(null);
   }, []);
+
+  // Context menu actions
+  const duplicateStep = useCallback((index: number) => {
+    const stepToDuplicate = steps[index];
+    const newStep: Step = {
+      ...stepToDuplicate,
+      id: nextId,
+      name: `${stepToDuplicate.name} (copy)`,
+      status: "pending"
+    };
+    setNextId(prev => prev + 1);
+    
+    const newSteps = [...steps];
+    newSteps.splice(index + 1, 0, newStep);
+    setSteps(newSteps);
+  }, [steps, nextId]);
+
+  const deleteStep = useCallback((index: number) => {
+    if (steps.length <= 1) return;
+    const newSteps = steps.filter((_, idx) => idx !== index);
+    setSteps(newSteps);
+    if (activeStep >= newSteps.length) {
+      setActiveStep(newSteps.length - 1);
+    }
+  }, [steps, activeStep]);
 
   // Cycle through steps
   useEffect(() => {
@@ -200,23 +292,29 @@ export const HeroLiveDemo = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const getStepIcon = (status: string) => {
-    switch (status) {
-      case "done":
-        return <CheckCircle2 className="w-3.5 h-3.5 text-success" />;
-      case "running":
-        return <Loader2 className="w-3.5 h-3.5 text-primary animate-spin" />;
-      case "failed":
-        return <XCircle className="w-3.5 h-3.5 text-destructive" />;
-      default:
-        return <div className="w-3.5 h-3.5 rounded-full border border-border" />;
+  const getStepIcon = (status: string, type: string) => {
+    if (status === "done") {
+      return <CheckCircle2 className="w-3.5 h-3.5 text-success" />;
     }
+    if (status === "running") {
+      return <Loader2 className="w-3.5 h-3.5 text-primary animate-spin" />;
+    }
+    if (status === "failed") {
+      return <XCircle className="w-3.5 h-3.5 text-destructive" />;
+    }
+    
+    const template = stepTemplates.find(t => t.type === type);
+    if (template) {
+      const IconComponent = template.icon;
+      return <IconComponent className={`w-3.5 h-3.5 ${template.color} opacity-50`} />;
+    }
+    return <div className="w-3.5 h-3.5 rounded-full border border-border" />;
   };
 
-  return (
+  const renderContent = () => (
     <div ref={containerRef} className="relative w-full">
       {/* Main cockpit container - Theme aware */}
-      <div className="relative rounded-2xl border border-border/50 bg-card/80 backdrop-blur-xl overflow-hidden shadow-2xl shadow-primary/5">
+      <div className={`relative rounded-2xl border border-border/50 bg-card/80 backdrop-blur-xl overflow-hidden shadow-2xl shadow-primary/5 ${isFullscreen ? 'h-full' : ''}`}>
         
         {/* Top header bar */}
         <header className="flex items-center justify-between px-4 py-2.5 border-b border-border/50 bg-card/90">
@@ -245,76 +343,136 @@ export const HeroLiveDemo = () => {
               <Clock className="w-3 h-3" />
               <span className="font-mono">00:05:32</span>
             </div>
+            {isFullscreen ? (
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsMaximized(true)}
+                className="p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
+                title="Maximize"
+              >
+                <Maximize2 className="w-4 h-4 text-muted-foreground" />
+              </button>
+            )}
           </div>
         </header>
 
-        {/* Main 3-column + bottom layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr_200px]">
+        {/* Main layout */}
+        <div className={`grid grid-cols-1 ${isFullscreen ? 'lg:grid-cols-[220px_1fr_240px]' : 'lg:grid-cols-[180px_1fr_200px]'}`}>
           
-          {/* LEFT: Steps Timeline with Drag & Drop */}
-          <section className="p-3 border-b lg:border-b-0 lg:border-r border-border/40 bg-muted/20">
+          {/* LEFT: Steps Timeline + Templates */}
+          <section className={`p-3 border-b lg:border-b-0 lg:border-r border-border/40 bg-muted/20 ${isFullscreen ? 'overflow-y-auto max-h-[calc(100vh-200px)]' : ''}`}>
+            {/* Step Templates */}
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Plus className="w-3 h-3 text-primary" />
+                <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-widest">Templates</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {stepTemplates.map((template) => {
+                  const IconComponent = template.icon;
+                  return (
+                    <div
+                      key={template.type}
+                      draggable
+                      onDragStart={(e) => handleTemplateDragStart(e, template.type)}
+                      onDragEnd={handleDragEnd}
+                      className={`flex items-center gap-1 px-2 py-1 rounded-md bg-card/60 border border-border/40 cursor-grab active:cursor-grabbing hover:border-primary/40 hover:bg-primary/5 transition-all ${
+                        draggedTemplate === template.type ? 'opacity-50 scale-95' : ''
+                      }`}
+                      title={`Drag to add: ${template.name}`}
+                    >
+                      <IconComponent className={`w-3 h-3 ${template.color}`} />
+                      <span className="text-[8px] text-muted-foreground">{template.name.split(' ')[0]}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Steps */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-1 h-1 rounded-full bg-primary" />
                 <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Steps</span>
               </div>
-              <span className="text-[9px] text-muted-foreground/60">Drag to reorder</span>
+              <span className="text-[8px] text-muted-foreground/60">Right-click for options</span>
             </div>
             
             <div className="space-y-1">
               {steps.map((step, idx) => {
                 const isActive = idx === activeStep;
                 const isDone = step.status === "done";
-                const isRunning = step.status === "running";
                 const isDragging = draggedIndex === idx;
                 const isDragOver = dragOverIndex === idx;
                 
                 return (
-                  <div
-                    key={step.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, idx)}
-                    onDragOver={(e) => handleDragOver(e, idx)}
-                    onDragLeave={handleDragLeave}
-                    onDrop={(e) => handleDrop(e, idx)}
-                    onDragEnd={handleDragEnd}
-                    className={`relative flex items-start gap-2 px-2 py-1.5 rounded-lg transition-all duration-200 cursor-grab active:cursor-grabbing select-none ${
-                      isDragging
-                        ? "opacity-50 scale-95"
-                        : isDragOver
-                          ? "bg-primary/20 border-2 border-dashed border-primary/50"
-                          : isActive
-                            ? "bg-primary/10 border border-primary/30"
-                            : "border border-transparent hover:bg-muted/50"
-                    }`}
-                  >
-                    {/* Drag handle */}
-                    <GripVertical className="w-3 h-3 text-muted-foreground/40 mt-0.5 flex-shrink-0" />
-                    
-                    {/* Timeline connector */}
-                    {idx < steps.length - 1 && (
-                      <div 
-                        className={`absolute left-[21px] top-6 w-px h-[calc(100%+4px)] transition-colors duration-300 ${
-                          isDone ? "bg-success/40" : "bg-border/50"
+                  <ContextMenu key={step.id}>
+                    <ContextMenuTrigger>
+                      <div
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, idx)}
+                        onDragOver={(e) => handleDragOver(e, idx)}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, idx)}
+                        onDragEnd={handleDragEnd}
+                        className={`relative flex items-start gap-2 px-2 py-1.5 rounded-lg transition-all duration-200 cursor-grab active:cursor-grabbing select-none ${
+                          isDragging
+                            ? "opacity-50 scale-95"
+                            : isDragOver
+                              ? "bg-primary/20 border-2 border-dashed border-primary/50"
+                              : isActive
+                                ? "bg-primary/10 border border-primary/30"
+                                : "border border-transparent hover:bg-muted/50"
                         }`}
-                      />
-                    )}
-                    
-                    <div className="relative z-10 mt-0.5">
-                      {getStepIcon(isDone ? "done" : isRunning ? "running" : "pending")}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <span className={`text-[10px] leading-tight block transition-colors ${
-                        isActive ? "text-foreground font-medium" : isDone ? "text-muted-foreground" : "text-muted-foreground/60"
-                      }`}>
-                        {step.name}
-                      </span>
-                      {isDone && (
-                        <span className="text-[9px] text-muted-foreground/60 font-mono">{step.duration}</span>
-                      )}
-                    </div>
-                  </div>
+                      >
+                        <GripVertical className="w-3 h-3 text-muted-foreground/40 mt-0.5 flex-shrink-0" />
+                        
+                        {idx < steps.length - 1 && (
+                          <div 
+                            className={`absolute left-[21px] top-6 w-px h-[calc(100%+4px)] transition-colors duration-300 ${
+                              isDone ? "bg-success/40" : "bg-border/50"
+                            }`}
+                          />
+                        )}
+                        
+                        <div className="relative z-10 mt-0.5">
+                          {getStepIcon(step.status, step.type)}
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <span className={`text-[10px] leading-tight block transition-colors ${
+                            isActive ? "text-foreground font-medium" : isDone ? "text-muted-foreground" : "text-muted-foreground/60"
+                          }`}>
+                            {step.name}
+                          </span>
+                          {isDone && (
+                            <span className="text-[9px] text-muted-foreground/60 font-mono">{step.duration}</span>
+                          )}
+                        </div>
+                      </div>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent className="w-40">
+                      <ContextMenuItem onClick={() => duplicateStep(idx)} className="gap-2 text-xs">
+                        <Copy className="w-3.5 h-3.5" />
+                        Duplicate
+                      </ContextMenuItem>
+                      <ContextMenuSeparator />
+                      <ContextMenuItem 
+                        onClick={() => deleteStep(idx)} 
+                        className="gap-2 text-xs text-destructive focus:text-destructive"
+                        disabled={steps.length <= 1}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Delete
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
                 );
               })}
             </div>
@@ -338,13 +496,13 @@ export const HeroLiveDemo = () => {
           <section className="flex flex-col border-b lg:border-b-0 lg:border-r border-border/40">
             
             {/* Live Preview */}
-            <div className="flex-1 p-3">
+            <div className={`flex-1 p-3 ${isFullscreen ? 'p-6' : ''}`}>
               <div className="flex items-center gap-2 mb-2">
                 <MonitorPlay className="w-3.5 h-3.5 text-primary" />
                 <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Live Preview</span>
               </div>
               
-              <div className="relative h-[130px] rounded-lg border border-border/50 bg-background/80 overflow-hidden">
+              <div className={`relative rounded-lg border border-border/50 bg-background/80 overflow-hidden ${isFullscreen ? 'h-[300px]' : 'h-[130px]'}`}>
                 {/* Subtle grid background */}
                 <div 
                   className="absolute inset-0 opacity-[0.03]"
@@ -355,55 +513,55 @@ export const HeroLiveDemo = () => {
                 />
                 
                 {/* Browser chrome */}
-                <div className="absolute top-0 inset-x-0 h-5 bg-muted/50 border-b border-border/50 flex items-center px-2 gap-1">
+                <div className="absolute top-0 inset-x-0 h-6 bg-muted/50 border-b border-border/50 flex items-center px-2 gap-1">
                   <div className="flex gap-1">
                     <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
                     <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
                     <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
                   </div>
-                  <div className="flex-1 mx-2 h-3 rounded bg-background/80 flex items-center px-2">
-                    <span className="text-[8px] text-muted-foreground/60 font-mono">app.example.com/login</span>
+                  <div className="flex-1 mx-2 h-3.5 rounded bg-background/80 flex items-center px-2">
+                    <span className="text-[9px] text-muted-foreground/60 font-mono">app.example.com/login</span>
                   </div>
                 </div>
                 
                 {/* Simulated app content */}
-                <div className="absolute top-5 inset-x-0 bottom-0 p-3">
-                  <div className="max-w-[140px] mx-auto space-y-2">
-                    <div className="h-2 w-16 bg-muted/60 rounded mx-auto" />
-                    <div className="h-5 bg-muted/40 rounded border border-border/40" />
-                    <div className="h-5 bg-muted/40 rounded border border-border/40" />
-                    <div className="h-5 bg-primary/20 rounded border border-primary/40 flex items-center justify-center">
-                      <span className="text-[8px] text-primary font-medium">Sign In</span>
+                <div className="absolute top-6 inset-x-0 bottom-0 p-4">
+                  <div className={`mx-auto space-y-2 ${isFullscreen ? 'max-w-[200px]' : 'max-w-[140px]'}`}>
+                    <div className="h-3 w-20 bg-muted/60 rounded mx-auto" />
+                    <div className={`bg-muted/40 rounded border border-border/40 ${isFullscreen ? 'h-8' : 'h-5'}`} />
+                    <div className={`bg-muted/40 rounded border border-border/40 ${isFullscreen ? 'h-8' : 'h-5'}`} />
+                    <div className={`bg-primary/20 rounded border border-primary/40 flex items-center justify-center ${isFullscreen ? 'h-8' : 'h-5'}`}>
+                      <span className={`text-primary font-medium ${isFullscreen ? 'text-sm' : 'text-[8px]'}`}>Sign In</span>
                     </div>
                   </div>
                 </div>
                 
                 {/* Animated cursor */}
                 <div 
-                  className="absolute w-3 h-3 transition-all duration-700 ease-out pointer-events-none"
+                  className="absolute transition-all duration-700 ease-out pointer-events-none"
                   style={{ left: `${cursorPos.x}%`, top: `${cursorPos.y}%`, transform: 'translate(-50%, -50%)' }}
                 >
-                  <MousePointer2 className="w-3 h-3 text-primary drop-shadow-[0_0_4px_hsl(var(--primary)/0.5)]" />
+                  <MousePointer2 className={`text-primary drop-shadow-[0_0_4px_hsl(var(--primary)/0.5)] ${isFullscreen ? 'w-5 h-5' : 'w-3 h-3'}`} />
                 </div>
                 
                 {/* Action indicator */}
                 {previewAction && (
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-card/90 border border-primary/30 backdrop-blur-sm">
-                    <div className="flex items-center gap-1.5">
-                      {previewAction === "Click detected" && <MousePointer2 className="w-2.5 h-2.5 text-primary" />}
-                      {previewAction === "Typing..." && <Keyboard className="w-2.5 h-2.5 text-warning" />}
-                      {previewAction === "Assertion running" && <CheckSquare className="w-2.5 h-2.5 text-success" />}
-                      {previewAction === "Waiting..." && <Loader2 className="w-2.5 h-2.5 text-muted-foreground animate-spin" />}
-                      <span className="text-[9px] text-foreground">{previewAction}</span>
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-lg bg-card/90 border border-primary/30 backdrop-blur-sm shadow-lg">
+                    <div className="flex items-center gap-2">
+                      {previewAction === "Click detected" && <MousePointerClick className="w-3.5 h-3.5 text-primary" />}
+                      {previewAction === "Typing..." && <Keyboard className="w-3.5 h-3.5 text-warning" />}
+                      {previewAction === "Assertion running" && <CheckSquare className="w-3.5 h-3.5 text-success" />}
+                      {previewAction === "Waiting..." && <Loader2 className="w-3.5 h-3.5 text-muted-foreground animate-spin" />}
+                      <span className={`text-foreground ${isFullscreen ? 'text-sm' : 'text-[10px]'}`}>{previewAction}</span>
                     </div>
                   </div>
                 )}
                 
-                {/* Highlight overlay when action occurs */}
+                {/* Click highlight */}
                 {previewAction === "Click detected" && (
                   <div className="absolute inset-0 pointer-events-none">
                     <div 
-                      className="absolute w-8 h-8 rounded-full border-2 border-primary/50 animate-ping"
+                      className="absolute w-10 h-10 rounded-full border-2 border-primary/50 animate-ping"
                       style={{ left: `${cursorPos.x}%`, top: `${cursorPos.y}%`, transform: 'translate(-50%, -50%)' }}
                     />
                   </div>
@@ -411,16 +569,15 @@ export const HeroLiveDemo = () => {
               </div>
             </div>
             
-            {/* Console - Full width bottom of center column */}
+            {/* Console */}
             <div className="border-t border-border/40 bg-muted/10">
-              {/* Console tabs */}
               <div className="flex items-center gap-1 px-3 py-1.5 border-b border-border/30">
                 {[
                   { id: "logs" as ConsoleTab, label: "Logs", icon: Terminal },
                   { id: "network" as ConsoleTab, label: "Network", icon: Network },
                   { id: "assertions" as ConsoleTab, label: "Assertions", icon: FileCheck },
                 ].map((tab) => {
-                  const Icon = tab.icon;
+                  const IconComponent = tab.icon;
                   const isActive = consoleTab === tab.id;
                   return (
                     <button
@@ -432,17 +589,16 @@ export const HeroLiveDemo = () => {
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                       }`}
                     >
-                      <Icon className="w-3 h-3" />
+                      <IconComponent className="w-3 h-3" />
                       {tab.label}
                     </button>
                   );
                 })}
               </div>
               
-              {/* Console content */}
               <div 
                 ref={consoleRef}
-                className="h-[72px] overflow-y-auto px-3 py-2 font-mono text-[9px] leading-relaxed"
+                className={`overflow-y-auto px-3 py-2 font-mono text-[9px] leading-relaxed ${isFullscreen ? 'h-[120px]' : 'h-[72px]'}`}
               >
                 {consoleTab === "logs" && (
                   <div className="space-y-0.5">
@@ -506,7 +662,7 @@ export const HeroLiveDemo = () => {
           </section>
 
           {/* RIGHT: AI Insights Panel */}
-          <section className="p-3 bg-muted/10">
+          <section className={`p-3 bg-muted/10 ${isFullscreen ? 'overflow-y-auto max-h-[calc(100vh-200px)]' : ''}`}>
             <div className="flex items-center gap-2 mb-3">
               <Zap className="w-3.5 h-3.5 text-primary" />
               <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">AI Insights</span>
@@ -523,7 +679,7 @@ export const HeroLiveDemo = () => {
                   {suggestedAssertions.map((assertion, i) => (
                     <div
                       key={i}
-                      className="px-2 py-1 rounded bg-muted/50 border border-border/30 text-[9px] text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all cursor-pointer"
+                      className="px-2 py-1.5 rounded bg-muted/50 border border-border/30 text-[9px] text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all cursor-pointer"
                     >
                       {assertion}
                     </div>
@@ -601,7 +757,6 @@ export const HeroLiveDemo = () => {
                     </div>
                   ))}
                 </div>
-                {/* Journey connector line */}
                 <div className="relative h-px mx-4 mt-2">
                   <div className="absolute inset-0 bg-border" />
                   <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-success to-primary" />
@@ -612,5 +767,18 @@ export const HeroLiveDemo = () => {
         </div>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {renderContent()}
+      
+      {/* Maximize Modal */}
+      <Dialog open={isMaximized} onOpenChange={setIsMaximized}>
+        <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] p-0 overflow-hidden">
+          <HeroLiveDemo isFullscreen onClose={() => setIsMaximized(false)} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
