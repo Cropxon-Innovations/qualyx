@@ -21,12 +21,16 @@ import APIAutomation from "./pages/product/APIAutomation";
 import SessionReplay from "./pages/product/SessionReplay";
 import AutoHealing from "./pages/product/AutoHealing";
 import AITestEngine from "./pages/product/AITestEngine";
+import Reports from "./pages/product/Reports";
+import ExportableCode from "./pages/product/ExportableCode";
 
 // Platform pages
 import HybridExecution from "./pages/platform/HybridExecution";
 import Security from "./pages/platform/Security";
 import Integrations from "./pages/platform/Integrations";
 import Architecture from "./pages/platform/Architecture";
+import Runners from "./pages/platform/Runners";
+import Observability from "./pages/platform/Observability";
 
 // Resource pages
 import Blog from "./pages/resources/Blog";
@@ -66,12 +70,16 @@ const App = () => (
             <Route path="/product/session-replay" element={<SessionReplay />} />
             <Route path="/product/auto-healing" element={<AutoHealing />} />
             <Route path="/product/ai-test-engine" element={<AITestEngine />} />
+            <Route path="/product/reports" element={<Reports />} />
+            <Route path="/product/exportable-code" element={<ExportableCode />} />
             
             {/* Platform */}
             <Route path="/platform/hybrid-execution" element={<HybridExecution />} />
             <Route path="/platform/security" element={<Security />} />
             <Route path="/platform/integrations" element={<Integrations />} />
             <Route path="/platform/architecture" element={<Architecture />} />
+            <Route path="/platform/runners" element={<Runners />} />
+            <Route path="/platform/observability" element={<Observability />} />
             
             {/* Resources */}
             <Route path="/resources/blog" element={<Blog />} />
