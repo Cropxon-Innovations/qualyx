@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
-import { PipelineAnimation } from "./PipelineAnimation";
+import { HeroLiveDemo } from "./HeroLiveDemo";
 import { FloatingParticles } from "./FloatingParticles";
 import { VideoModal } from "./VideoModal";
 
@@ -75,10 +75,10 @@ export const HeroSection = () => {
             </div>
           </div>
           
-          {/* Right: Pipeline Animation */}
+          {/* Right: Live demo preview */}
           <div className="relative opacity-0 animate-fade-in delay-200 order-1 lg:order-2">
-            <div className="relative rounded-xl sm:rounded-2xl border border-border/20 bg-card/10 backdrop-blur-sm p-3 sm:p-4 md:p-5">
-              <PipelineAnimation />
+            <div className="glass-card-glow p-3 sm:p-4 md:p-5">
+              <HeroLiveDemo />
             </div>
           </div>
         </div>
