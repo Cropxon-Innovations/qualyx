@@ -55,47 +55,47 @@
 
   /* ========================================
      THEME 2: LIGHT ENTERPRISE
-     Docs, blog, knowledge base, pricing
+     Clean, readable, high contrast
      ======================================== */
   .theme-light-enterprise {
-    --background: 210 20% 98%;
-    --foreground: 220 15% 15%;
+    --background: 0 0% 98%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 221 83% 53%;
+    --primary: 217 91% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 187 85% 43%;
+    --secondary: 199 89% 40%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 15% 93%;
-    --muted-foreground: 215 15% 45%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 215 16% 40%;
 
-    --accent: 187 85% 43%;
+    --accent: 199 89% 40%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 20% 88%;
-    --input: 214 20% 92%;
-    --ring: 221 83% 53%;
+    --border: 214 25% 82%;
+    --input: 214 20% 90%;
+    --ring: 217 91% 50%;
 
     /* Light Enterprise tokens */
-    --glow-cyan: 187 85% 43%;
-    --glow-blue: 221 83% 53%;
-    --surface-glass: 210 15% 96%;
+    --glow-cyan: 199 89% 40%;
+    --glow-blue: 217 91% 50%;
+    --surface-glass: 0 0% 100%;
     --surface-elevated: 0 0% 100%;
-    --grid-line: 214 20% 90%;
-    --neon-cyan: 187 85% 43%;
-    --neon-blue: 221 83% 53%;
-    --success: 142 76% 36%;
-    --warning: 45 93% 47%;
+    --grid-line: 214 25% 85%;
+    --neon-cyan: 199 89% 40%;
+    --neon-blue: 217 91% 50%;
+    --success: 142 71% 35%;
+    --warning: 38 92% 45%;
   }
 
   /* ========================================
@@ -566,4 +566,68 @@
   .delay-500 { animation-delay: 500ms; }
   .delay-700 { animation-delay: 700ms; }
   .delay-1000 { animation-delay: 1000ms; }
+}
+
+/* ========================================
+   LIGHT THEME SPECIFIC OVERRIDES
+   Ensures proper contrast and visibility
+   ======================================== */
+.theme-light-enterprise nav {
+  background-color: hsl(var(--background) / 0.98);
+  border-color: hsl(var(--border) / 0.6);
+}
+
+.theme-light-enterprise section {
+  background-color: hsl(var(--background));
+}
+
+/* Cards with better visibility in light theme */
+.theme-light-enterprise [class*="bg-card/"] {
+  background-color: hsl(var(--card) / 0.95);
+}
+
+/* Particles more visible in light theme */
+.theme-light-enterprise [class*="bg-secondary/4"],
+.theme-light-enterprise [class*="bg-secondary/5"],
+.theme-light-enterprise [class*="bg-secondary/6"],
+.theme-light-enterprise [class*="bg-secondary/8"] {
+  background-color: hsl(var(--secondary) / 0.15);
+}
+
+.theme-light-enterprise [class*="bg-primary/3"],
+.theme-light-enterprise [class*="bg-primary/4"],
+.theme-light-enterprise [class*="bg-primary/5"] {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+/* Border visibility in light theme */
+.theme-light-enterprise [class*="border-border/2"],
+.theme-light-enterprise [class*="border-border/3"],
+.theme-light-enterprise [class*="border-border/4"] {
+  border-color: hsl(var(--border));
+}
+
+.theme-light-enterprise [class*="border-secondary/2"],
+.theme-light-enterprise [class*="border-secondary/3"],
+.theme-light-enterprise [class*="border-secondary/4"],
+.theme-light-enterprise [class*="border-secondary/5"] {
+  border-color: hsl(var(--secondary) / 0.5);
+}
+
+/* Success colors more visible */
+.theme-light-enterprise [class*="border-success/2"],
+.theme-light-enterprise [class*="border-success/3"],
+.theme-light-enterprise [class*="border-success/4"] {
+  border-color: hsl(var(--success) / 0.5);
+}
+
+/* Glow effects adjusted for light theme */
+.theme-light-enterprise [class*="blur-"] {
+  opacity: 0.8;
+}
+
+/* Text contrast improvements */
+.theme-light-enterprise .text-muted-foreground\/40,
+.theme-light-enterprise .text-muted-foreground\/50 {
+  color: hsl(var(--muted-foreground) / 0.8);
 }

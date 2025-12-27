@@ -197,7 +197,7 @@ export const PipelineAnimation = () => {
           })}
         </div>
 
-        {/* AI CORE - Clean chip design */}
+        {/* AI CORE - Premium chip design with animated glow */}
         <Tooltip>
           <TooltipTrigger asChild>
             <div 
@@ -207,57 +207,75 @@ export const PipelineAnimation = () => {
                 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10
                 transition-all duration-500 ease-out
                 ${engineActive ? "opacity-100 scale-100" : "opacity-0 scale-90"}
-                ${hoveredNode === "engine" ? "scale-[1.02]" : ""}
+                ${hoveredNode === "engine" ? "scale-[1.03]" : ""}
               `}
             >
-              {/* Outer glow - no box */}
-              <div className={`
-                absolute -inset-10 rounded-full blur-3xl transition-all duration-500 pointer-events-none
-                ${hoveredNode === "engine" ? "bg-secondary/12" : "bg-secondary/6"}
-              `} />
-              
-              {/* Orbiting particles */}
-              <div className="absolute -inset-8 pointer-events-none">
-                <div className="absolute w-1 h-1 bg-secondary/40 rounded-full animate-orbit-1" />
-                <div className="absolute w-1 h-1 bg-secondary/30 rounded-full animate-orbit-2" />
-                <div className="absolute w-0.5 h-0.5 bg-secondary/25 rounded-full animate-orbit-3" />
+              {/* Animated pulsing glow layers */}
+              <div className="absolute -inset-12 pointer-events-none">
+                <div className="absolute inset-0 rounded-full bg-primary/8 blur-2xl animate-glow-pulse-1" />
+                <div className="absolute inset-2 rounded-full bg-secondary/10 blur-xl animate-glow-pulse-2" />
               </div>
               
-              {/* Rotating ring */}
+              {/* Orbiting particles */}
+              <div className="absolute -inset-10 pointer-events-none">
+                <div className="absolute w-1.5 h-1.5 bg-secondary/50 rounded-full blur-[1px] animate-orbit-1" />
+                <div className="absolute w-1 h-1 bg-primary/40 rounded-full blur-[1px] animate-orbit-2" />
+                <div className="absolute w-1 h-1 bg-secondary/35 rounded-full animate-orbit-3" />
+              </div>
+              
+              {/* Rotating rings */}
               <div 
-                className={`absolute -inset-6 border rounded-full transition-colors duration-500 ${
-                  hoveredNode === "engine" ? "border-secondary/20" : "border-secondary/8"
+                className={`absolute -inset-7 border rounded-full transition-colors duration-500 ${
+                  hoveredNode === "engine" ? "border-secondary/25" : "border-secondary/10"
                 }`}
-                style={{ animation: "spin 50s linear infinite" }}
+                style={{ animation: "spin 45s linear infinite" }}
+              />
+              <div 
+                className={`absolute -inset-10 border border-dashed rounded-full transition-colors duration-500 ${
+                  hoveredNode === "engine" ? "border-primary/15" : "border-primary/5"
+                }`}
+                style={{ animation: "spin 60s linear infinite reverse" }}
               />
               
-              {/* Core - Clean design without box */}
-              <div className="relative flex flex-col items-center gap-2">
-                {/* Chip icon */}
+              {/* Core - Premium chip design */}
+              <div className="relative flex flex-col items-center gap-2.5">
+                {/* Chip icon with animated glow */}
                 <div className="relative">
+                  {/* Inner glow behind chip */}
                   <div className={`
-                    w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center
-                    bg-gradient-to-br from-secondary/15 to-secondary/5
-                    border transition-all duration-300
+                    absolute -inset-2 rounded-2xl blur-md transition-all duration-500
+                    ${hoveredNode === "engine" ? "bg-secondary/30" : "bg-secondary/15"}
+                    animate-glow-pulse-3
+                  `} />
+                  
+                  <div className={`
+                    relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center
+                    bg-gradient-to-br from-secondary/20 via-primary/10 to-secondary/5
+                    border-2 transition-all duration-300
                     ${hoveredNode === "engine" 
-                      ? "border-secondary/40 shadow-[0_0_25px_hsl(217,91%,60%,0.15)]" 
-                      : "border-secondary/20 shadow-[0_0_15px_hsl(217,91%,60%,0.08)]"
+                      ? "border-secondary/50 shadow-[0_0_30px_hsl(var(--secondary)/0.25)]" 
+                      : "border-secondary/25 shadow-[0_0_20px_hsl(var(--secondary)/0.12)]"
                     }
                   `}>
-                    <Cpu className="w-6 h-6 sm:w-7 sm:h-7 text-secondary/80" strokeWidth={1.5} />
+                    <Cpu className={`w-7 h-7 sm:w-8 sm:h-8 transition-colors duration-300 ${
+                      hoveredNode === "engine" ? "text-secondary" : "text-secondary/80"
+                    }`} strokeWidth={1.5} />
+                    
                     {/* Pulse indicator */}
-                    <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
+                    <div className="absolute top-2 right-2 w-2 h-2 bg-success rounded-full animate-pulse shadow-[0_0_8px_hsl(var(--success))]" />
                   </div>
-                  {/* Circuit lines */}
-                  <div className="absolute -left-3 top-1/2 w-3 h-px bg-secondary/25" />
-                  <div className="absolute -right-3 top-1/2 w-3 h-px bg-secondary/25" />
-                  <div className="absolute left-1/2 -top-3 w-px h-3 bg-secondary/25" />
-                  <div className="absolute left-1/2 -bottom-3 w-px h-3 bg-secondary/25" />
+                  
+                  {/* Circuit lines with glow */}
+                  <div className="absolute -left-4 top-1/2 w-4 h-0.5 bg-gradient-to-l from-secondary/40 to-transparent" />
+                  <div className="absolute -right-4 top-1/2 w-4 h-0.5 bg-gradient-to-r from-secondary/40 to-transparent" />
+                  <div className="absolute left-1/2 -top-4 w-0.5 h-4 bg-gradient-to-t from-secondary/40 to-transparent" />
+                  <div className="absolute left-1/2 -bottom-4 w-0.5 h-4 bg-gradient-to-b from-secondary/40 to-transparent" />
                 </div>
+                
                 <div className="text-center mt-1">
-                  <span className="text-xs sm:text-sm font-semibold text-foreground/90 block">QUALYX Engine</span>
-                  <span className="text-[8px] sm:text-[9px] text-muted-foreground/50 block mt-0.5 max-w-[100px] sm:max-w-[120px] leading-tight">
-                    AI-assisted automation
+                  <span className="text-sm sm:text-base font-bold text-foreground block">QUALYX Engine</span>
+                  <span className="text-[9px] sm:text-[10px] text-muted-foreground block mt-0.5 max-w-[110px] sm:max-w-[130px] leading-tight">
+                    AI-assisted automation core
                   </span>
                 </div>
               </div>
@@ -265,7 +283,7 @@ export const PipelineAnimation = () => {
           </TooltipTrigger>
           <TooltipContent 
             side="bottom" 
-            className="max-w-[200px] bg-card/95 backdrop-blur-xl border-border/50 text-[11px]"
+            className="max-w-[220px] bg-card/95 backdrop-blur-xl border-border/50 text-xs"
           >
             The QUALYX Engine processes test inputs using AI-assisted analysis to produce reliable, deterministic automation.
           </TooltipContent>
@@ -345,70 +363,88 @@ export const PipelineAnimation = () => {
 
       <style>{`
         @keyframes orbit-1 {
-          from { transform: rotate(0deg) translateX(28px) rotate(0deg); }
-          to { transform: rotate(360deg) translateX(28px) rotate(-360deg); }
+          from { transform: rotate(0deg) translateX(36px) rotate(0deg); }
+          to { transform: rotate(360deg) translateX(36px) rotate(-360deg); }
         }
-        .animate-orbit-1 { animation: orbit-1 20s linear infinite; top: 50%; left: 50%; }
+        .animate-orbit-1 { animation: orbit-1 18s linear infinite; top: 50%; left: 50%; }
         
         @keyframes orbit-2 {
-          from { transform: rotate(120deg) translateX(32px) rotate(-120deg); }
-          to { transform: rotate(480deg) translateX(32px) rotate(-480deg); }
+          from { transform: rotate(120deg) translateX(40px) rotate(-120deg); }
+          to { transform: rotate(480deg) translateX(40px) rotate(-480deg); }
         }
-        .animate-orbit-2 { animation: orbit-2 28s linear infinite reverse; top: 50%; left: 50%; }
+        .animate-orbit-2 { animation: orbit-2 25s linear infinite reverse; top: 50%; left: 50%; }
         
         @keyframes orbit-3 {
-          from { transform: rotate(240deg) translateX(24px) rotate(-240deg); }
-          to { transform: rotate(600deg) translateX(24px) rotate(-600deg); }
+          from { transform: rotate(240deg) translateX(32px) rotate(-240deg); }
+          to { transform: rotate(600deg) translateX(32px) rotate(-600deg); }
         }
-        .animate-orbit-3 { animation: orbit-3 35s linear infinite; top: 50%; left: 50%; }
+        .animate-orbit-3 { animation: orbit-3 30s linear infinite; top: 50%; left: 50%; }
+        
+        @keyframes glow-pulse-1 {
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        .animate-glow-pulse-1 { animation: glow-pulse-1 4s ease-in-out infinite; }
+        
+        @keyframes glow-pulse-2 {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.08); }
+        }
+        .animate-glow-pulse-2 { animation: glow-pulse-2 3s ease-in-out infinite 0.5s; }
+        
+        @keyframes glow-pulse-3 {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.02); }
+        }
+        .animate-glow-pulse-3 { animation: glow-pulse-3 2.5s ease-in-out infinite; }
         
         @keyframes particle-in-1 {
           0% { top: 18%; left: 26%; opacity: 0; }
-          15% { opacity: 0.7; }
-          85% { opacity: 0.7; }
+          15% { opacity: 0.8; }
+          85% { opacity: 0.8; }
           100% { top: 48%; left: 42%; opacity: 0; }
         }
-        .animate-particle-in-1 { animation: particle-in-1 3.5s ease-in-out infinite; }
+        .animate-particle-in-1 { animation: particle-in-1 3s ease-in-out infinite; }
         
         @keyframes particle-in-2 {
           0% { top: 48%; left: 26%; opacity: 0; }
-          15% { opacity: 0.7; }
-          85% { opacity: 0.7; }
+          15% { opacity: 0.8; }
+          85% { opacity: 0.8; }
           100% { top: 48%; left: 42%; opacity: 0; }
         }
-        .animate-particle-in-2 { animation: particle-in-2 4s ease-in-out infinite 0.6s; }
+        .animate-particle-in-2 { animation: particle-in-2 3.5s ease-in-out infinite 0.5s; }
         
         @keyframes particle-in-3 {
           0% { top: 78%; left: 26%; opacity: 0; }
-          15% { opacity: 0.7; }
-          85% { opacity: 0.7; }
+          15% { opacity: 0.8; }
+          85% { opacity: 0.8; }
           100% { top: 48%; left: 42%; opacity: 0; }
         }
-        .animate-particle-in-3 { animation: particle-in-3 4.5s ease-in-out infinite 1.2s; }
+        .animate-particle-in-3 { animation: particle-in-3 4s ease-in-out infinite 1s; }
         
         @keyframes particle-out-1 {
           0% { top: 48%; left: 56%; opacity: 0; }
-          15% { opacity: 0.7; }
-          85% { opacity: 0.7; }
+          15% { opacity: 0.8; }
+          85% { opacity: 0.8; }
           100% { top: 18%; left: 72%; opacity: 0; }
         }
-        .animate-particle-out-1 { animation: particle-out-1 3.5s ease-in-out infinite 0.4s; }
+        .animate-particle-out-1 { animation: particle-out-1 3s ease-in-out infinite 0.3s; }
         
         @keyframes particle-out-2 {
           0% { top: 48%; left: 56%; opacity: 0; }
-          15% { opacity: 0.7; }
-          85% { opacity: 0.7; }
+          15% { opacity: 0.8; }
+          85% { opacity: 0.8; }
           100% { top: 48%; left: 72%; opacity: 0; }
         }
-        .animate-particle-out-2 { animation: particle-out-2 4s ease-in-out infinite 1s; }
+        .animate-particle-out-2 { animation: particle-out-2 3.5s ease-in-out infinite 0.8s; }
         
         @keyframes particle-out-3 {
           0% { top: 48%; left: 56%; opacity: 0; }
-          15% { opacity: 0.7; }
-          85% { opacity: 0.7; }
+          15% { opacity: 0.8; }
+          85% { opacity: 0.8; }
           100% { top: 78%; left: 72%; opacity: 0; }
         }
-        .animate-particle-out-3 { animation: particle-out-3 4.5s ease-in-out infinite 1.6s; }
+        .animate-particle-out-3 { animation: particle-out-3 4s ease-in-out infinite 1.3s; }
       `}</style>
     </TooltipProvider>
   );
