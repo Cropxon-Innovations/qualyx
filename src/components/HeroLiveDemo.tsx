@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { 
   CheckCircle2, 
   XCircle, 
@@ -13,17 +13,25 @@ import {
   CheckSquare,
   Loader2,
   Network,
-  FileCheck
+  FileCheck,
+  GripVertical
 } from "lucide-react";
 
-// Test steps data
-const steps = [
-  { id: 1, name: "Navigate to /login", duration: "0.42s", status: "done" as const },
-  { id: 2, name: "Enter email credential", duration: "0.89s", status: "done" as const },
-  { id: 3, name: "Enter password", duration: "0.76s", status: "done" as const },
-  { id: 4, name: "Click 'Sign In' button", duration: "—", status: "running" as const },
-  { id: 5, name: "Assert dashboard visible", duration: "—", status: "pending" as const },
-  { id: 6, name: "Capture session snapshot", duration: "—", status: "pending" as const },
+interface Step {
+  id: number;
+  name: string;
+  duration: string;
+  status: "done" | "running" | "pending";
+}
+
+// Initial test steps data
+const initialSteps: Step[] = [
+  { id: 1, name: "Navigate to /login", duration: "0.42s", status: "done" },
+  { id: 2, name: "Enter email credential", duration: "0.89s", status: "done" },
+  { id: 3, name: "Enter password", duration: "0.76s", status: "done" },
+  { id: 4, name: "Click 'Sign In' button", duration: "—", status: "running" },
+  { id: 5, name: "Assert dashboard visible", duration: "—", status: "pending" },
+  { id: 6, name: "Capture session snapshot", duration: "—", status: "pending" },
 ];
 
 // Console logs with types
@@ -72,13 +80,63 @@ const reusableFlows = [
 type ConsoleTab = "logs" | "network" | "assertions";
 
 export const HeroLiveDemo = () => {
+  const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [activeStep, setActiveStep] = useState(3);
   const [visibleLogs, setVisibleLogs] = useState(consoleLogs.slice(0, 4));
   const [consoleTab, setConsoleTab] = useState<ConsoleTab>("logs");
   const [previewAction, setPreviewAction] = useState<string | null>("Click detected");
   const [cursorPos, setCursorPos] = useState({ x: 50, y: 60 });
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const consoleRef = useRef<HTMLDivElement>(null);
+
+  // Drag and drop handlers
+  const handleDragStart = useCallback((e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index.toString());
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverIndex(index);
+  }, []);
+
+  const handleDragLeave = useCallback(() => {
+    setDragOverIndex(null);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    const dragIndex = draggedIndex;
+    
+    if (dragIndex === null || dragIndex === dropIndex) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const newSteps = [...steps];
+    const [draggedStep] = newSteps.splice(dragIndex, 1);
+    newSteps.splice(dropIndex, 0, draggedStep);
+    
+    // Update statuses based on new positions
+    const updatedSteps = newSteps.map((step, idx) => ({
+      ...step,
+      status: idx < activeStep ? "done" as const : idx === activeStep ? "running" as const : "pending" as const
+    }));
+    
+    setSteps(updatedSteps);
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  }, [draggedIndex, steps, activeStep]);
+
+  const handleDragEnd = useCallback(() => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  }, []);
 
   // Cycle through steps
   useEffect(() => {
@@ -86,7 +144,15 @@ export const HeroLiveDemo = () => {
       setActiveStep((p) => (p + 1) % steps.length);
     }, 3000);
     return () => clearInterval(timer);
-  }, []);
+  }, [steps.length]);
+
+  // Update step statuses when activeStep changes
+  useEffect(() => {
+    setSteps(prev => prev.map((step, idx) => ({
+      ...step,
+      status: idx < activeStep ? "done" as const : idx === activeStep ? "running" as const : "pending" as const
+    })));
+  }, [activeStep]);
 
   // Add logs progressively
   useEffect(() => {
@@ -137,45 +203,45 @@ export const HeroLiveDemo = () => {
   const getStepIcon = (status: string) => {
     switch (status) {
       case "done":
-        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />;
+        return <CheckCircle2 className="w-3.5 h-3.5 text-success" />;
       case "running":
-        return <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin" />;
+        return <Loader2 className="w-3.5 h-3.5 text-primary animate-spin" />;
       case "failed":
-        return <XCircle className="w-3.5 h-3.5 text-red-400" />;
+        return <XCircle className="w-3.5 h-3.5 text-destructive" />;
       default:
-        return <div className="w-3.5 h-3.5 rounded-full border border-slate-600" />;
+        return <div className="w-3.5 h-3.5 rounded-full border border-border" />;
     }
   };
 
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* Main cockpit container */}
-      <div className="relative rounded-2xl border border-slate-700/50 bg-slate-900/80 backdrop-blur-xl overflow-hidden shadow-2xl shadow-cyan-500/5">
+      {/* Main cockpit container - Theme aware */}
+      <div className="relative rounded-2xl border border-border/50 bg-card/80 backdrop-blur-xl overflow-hidden shadow-2xl shadow-primary/5">
         
         {/* Top header bar */}
-        <header className="flex items-center justify-between px-4 py-2.5 border-b border-slate-700/50 bg-slate-900/90">
+        <header className="flex items-center justify-between px-4 py-2.5 border-b border-border/50 bg-card/90">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-              <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-destructive/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-warning/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-success/80" />
             </div>
-            <div className="w-px h-4 bg-slate-700 mx-2" />
+            <div className="w-px h-4 bg-border mx-2" />
             <div className="flex items-center gap-1.5">
               <div className="relative">
-                <Zap className="w-3.5 h-3.5 text-cyan-400" />
-                <div className="absolute -inset-1 bg-cyan-400/20 rounded-full blur-sm animate-pulse" />
+                <Zap className="w-3.5 h-3.5 text-primary" />
+                <div className="absolute -inset-1 bg-primary/20 rounded-full blur-sm animate-pulse" />
               </div>
-              <span className="text-[11px] font-medium text-slate-200">QUALYX Engine</span>
+              <span className="text-[11px] font-medium text-foreground">QUALYX Engine</span>
             </div>
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[10px] font-medium text-emerald-400">RECORDING</span>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/15 border border-success/30">
+              <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+              <span className="text-[10px] font-medium text-success">RECORDING</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <Clock className="w-3 h-3" />
               <span className="font-mono">00:05:32</span>
             </div>
@@ -185,33 +251,51 @@ export const HeroLiveDemo = () => {
         {/* Main 3-column + bottom layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr_200px]">
           
-          {/* LEFT: Steps Timeline */}
-          <section className="p-3 border-b lg:border-b-0 lg:border-r border-slate-700/40 bg-slate-900/50">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-1 h-1 rounded-full bg-cyan-400" />
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Steps</span>
+          {/* LEFT: Steps Timeline with Drag & Drop */}
+          <section className="p-3 border-b lg:border-b-0 lg:border-r border-border/40 bg-muted/20">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-1 rounded-full bg-primary" />
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Steps</span>
+              </div>
+              <span className="text-[9px] text-muted-foreground/60">Drag to reorder</span>
             </div>
             
             <div className="space-y-1">
               {steps.map((step, idx) => {
                 const isActive = idx === activeStep;
-                const isDone = step.status === "done" || idx < activeStep;
-                const isRunning = idx === activeStep;
+                const isDone = step.status === "done";
+                const isRunning = step.status === "running";
+                const isDragging = draggedIndex === idx;
+                const isDragOver = dragOverIndex === idx;
                 
                 return (
                   <div
                     key={step.id}
-                    className={`relative flex items-start gap-2 px-2 py-1.5 rounded-lg transition-all duration-300 ${
-                      isActive
-                        ? "bg-cyan-500/10 border border-cyan-500/30"
-                        : "border border-transparent hover:bg-slate-800/50"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, idx)}
+                    onDragOver={(e) => handleDragOver(e, idx)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, idx)}
+                    onDragEnd={handleDragEnd}
+                    className={`relative flex items-start gap-2 px-2 py-1.5 rounded-lg transition-all duration-200 cursor-grab active:cursor-grabbing select-none ${
+                      isDragging
+                        ? "opacity-50 scale-95"
+                        : isDragOver
+                          ? "bg-primary/20 border-2 border-dashed border-primary/50"
+                          : isActive
+                            ? "bg-primary/10 border border-primary/30"
+                            : "border border-transparent hover:bg-muted/50"
                     }`}
                   >
+                    {/* Drag handle */}
+                    <GripVertical className="w-3 h-3 text-muted-foreground/40 mt-0.5 flex-shrink-0" />
+                    
                     {/* Timeline connector */}
                     {idx < steps.length - 1 && (
                       <div 
-                        className={`absolute left-[17px] top-6 w-px h-[calc(100%+4px)] transition-colors duration-300 ${
-                          isDone ? "bg-emerald-500/40" : "bg-slate-700/50"
+                        className={`absolute left-[21px] top-6 w-px h-[calc(100%+4px)] transition-colors duration-300 ${
+                          isDone ? "bg-success/40" : "bg-border/50"
                         }`}
                       />
                     )}
@@ -222,12 +306,12 @@ export const HeroLiveDemo = () => {
                     
                     <div className="flex-1 min-w-0">
                       <span className={`text-[10px] leading-tight block transition-colors ${
-                        isActive ? "text-slate-100 font-medium" : isDone ? "text-slate-400" : "text-slate-500"
+                        isActive ? "text-foreground font-medium" : isDone ? "text-muted-foreground" : "text-muted-foreground/60"
                       }`}>
                         {step.name}
                       </span>
                       {isDone && (
-                        <span className="text-[9px] text-slate-500 font-mono">{step.duration}</span>
+                        <span className="text-[9px] text-muted-foreground/60 font-mono">{step.duration}</span>
                       )}
                     </div>
                   </div>
@@ -236,14 +320,14 @@ export const HeroLiveDemo = () => {
             </div>
             
             {/* Progress indicator */}
-            <div className="mt-3 pt-3 border-t border-slate-700/40">
-              <div className="flex justify-between text-[9px] text-slate-500 mb-1">
+            <div className="mt-3 pt-3 border-t border-border/40">
+              <div className="flex justify-between text-[9px] text-muted-foreground/60 mb-1">
                 <span>Progress</span>
                 <span>{Math.round(((activeStep + 1) / steps.length) * 100)}%</span>
               </div>
-              <div className="h-1 rounded-full bg-slate-800 overflow-hidden">
+              <div className="h-1 rounded-full bg-muted/50 overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-primary to-success transition-all duration-500"
                   style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
                 />
               </div>
@@ -251,45 +335,45 @@ export const HeroLiveDemo = () => {
           </section>
 
           {/* CENTER + BOTTOM: Preview and Console stacked */}
-          <section className="flex flex-col border-b lg:border-b-0 lg:border-r border-slate-700/40">
+          <section className="flex flex-col border-b lg:border-b-0 lg:border-r border-border/40">
             
             {/* Live Preview */}
             <div className="flex-1 p-3">
               <div className="flex items-center gap-2 mb-2">
-                <MonitorPlay className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Live Preview</span>
+                <MonitorPlay className="w-3.5 h-3.5 text-primary" />
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Live Preview</span>
               </div>
               
-              <div className="relative h-[130px] rounded-lg border border-slate-700/50 bg-slate-950/80 overflow-hidden">
+              <div className="relative h-[130px] rounded-lg border border-border/50 bg-background/80 overflow-hidden">
                 {/* Subtle grid background */}
                 <div 
                   className="absolute inset-0 opacity-[0.03]"
                   style={{
-                    backgroundImage: `linear-gradient(to right, #64748b 1px, transparent 1px), linear-gradient(to bottom, #64748b 1px, transparent 1px)`,
+                    backgroundImage: `linear-gradient(to right, hsl(var(--muted-foreground)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--muted-foreground)) 1px, transparent 1px)`,
                     backgroundSize: '20px 20px'
                   }}
                 />
                 
                 {/* Browser chrome */}
-                <div className="absolute top-0 inset-x-0 h-5 bg-slate-800/80 border-b border-slate-700/50 flex items-center px-2 gap-1">
+                <div className="absolute top-0 inset-x-0 h-5 bg-muted/50 border-b border-border/50 flex items-center px-2 gap-1">
                   <div className="flex gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
                   </div>
-                  <div className="flex-1 mx-2 h-3 rounded bg-slate-900/80 flex items-center px-2">
-                    <span className="text-[8px] text-slate-500 font-mono">app.example.com/login</span>
+                  <div className="flex-1 mx-2 h-3 rounded bg-background/80 flex items-center px-2">
+                    <span className="text-[8px] text-muted-foreground/60 font-mono">app.example.com/login</span>
                   </div>
                 </div>
                 
                 {/* Simulated app content */}
                 <div className="absolute top-5 inset-x-0 bottom-0 p-3">
                   <div className="max-w-[140px] mx-auto space-y-2">
-                    <div className="h-2 w-16 bg-slate-700/40 rounded mx-auto" />
-                    <div className="h-5 bg-slate-800/60 rounded border border-slate-700/40" />
-                    <div className="h-5 bg-slate-800/60 rounded border border-slate-700/40" />
-                    <div className="h-5 bg-cyan-500/20 rounded border border-cyan-500/40 flex items-center justify-center">
-                      <span className="text-[8px] text-cyan-400 font-medium">Sign In</span>
+                    <div className="h-2 w-16 bg-muted/60 rounded mx-auto" />
+                    <div className="h-5 bg-muted/40 rounded border border-border/40" />
+                    <div className="h-5 bg-muted/40 rounded border border-border/40" />
+                    <div className="h-5 bg-primary/20 rounded border border-primary/40 flex items-center justify-center">
+                      <span className="text-[8px] text-primary font-medium">Sign In</span>
                     </div>
                   </div>
                 </div>
@@ -299,18 +383,18 @@ export const HeroLiveDemo = () => {
                   className="absolute w-3 h-3 transition-all duration-700 ease-out pointer-events-none"
                   style={{ left: `${cursorPos.x}%`, top: `${cursorPos.y}%`, transform: 'translate(-50%, -50%)' }}
                 >
-                  <MousePointer2 className="w-3 h-3 text-cyan-400 drop-shadow-[0_0_4px_rgba(34,211,238,0.5)]" />
+                  <MousePointer2 className="w-3 h-3 text-primary drop-shadow-[0_0_4px_hsl(var(--primary)/0.5)]" />
                 </div>
                 
                 {/* Action indicator */}
                 {previewAction && (
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-slate-900/90 border border-cyan-500/30 backdrop-blur-sm">
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-card/90 border border-primary/30 backdrop-blur-sm">
                     <div className="flex items-center gap-1.5">
-                      {previewAction === "Click detected" && <MousePointer2 className="w-2.5 h-2.5 text-cyan-400" />}
-                      {previewAction === "Typing..." && <Keyboard className="w-2.5 h-2.5 text-amber-400" />}
-                      {previewAction === "Assertion running" && <CheckSquare className="w-2.5 h-2.5 text-emerald-400" />}
-                      {previewAction === "Waiting..." && <Loader2 className="w-2.5 h-2.5 text-slate-400 animate-spin" />}
-                      <span className="text-[9px] text-slate-300">{previewAction}</span>
+                      {previewAction === "Click detected" && <MousePointer2 className="w-2.5 h-2.5 text-primary" />}
+                      {previewAction === "Typing..." && <Keyboard className="w-2.5 h-2.5 text-warning" />}
+                      {previewAction === "Assertion running" && <CheckSquare className="w-2.5 h-2.5 text-success" />}
+                      {previewAction === "Waiting..." && <Loader2 className="w-2.5 h-2.5 text-muted-foreground animate-spin" />}
+                      <span className="text-[9px] text-foreground">{previewAction}</span>
                     </div>
                   </div>
                 )}
@@ -319,7 +403,7 @@ export const HeroLiveDemo = () => {
                 {previewAction === "Click detected" && (
                   <div className="absolute inset-0 pointer-events-none">
                     <div 
-                      className="absolute w-8 h-8 rounded-full border-2 border-cyan-400/50 animate-ping"
+                      className="absolute w-8 h-8 rounded-full border-2 border-primary/50 animate-ping"
                       style={{ left: `${cursorPos.x}%`, top: `${cursorPos.y}%`, transform: 'translate(-50%, -50%)' }}
                     />
                   </div>
@@ -328,9 +412,9 @@ export const HeroLiveDemo = () => {
             </div>
             
             {/* Console - Full width bottom of center column */}
-            <div className="border-t border-slate-700/40 bg-slate-950/60">
+            <div className="border-t border-border/40 bg-muted/10">
               {/* Console tabs */}
-              <div className="flex items-center gap-1 px-3 py-1.5 border-b border-slate-700/30">
+              <div className="flex items-center gap-1 px-3 py-1.5 border-b border-border/30">
                 {[
                   { id: "logs" as ConsoleTab, label: "Logs", icon: Terminal },
                   { id: "network" as ConsoleTab, label: "Network", icon: Network },
@@ -344,8 +428,8 @@ export const HeroLiveDemo = () => {
                       onClick={() => setConsoleTab(tab.id)}
                       className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] font-medium transition-all ${
                         isActive
-                          ? "bg-slate-800 text-slate-200"
-                          : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+                          ? "bg-card text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                       }`}
                     >
                       <Icon className="w-3 h-3" />
@@ -358,7 +442,7 @@ export const HeroLiveDemo = () => {
               {/* Console content */}
               <div 
                 ref={consoleRef}
-                className="h-[72px] overflow-y-auto px-3 py-2 font-mono text-[9px] leading-relaxed scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent"
+                className="h-[72px] overflow-y-auto px-3 py-2 font-mono text-[9px] leading-relaxed"
               >
                 {consoleTab === "logs" && (
                   <div className="space-y-0.5">
@@ -366,36 +450,36 @@ export const HeroLiveDemo = () => {
                       <div
                         key={`${log.text}-${i}`}
                         className={`flex items-start gap-2 ${
-                          i === visibleLogs.length - 1 ? "text-slate-200" : "text-slate-500"
+                          i === visibleLogs.length - 1 ? "text-foreground" : "text-muted-foreground/70"
                         }`}
                       >
-                        <span className="text-slate-600 flex-shrink-0">{log.time}</span>
+                        <span className="text-muted-foreground/50 flex-shrink-0">{log.time}</span>
                         <span className={`flex-shrink-0 ${
-                          log.type === "success" ? "text-emerald-400" :
-                          log.type === "debug" ? "text-slate-500" :
-                          "text-cyan-400"
+                          log.type === "success" ? "text-success" :
+                          log.type === "debug" ? "text-muted-foreground/50" :
+                          "text-primary"
                         }`}>
                           [{log.type.toUpperCase()}]
                         </span>
                         <span className="break-all">{log.text}</span>
                       </div>
                     ))}
-                    <div className="text-slate-600 animate-pulse">▋</div>
+                    <div className="text-muted-foreground/50 animate-pulse">▋</div>
                   </div>
                 )}
                 
                 {consoleTab === "network" && (
                   <div className="space-y-1">
                     {networkLogs.map((req, i) => (
-                      <div key={i} className="flex items-center gap-2 text-slate-400">
+                      <div key={i} className="flex items-center gap-2 text-muted-foreground">
                         <span className={`px-1 py-0.5 rounded text-[8px] font-bold ${
-                          req.method === "GET" ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-400"
+                          req.method === "GET" ? "bg-success/20 text-success" : "bg-warning/20 text-warning"
                         }`}>
                           {req.method}
                         </span>
-                        <span className="flex-1 truncate text-slate-300">{req.url}</span>
-                        <span className={`${req.status === 200 ? "text-emerald-400" : "text-red-400"}`}>{req.status}</span>
-                        <span className="text-slate-600">{req.time}</span>
+                        <span className="flex-1 truncate text-foreground/80">{req.url}</span>
+                        <span className={`${req.status === 200 ? "text-success" : "text-destructive"}`}>{req.status}</span>
+                        <span className="text-muted-foreground/50">{req.time}</span>
                       </div>
                     ))}
                   </div>
@@ -406,11 +490,11 @@ export const HeroLiveDemo = () => {
                     {assertionLogs.map((assertion, i) => (
                       <div key={i} className="flex items-center gap-2">
                         {assertion.status === "pass" ? (
-                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                          <CheckCircle2 className="w-3 h-3 text-success" />
                         ) : (
-                          <Loader2 className="w-3 h-3 text-cyan-400 animate-spin" />
+                          <Loader2 className="w-3 h-3 text-primary animate-spin" />
                         )}
-                        <span className={assertion.status === "pass" ? "text-slate-300" : "text-cyan-300"}>
+                        <span className={assertion.status === "pass" ? "text-foreground/80" : "text-primary"}>
                           {assertion.name}
                         </span>
                       </div>
@@ -422,24 +506,24 @@ export const HeroLiveDemo = () => {
           </section>
 
           {/* RIGHT: AI Insights Panel */}
-          <section className="p-3 bg-slate-900/50">
+          <section className="p-3 bg-muted/10">
             <div className="flex items-center gap-2 mb-3">
-              <Zap className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">AI Insights</span>
+              <Zap className="w-3.5 h-3.5 text-primary" />
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">AI Insights</span>
             </div>
             
             <div className="space-y-4">
               {/* Suggested Assertions */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <CheckSquare className="w-3 h-3 text-emerald-400" />
-                  <span className="text-[9px] font-medium text-slate-300">Suggested Assertions</span>
+                  <CheckSquare className="w-3 h-3 text-success" />
+                  <span className="text-[9px] font-medium text-foreground/80">Suggested Assertions</span>
                 </div>
                 <div className="space-y-1">
                   {suggestedAssertions.map((assertion, i) => (
                     <div
                       key={i}
-                      className="px-2 py-1 rounded bg-slate-800/50 border border-slate-700/30 text-[9px] text-slate-400 hover:text-slate-200 hover:border-cyan-500/30 transition-all cursor-pointer"
+                      className="px-2 py-1 rounded bg-muted/50 border border-border/30 text-[9px] text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all cursor-pointer"
                     >
                       {assertion}
                     </div>
@@ -450,24 +534,24 @@ export const HeroLiveDemo = () => {
               {/* Flaky Selector Warnings */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <AlertTriangle className="w-3 h-3 text-amber-400" />
-                  <span className="text-[9px] font-medium text-slate-300">Flaky Warnings</span>
+                  <AlertTriangle className="w-3 h-3 text-warning" />
+                  <span className="text-[9px] font-medium text-foreground/80">Flaky Warnings</span>
                 </div>
                 <div className="space-y-1">
                   {flakyWarnings.map((warning, i) => (
                     <div
                       key={i}
-                      className="px-2 py-1.5 rounded bg-amber-500/10 border border-amber-500/20 text-[9px]"
+                      className="px-2 py-1.5 rounded bg-warning/10 border border-warning/20 text-[9px]"
                     >
                       <div className="flex items-center justify-between mb-0.5">
-                        <code className="text-amber-300">{warning.selector}</code>
+                        <code className="text-warning">{warning.selector}</code>
                         <span className={`px-1 py-0.5 rounded text-[8px] font-medium ${
-                          warning.risk === "high" ? "bg-red-500/20 text-red-400" : "bg-amber-500/20 text-amber-400"
+                          warning.risk === "high" ? "bg-destructive/20 text-destructive" : "bg-warning/20 text-warning"
                         }`}>
                           {warning.risk}
                         </span>
                       </div>
-                      <p className="text-slate-500">{warning.reason}</p>
+                      <p className="text-muted-foreground/70">{warning.reason}</p>
                     </div>
                   ))}
                 </div>
@@ -476,19 +560,19 @@ export const HeroLiveDemo = () => {
               {/* Reusable Flows */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <Workflow className="w-3 h-3 text-cyan-400" />
-                  <span className="text-[9px] font-medium text-slate-300">Detected Flows</span>
+                  <Workflow className="w-3 h-3 text-primary" />
+                  <span className="text-[9px] font-medium text-foreground/80">Detected Flows</span>
                 </div>
                 <div className="space-y-1">
                   {reusableFlows.map((flow, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between px-2 py-1.5 rounded bg-slate-800/50 border border-slate-700/30 text-[9px] hover:border-cyan-500/30 transition-all cursor-pointer"
+                      className="flex items-center justify-between px-2 py-1.5 rounded bg-muted/50 border border-border/30 text-[9px] hover:border-primary/30 transition-all cursor-pointer"
                     >
-                      <span className="text-slate-300">{flow.name}</span>
-                      <div className="flex items-center gap-2 text-slate-500">
+                      <span className="text-foreground/80">{flow.name}</span>
+                      <div className="flex items-center gap-2 text-muted-foreground/60">
                         <span>{flow.steps} steps</span>
-                        <span className="text-cyan-400">×{flow.reused}</span>
+                        <span className="text-primary">×{flow.reused}</span>
                       </div>
                     </div>
                   ))}
@@ -496,31 +580,31 @@ export const HeroLiveDemo = () => {
               </div>
               
               {/* Mini Journey Map */}
-              <div className="pt-2 border-t border-slate-700/40">
+              <div className="pt-2 border-t border-border/40">
                 <div className="flex items-center gap-1.5 mb-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                  <span className="text-[9px] font-medium text-slate-300">Journey</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  <span className="text-[9px] font-medium text-foreground/80">Journey</span>
                 </div>
                 <div className="flex items-center justify-between px-1">
                   {["Login", "Navigate", "Assert", "Done"].map((label, i) => (
                     <div key={label} className="flex flex-col items-center">
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
                         i < 2 
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40" 
+                          ? "bg-success/20 text-success border border-success/40" 
                           : i === 2 
-                            ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-[0_0_8px_rgba(34,211,238,0.3)]"
-                            : "bg-slate-800 text-slate-600 border border-slate-700"
+                            ? "bg-primary/20 text-primary border border-primary/40 shadow-[0_0_8px_hsl(var(--primary)/0.3)]"
+                            : "bg-muted text-muted-foreground/50 border border-border"
                       }`}>
                         {i < 2 ? "✓" : i + 1}
                       </div>
-                      <span className="text-[7px] text-slate-500 mt-1">{label}</span>
+                      <span className="text-[7px] text-muted-foreground/60 mt-1">{label}</span>
                     </div>
                   ))}
                 </div>
                 {/* Journey connector line */}
                 <div className="relative h-px mx-4 mt-2">
-                  <div className="absolute inset-0 bg-slate-700" />
-                  <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-emerald-500 to-cyan-500" />
+                  <div className="absolute inset-0 bg-border" />
+                  <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-success to-primary" />
                 </div>
               </div>
             </div>
