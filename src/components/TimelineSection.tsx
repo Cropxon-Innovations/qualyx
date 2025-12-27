@@ -162,13 +162,13 @@ export const TimelineSection = () => {
   return (
     <TooltipProvider delayDuration={200}>
       <section ref={sectionRef} className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
-        {/* Subtle background */}
-        <div className="absolute inset-0 bg-[hsl(220,15%,5%)]" />
-        <div className="absolute inset-0 grid-bg-subtle opacity-8" />
+        {/* Background */}
+        <div className="absolute inset-0 bg-background" />
+        <div className="absolute inset-0 grid-bg-subtle opacity-10" />
         
         {/* Ambient glow - follows active step */}
         <div 
-          className="absolute top-1/2 h-[400px] w-[400px] bg-[hsl(217,91%,60%,0.04)] rounded-full blur-[120px] transition-all duration-1000 ease-out -translate-y-1/2"
+          className="absolute top-1/2 h-[400px] w-[400px] bg-primary/10 rounded-full blur-[120px] transition-all duration-1000 ease-out -translate-y-1/2"
           style={{ 
             left: `${15 + (activeStep / (steps.length - 1)) * 70}%`,
             transform: 'translate(-50%, -50%)'
@@ -198,14 +198,14 @@ export const TimelineSection = () => {
                 className="absolute top-1/2 left-[8%] h-px -translate-y-1/2 transition-all duration-700 ease-out"
                 style={{ 
                   width: `${(activeStep / (steps.length - 1)) * 84}%`,
-                  background: 'linear-gradient(90deg, hsl(217,91%,60%,0.5), hsl(142,76%,45%,0.5))',
-                  boxShadow: '0 0 12px hsl(217,91%,60%,0.3)'
+                  background: 'linear-gradient(90deg, hsl(var(--secondary) / 0.55), hsl(var(--success) / 0.55))',
+                  boxShadow: '0 0 12px hsl(var(--secondary) / 0.28)'
                 }}
               />
               
               {/* Animated particle on the line */}
               <div 
-                className="absolute top-1/2 w-2 h-2 bg-secondary rounded-full -translate-y-1/2 transition-all duration-700 ease-out shadow-[0_0_10px_hsl(217,91%,60%,0.5)]"
+                className="absolute top-1/2 w-2 h-2 bg-secondary rounded-full -translate-y-1/2 transition-all duration-700 ease-out shadow-[0_0_10px_hsl(var(--secondary)/0.45)]"
                 style={{ 
                   left: `calc(8% + ${(activeStep / (steps.length - 1)) * 84}%)`,
                   transform: 'translate(-50%, -50%)'

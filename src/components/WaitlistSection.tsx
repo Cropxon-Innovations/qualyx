@@ -63,12 +63,12 @@ export const WaitlistSection = () => {
   return (
     <section id="waitlist" className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-[hsl(220,15%,4%)]" />
+      <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 grid-bg-subtle opacity-10" />
       
       {/* Ambient glow */}
-      <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-[hsl(217,91%,60%,0.05)] rounded-full blur-[150px]" />
-      <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-[hsl(190,100%,50%,0.04)] rounded-full blur-[120px]" />
+      <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-primary/12 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[120px]" />
       
       <div className="relative z-10 max-w-xl mx-auto">
         {/* Header */}

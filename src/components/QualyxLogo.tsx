@@ -54,7 +54,7 @@ export const QualyxLogo = ({ className = "", size = "default" }: { className?: s
         d="M24 10L36 17V31L24 38L12 31V17L24 10Z"
         stroke="url(#hexGradient)"
         strokeWidth="1"
-        fill="hsl(220,15%,8%)"
+        fill="hsl(var(--card))"
         opacity="0.9"
       />
 
