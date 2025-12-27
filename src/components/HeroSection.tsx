@@ -1,13 +1,10 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import { HeroLiveDemo } from "./HeroLiveDemo";
 import { FloatingParticles } from "./FloatingParticles";
-import { VideoModal } from "./VideoModal";
+import { Link } from "react-router-dom";
 
 export const HeroSection = () => {
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20">
       {/* Background */}
@@ -51,15 +48,16 @@ export const HeroSection = () => {
                 Join Waitlist
                 <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
-              <Button 
-                variant="hero-secondary" 
-                size="lg" 
-                className="group text-sm sm:text-base"
-                onClick={() => setIsVideoOpen(true)}
-              >
-                <Play className="w-4 h-4 mr-1" />
-                Watch Demo
-              </Button>
+              <Link to="/demo">
+                <Button 
+                  variant="hero-secondary" 
+                  size="lg" 
+                  className="group text-sm sm:text-base w-full"
+                >
+                  <Play className="w-4 h-4 mr-1" />
+                  Watch Demo
+                </Button>
+              </Link>
             </div>
             
             {/* Trust indicators */}
@@ -86,9 +84,6 @@ export const HeroSection = () => {
       
       {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-28 bg-gradient-to-t from-background to-transparent" />
-
-      {/* Video Modal */}
-      <VideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
     </section>
   );
 };

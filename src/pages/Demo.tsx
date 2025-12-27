@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MonitorPlay, Code2, GitBranch, CheckCircle2, Clock, Terminal, Image, Play, Pause } from "lucide-react";
+import { ArrowLeft, MonitorPlay, Code2, GitBranch, CheckCircle2, Clock, Terminal, Play, Pause, ChevronLeft, ChevronRight, Keyboard } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
@@ -61,14 +61,31 @@ const logsData: Record<Scenario, string[]> = {
 };
 
 const Demo = () => {
-  const [scenario, setScenario] = useState<Scenario>("ui");
+  const [scenarioIndex, setScenarioIndex] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [visibleLogs, setVisibleLogs] = useState<string[]>([]);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  const scenario = scenarios[scenarioIndex].id;
   const steps = stepsData[scenario];
   const logs = logsData[scenario];
+
+  // Keyboard navigation
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      setScenarioIndex((p) => (p - 1 + scenarios.length) % scenarios.length);
+    } else if (e.key === "ArrowRight") {
+      setScenarioIndex((p) => (p + 1) % scenarios.length);
+    } else if (e.key === " ") {
+      e.preventDefault();
+      setPlaying((p) => !p);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   // Reset on scenario change
   useEffect(() => {
@@ -79,25 +96,29 @@ const Demo = () => {
   // Animate steps
   useEffect(() => {
     if (!playing) return;
-    intervalRef.current = setInterval(() => {
+    const timer = setInterval(() => {
       setActiveStep((p) => (p + 1) % steps.length);
     }, 1800);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    return () => clearInterval(timer);
   }, [playing, steps.length]);
 
   // Animate logs
   useEffect(() => {
     if (!playing) return;
-    const logTimer = setInterval(() => {
+    const timer = setInterval(() => {
       setVisibleLogs((prev) => {
-        const next = logs[(prev.length) % logs.length];
+        const next = logs[prev.length % logs.length];
         return [...prev.slice(-4), next];
       });
     }, 700);
-    return () => clearInterval(logTimer);
+    return () => clearInterval(timer);
   }, [playing, logs]);
+
+  const goToPrev = () => setScenarioIndex((p) => (p - 1 + scenarios.length) % scenarios.length);
+  const goToNext = () => setScenarioIndex((p) => (p + 1) % scenarios.length);
+
+  // Calculate overall progress
+  const overallProgress = ((scenarioIndex * steps.length + activeStep + 1) / (scenarios.length * steps.length)) * 100;
 
   return (
     <>
@@ -118,37 +139,97 @@ const Demo = () => {
             </Link>
 
             <ScrollReveal>
-              <header className="text-center mb-12">
+              <header className="text-center mb-8">
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 gradient-text-white">
                   See QUALYX in Action
                 </h1>
-                <p className="text-muted-foreground max-w-xl mx-auto">
+                <p className="text-muted-foreground max-w-xl mx-auto mb-4">
                   Explore how QUALYX runs autonomous tests across UI, API, and CI/CD scenarios.
                 </p>
+                <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/60">
+                  <Keyboard className="w-3.5 h-3.5" />
+                  <span>Use arrow keys to navigate • Space to play/pause</span>
+                </div>
               </header>
             </ScrollReveal>
 
-            {/* Scenario tabs */}
-            <ScrollReveal delay={100}>
-              <div className="flex flex-wrap justify-center gap-3 mb-10">
-                {scenarios.map((s) => {
-                  const Icon = s.icon;
-                  const isActive = s.id === scenario;
-                  return (
-                    <button
+            {/* Progress bar */}
+            <ScrollReveal delay={50}>
+              <div className="mb-8">
+                <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                  <span>Demo Progress</span>
+                  <span>{Math.round(overallProgress)}% Complete</span>
+                </div>
+                <div className="h-2 rounded-full bg-muted/30 overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${overallProgress}%` }}
+                  />
+                </div>
+                {/* Scenario indicators */}
+                <div className="flex justify-between mt-2">
+                  {scenarios.map((s, idx) => (
+                    <div 
                       key={s.id}
-                      onClick={() => setScenario(s.id)}
-                      className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                        isActive
-                          ? "bg-secondary/20 text-foreground border border-secondary/40 shadow-md"
-                          : "bg-card/40 text-muted-foreground border border-border/30 hover:border-border"
+                      className={`flex items-center gap-1.5 text-[10px] transition-colors ${
+                        idx === scenarioIndex ? "text-primary font-medium" : idx < scenarioIndex ? "text-success" : "text-muted-foreground/50"
                       }`}
                     >
-                      <Icon className={`w-4 h-4 ${isActive ? "text-secondary" : ""}`} />
-                      {s.label}
-                    </button>
-                  );
-                })}
+                      {idx < scenarioIndex ? (
+                        <CheckCircle2 className="w-3 h-3 text-success" />
+                      ) : idx === scenarioIndex ? (
+                        <div className="w-3 h-3 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                      ) : (
+                        <div className="w-3 h-3 rounded-full border border-border/50" />
+                      )}
+                      <span className="hidden sm:inline">{s.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Scenario navigation */}
+            <ScrollReveal delay={100}>
+              <div className="flex items-center justify-center gap-4 mb-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={goToPrev}
+                  className="rounded-full"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+                
+                <div className="flex gap-2">
+                  {scenarios.map((s, idx) => {
+                    const Icon = s.icon;
+                    const isActive = idx === scenarioIndex;
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => setScenarioIndex(idx)}
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                          isActive
+                            ? "bg-secondary/20 text-foreground border border-secondary/40 shadow-lg shadow-secondary/10"
+                            : "bg-card/40 text-muted-foreground border border-border/30 hover:border-border hover:bg-muted/30"
+                        }`}
+                      >
+                        <Icon className={`w-4 h-4 ${isActive ? "text-secondary" : ""}`} />
+                        <span className="hidden sm:inline">{s.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={goToNext}
+                  className="rounded-full"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
               </div>
             </ScrollReveal>
 
@@ -163,18 +244,25 @@ const Demo = () => {
                       <div className="w-3 h-3 rounded-full bg-warning/70" />
                       <div className="w-3 h-3 rounded-full bg-success/70" />
                     </div>
-                    <span className="text-sm font-medium text-foreground">{scenarios.find((s) => s.id === scenario)?.label} Demo</span>
+                    <span className="text-sm font-medium text-foreground">{scenarios[scenarioIndex].label} Demo</span>
                   </div>
 
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setPlaying((p) => !p)}
-                    className="gap-2"
-                  >
-                    {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    {playing ? "Pause" : "Play"}
-                  </Button>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setPlaying((p) => !p)}
+                      className="gap-2"
+                    >
+                      {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      {playing ? "Pause" : "Play"}
+                    </Button>
+                    
+                    {/* Step counter */}
+                    <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-muted/20 text-xs text-muted-foreground">
+                      <span>Step {activeStep + 1}/{steps.length}</span>
+                    </div>
+                  </div>
 
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Clock className="w-3.5 h-3.5" />
@@ -183,7 +271,7 @@ const Demo = () => {
                 </header>
 
                 {/* Body grid */}
-                <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/25">
+                <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/25 min-h-[350px]">
                   {/* Steps */}
                   <section className="p-6">
                     <div className="flex items-center gap-2 mb-4">
@@ -220,6 +308,16 @@ const Demo = () => {
                         );
                       })}
                     </div>
+                    
+                    {/* Step progress bar */}
+                    <div className="mt-6 pt-4 border-t border-border/20">
+                      <div className="h-1.5 rounded-full bg-muted/30 overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-secondary to-primary rounded-full transition-all duration-500"
+                          style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
+                        />
+                      </div>
+                    </div>
                   </section>
 
                   {/* Console */}
@@ -228,11 +326,11 @@ const Demo = () => {
                       <Terminal className="w-4 h-4 text-muted-foreground" />
                       <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Console</span>
                     </div>
-                    <div className="font-mono text-xs leading-relaxed space-y-1 min-h-[180px]">
+                    <div className="font-mono text-xs leading-relaxed space-y-1 min-h-[200px] bg-card/30 rounded-lg p-4 border border-border/20">
                       {visibleLogs.map((log, i) => (
                         <div
                           key={`${log}-${i}`}
-                          className={i === visibleLogs.length - 1 ? "text-foreground" : "text-muted-foreground/70"}
+                          className={`transition-all duration-300 ${i === visibleLogs.length - 1 ? "text-foreground" : "text-muted-foreground/70"}`}
                         >
                           {log}
                         </div>
@@ -244,21 +342,21 @@ const Demo = () => {
                   {/* Preview */}
                   <section className="p-6">
                     <div className="flex items-center gap-2 mb-4">
-                      <Image className="w-4 h-4 text-muted-foreground" />
+                      <MonitorPlay className="w-4 h-4 text-muted-foreground" />
                       <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Preview</span>
                     </div>
                     <div className="relative aspect-video rounded-xl bg-muted/20 border border-border/25 overflow-hidden group">
                       <div className="absolute inset-0 grid place-items-center">
                         <div className="text-center transition-transform duration-300 group-hover:scale-105">
                           {(() => {
-                            const Icon = scenarios.find((s) => s.id === scenario)?.icon ?? MonitorPlay;
+                            const Icon = scenarios[scenarioIndex].icon;
                             return (
                               <div className="mx-auto mb-2 h-12 w-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
                                 <Icon className="w-6 h-6 text-primary/70" />
                               </div>
                             );
                           })()}
-                          <div className="text-sm font-medium text-foreground">{scenarios.find((s) => s.id === scenario)?.label}</div>
+                          <div className="text-sm font-medium text-foreground">{scenarios[scenarioIndex].label}</div>
                           <div className="mt-1 text-xs text-muted-foreground">Near-live execution</div>
                         </div>
                       </div>
@@ -272,7 +370,7 @@ const Demo = () => {
                 {/* Description */}
                 <div className="px-6 py-4 border-t border-border/25 bg-muted/10">
                   <p className="text-sm text-muted-foreground text-center">
-                    {scenarios.find((s) => s.id === scenario)?.description}
+                    {scenarios[scenarioIndex].description}
                   </p>
                 </div>
               </div>
