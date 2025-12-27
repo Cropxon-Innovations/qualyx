@@ -51,20 +51,33 @@ import Partners from "./pages/company/Partners";
 import ConsoleDashboard from "./pages/console/ConsoleDashboard";
 import RecordUITest from "./pages/console/create/RecordUITest";
 import CreateAPITest from "./pages/console/create/CreateAPITest";
+import SuitesBuilder from "./pages/console/create/SuitesBuilder";
+import ImportScripts from "./pages/console/create/ImportScripts";
 import SessionReplayPage from "./pages/console/analyze/SessionReplay";
-import RunCenter from "./pages/console/execute/RunCenter";
-import RunnersPage from "./pages/console/execute/RunnersPage";
-import AccessControl from "./pages/console/govern/AccessControl";
-import IntegrationsPage from "./pages/console/IntegrationsPage";
 import ReportsPage from "./pages/console/analyze/ReportsPage";
 import FlakinessExplorer from "./pages/console/analyze/FlakinessExplorer";
-import AuditLogs from "./pages/console/govern/AuditLogs";
-import SuitesPage from "./pages/console/organize/SuitesPage";
-import ProjectsPage from "./pages/console/organize/ProjectsPage";
-import EnvironmentsPage from "./pages/console/organize/EnvironmentsPage";
-import DataSetsPage from "./pages/console/organize/DataSetsPage";
+import Logs from "./pages/console/analyze/Logs";
+import Screenshots from "./pages/console/analyze/Screenshots";
+import Trends from "./pages/console/analyze/Trends";
+import RunCenter from "./pages/console/execute/RunCenter";
+import RunnersPage from "./pages/console/execute/RunnersPage";
 import SchedulesPage from "./pages/console/execute/SchedulesPage";
 import CICDTriggersPage from "./pages/console/execute/CICDTriggersPage";
+import ProjectsPage from "./pages/console/organize/ProjectsPage";
+import SuitesPage from "./pages/console/organize/SuitesPage";
+import DataSetsPage from "./pages/console/organize/DataSetsPage";
+import EnvironmentsPage from "./pages/console/organize/EnvironmentsPage";
+import Tags from "./pages/console/organize/Tags";
+import Versions from "./pages/console/organize/Versions";
+import AccessControl from "./pages/console/govern/AccessControl";
+import SecretsVault from "./pages/console/govern/SecretsVault";
+import LLMSettings from "./pages/console/govern/LLMSettings";
+import AuditLogs from "./pages/console/govern/AuditLogs";
+import SecurityPage from "./pages/console/govern/Security";
+import UserJourneys from "./pages/console/discover/UserJourneys";
+import CoverageMap from "./pages/console/discover/CoverageMap";
+import Suggestions from "./pages/console/discover/Suggestions";
+import IntegrationsPage from "./pages/console/IntegrationsPage";
 
 const queryClient = new QueryClient();
 
@@ -119,23 +132,47 @@ const App = () => (
             <Route path="/company/contact" element={<Contact />} />
             <Route path="/company/partners" element={<Partners />} />
             
-            {/* Console */}
+            {/* Console - Discover */}
             <Route path="/console" element={<ConsoleDashboard />} />
-            <Route path="/console/create/record-ui" element={<RecordUITest />} />
-            <Route path="/console/create/api-test" element={<CreateAPITest />} />
-            <Route path="/console/analyze/session-replay" element={<SessionReplayPage />} />
+            <Route path="/console/discover/journeys" element={<UserJourneys />} />
+            <Route path="/console/discover/coverage" element={<CoverageMap />} />
+            <Route path="/console/discover/suggestions" element={<Suggestions />} />
+            
+            {/* Console - Create */}
+            <Route path="/console/create/record" element={<RecordUITest />} />
+            <Route path="/console/create/api" element={<CreateAPITest />} />
+            <Route path="/console/create/suites" element={<SuitesBuilder />} />
+            <Route path="/console/create/import" element={<ImportScripts />} />
+            
+            {/* Console - Organize */}
+            <Route path="/console/organize/projects" element={<ProjectsPage />} />
+            <Route path="/console/organize/suites" element={<SuitesPage />} />
+            <Route path="/console/organize/data" element={<DataSetsPage />} />
+            <Route path="/console/organize/environments" element={<EnvironmentsPage />} />
+            <Route path="/console/organize/tags" element={<Tags />} />
+            <Route path="/console/organize/versions" element={<Versions />} />
+            
+            {/* Console - Execute */}
+            <Route path="/console/execute/runs" element={<RunCenter />} />
+            <Route path="/console/execute/schedules" element={<SchedulesPage />} />
+            <Route path="/console/execute/runners" element={<RunnersPage />} />
+            <Route path="/console/execute/cicd" element={<CICDTriggersPage />} />
+            
+            {/* Console - Analyze */}
+            <Route path="/console/analyze/replay" element={<SessionReplayPage />} />
+            <Route path="/console/analyze/logs" element={<Logs />} />
+            <Route path="/console/analyze/screenshots" element={<Screenshots />} />
             <Route path="/console/analyze/reports" element={<ReportsPage />} />
             <Route path="/console/analyze/flakiness" element={<FlakinessExplorer />} />
-            <Route path="/console/execute/run-center" element={<RunCenter />} />
-            <Route path="/console/execute/runners" element={<RunnersPage />} />
-            <Route path="/console/execute/schedules" element={<SchedulesPage />} />
-            <Route path="/console/execute/cicd" element={<CICDTriggersPage />} />
-            <Route path="/console/organize/suites" element={<SuitesPage />} />
-            <Route path="/console/organize/projects" element={<ProjectsPage />} />
-            <Route path="/console/organize/environments" element={<EnvironmentsPage />} />
-            <Route path="/console/organize/data" element={<DataSetsPage />} />
+            <Route path="/console/analyze/trends" element={<Trends />} />
+            
+            {/* Console - Govern */}
             <Route path="/console/govern/access" element={<AccessControl />} />
-            <Route path="/console/govern/audit-logs" element={<AuditLogs />} />
+            <Route path="/console/govern/secrets" element={<SecretsVault />} />
+            <Route path="/console/govern/llm" element={<LLMSettings />} />
+            <Route path="/console/govern/audit" element={<AuditLogs />} />
+            <Route path="/console/govern/security" element={<SecurityPage />} />
+            
             <Route path="/console/integrations" element={<IntegrationsPage />} />
             
             <Route path="*" element={<NotFound />} />
