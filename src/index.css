@@ -5,51 +5,236 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
-  :root {
-    --background: 240 10% 4%;
+  /* ========================================
+     THEME 1: DARK ENTERPRISE (Primary)
+     Landing page, dashboard, analytics
+     ======================================== */
+  :root,
+  .theme-dark-enterprise {
+    --background: 220 20% 4%;
     --foreground: 210 40% 98%;
 
-    --card: 240 10% 6%;
+    --card: 220 18% 6%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 240 10% 6%;
+    --popover: 220 18% 6%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 190 100% 45%;
-    --primary-foreground: 240 10% 4%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 220 20% 4%;
 
     --secondary: 217 91% 60%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 240 10% 12%;
+    --muted: 220 15% 12%;
     --muted-foreground: 215 20% 55%;
 
-    --accent: 190 100% 45%;
-    --accent-foreground: 240 10% 4%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 220 20% 4%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 240 10% 15%;
-    --input: 240 10% 12%;
-    --ring: 190 100% 45%;
+    --border: 220 15% 15%;
+    --input: 220 15% 12%;
+    --ring: 199 89% 48%;
 
     --radius: 0.75rem;
 
-    /* Custom QUALYX tokens */
-    --glow-cyan: 190 100% 50%;
+    /* QUALYX Dark Enterprise tokens */
+    --glow-cyan: 187 100% 50%;
     --glow-blue: 217 91% 60%;
-    --surface-glass: 240 10% 8%;
-    --surface-elevated: 240 10% 10%;
-    --grid-line: 240 10% 12%;
-    --neon-cyan: 190 100% 50%;
+    --surface-glass: 220 18% 8%;
+    --surface-elevated: 220 18% 10%;
+    --grid-line: 220 15% 12%;
+    --neon-cyan: 187 100% 50%;
     --neon-blue: 217 91% 60%;
     --success: 142 76% 45%;
+    --warning: 45 93% 47%;
   }
 
-  .dark {
-    --background: 240 10% 4%;
+  /* ========================================
+     THEME 2: LIGHT ENTERPRISE
+     Docs, blog, knowledge base, pricing
+     ======================================== */
+  .theme-light-enterprise {
+    --background: 210 20% 98%;
+    --foreground: 220 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 187 85% 43%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 15% 93%;
+    --muted-foreground: 215 15% 45%;
+
+    --accent: 187 85% 43%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 20% 88%;
+    --input: 214 20% 92%;
+    --ring: 221 83% 53%;
+
+    /* Light Enterprise tokens */
+    --glow-cyan: 187 85% 43%;
+    --glow-blue: 221 83% 53%;
+    --surface-glass: 210 15% 96%;
+    --surface-elevated: 0 0% 100%;
+    --grid-line: 214 20% 90%;
+    --neon-cyan: 187 85% 43%;
+    --neon-blue: 221 83% 53%;
+    --success: 142 76% 36%;
+    --warning: 45 93% 47%;
+  }
+
+  /* ========================================
+     THEME 3: GRADIENT TECH
+     Hero visuals, feature highlights
+     ======================================== */
+  .theme-gradient-tech {
+    --background: 222 47% 11%;
     --foreground: 210 40% 98%;
+
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 187 85% 43%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 199 89% 48%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 35% 18%;
+    --muted-foreground: 215 20% 60%;
+
+    --accent: 187 85% 43%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 222 30% 22%;
+    --input: 222 35% 18%;
+    --ring: 187 85% 43%;
+
+    /* Gradient Tech tokens */
+    --glow-cyan: 187 100% 50%;
+    --glow-blue: 199 89% 48%;
+    --surface-glass: 222 47% 12%;
+    --surface-elevated: 222 47% 16%;
+    --grid-line: 222 30% 20%;
+    --neon-cyan: 187 100% 50%;
+    --neon-blue: 199 89% 48%;
+    --success: 142 76% 45%;
+    --warning: 45 93% 47%;
+  }
+
+  /* ========================================
+     THEME 4: NEUMORPHISM LITE
+     Internal dashboard, tool panels
+     ======================================== */
+  .theme-neumorphism {
+    --background: 220 14% 96%;
+    --foreground: 220 15% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
+
+    --primary: 217 91% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 187 85% 43%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 14% 90%;
+    --muted-foreground: 215 14% 48%;
+
+    --accent: 187 85% 43%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 86%;
+    --input: 220 14% 92%;
+    --ring: 217 91% 55%;
+
+    /* Neumorphism tokens */
+    --glow-cyan: 187 85% 43%;
+    --glow-blue: 217 91% 55%;
+    --surface-glass: 220 14% 94%;
+    --surface-elevated: 0 0% 100%;
+    --grid-line: 220 13% 88%;
+    --neon-cyan: 187 85% 43%;
+    --neon-blue: 217 91% 55%;
+    --success: 142 76% 36%;
+    --warning: 45 93% 47%;
+    
+    /* Neumorphism-specific shadows */
+    --neu-shadow-light: 0 0% 100%;
+    --neu-shadow-dark: 220 14% 82%;
+  }
+
+  /* ========================================
+     THEME 5: MATERIAL IA
+     Comparison tables, docs, forms
+     ======================================== */
+  .theme-material {
+    --background: 0 0% 100%;
+    --foreground: 220 15% 20%;
+
+    --card: 210 17% 98%;
+    --card-foreground: 220 15% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 174 72% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 15% 95%;
+    --muted-foreground: 215 14% 48%;
+
+    --accent: 174 72% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 20% 90%;
+    --input: 214 20% 94%;
+    --ring: 221 83% 53%;
+
+    /* Material tokens */
+    --glow-cyan: 174 72% 40%;
+    --glow-blue: 221 83% 53%;
+    --surface-glass: 210 17% 97%;
+    --surface-elevated: 0 0% 100%;
+    --grid-line: 214 20% 92%;
+    --neon-cyan: 174 72% 40%;
+    --neon-blue: 221 83% 53%;
+    --success: 142 76% 36%;
+    --warning: 45 93% 47%;
   }
 }
 
@@ -69,7 +254,9 @@
 }
 
 @layer components {
-  /* Glassmorphism card */
+  /* ========================================
+     GLASSMORPHISM CARDS
+     ======================================== */
   .glass-card {
     @apply bg-card/40 backdrop-blur-xl border border-border/50 rounded-2xl;
     box-shadow: 
@@ -102,7 +289,34 @@
     pointer-events: none;
   }
 
-  /* Glow effects */
+  /* Light theme card adjustments */
+  .theme-light-enterprise .glass-card,
+  .theme-neumorphism .glass-card,
+  .theme-material .glass-card {
+    @apply bg-card/90 backdrop-blur-sm;
+    box-shadow: 
+      0 1px 3px hsl(var(--border) / 0.2),
+      0 4px 16px -4px hsl(var(--border) / 0.15);
+  }
+
+  /* Neumorphism card variant */
+  .theme-neumorphism .neu-card {
+    @apply bg-card rounded-2xl border-0;
+    box-shadow: 
+      8px 8px 16px hsl(var(--neu-shadow-dark)),
+      -8px -8px 16px hsl(var(--neu-shadow-light));
+  }
+
+  .theme-neumorphism .neu-card-inset {
+    @apply bg-background rounded-xl border-0;
+    box-shadow: 
+      inset 4px 4px 8px hsl(var(--neu-shadow-dark)),
+      inset -4px -4px 8px hsl(var(--neu-shadow-light));
+  }
+
+  /* ========================================
+     GLOW EFFECTS
+     ======================================== */
   .glow-cyan {
     box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.3),
                 0 0 40px hsl(var(--neon-cyan) / 0.15);
@@ -123,7 +337,17 @@
                  0 0 40px hsl(var(--neon-blue) / 0.25);
   }
 
-  /* Grid background */
+  /* Subtle glow for light themes */
+  .theme-light-enterprise .glow-cyan,
+  .theme-neumorphism .glow-cyan,
+  .theme-material .glow-cyan {
+    box-shadow: 0 0 15px hsl(var(--neon-cyan) / 0.2),
+                0 0 30px hsl(var(--neon-cyan) / 0.1);
+  }
+
+  /* ========================================
+     GRID BACKGROUNDS
+     ======================================== */
   .grid-bg {
     background-image: 
       linear-gradient(hsl(var(--grid-line) / 0.3) 1px, transparent 1px),
@@ -138,7 +362,18 @@
     background-size: 80px 80px;
   }
 
-  /* Gradient text */
+  /* Light theme grid */
+  .theme-light-enterprise .grid-bg,
+  .theme-neumorphism .grid-bg,
+  .theme-material .grid-bg {
+    background-image: 
+      linear-gradient(hsl(var(--grid-line) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--grid-line) / 0.5) 1px, transparent 1px);
+  }
+
+  /* ========================================
+     GRADIENT TEXT
+     ======================================== */
   .gradient-text {
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(
@@ -157,7 +392,47 @@
     );
   }
 
-  /* Button variants */
+  /* Light theme gradient text */
+  .theme-light-enterprise .gradient-text-white,
+  .theme-neumorphism .gradient-text-white,
+  .theme-material .gradient-text-white {
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--foreground)),
+      hsl(var(--foreground) / 0.8)
+    );
+  }
+
+  /* ========================================
+     GRADIENT TECH BACKGROUND
+     ======================================== */
+  .gradient-tech-bg {
+    background: linear-gradient(
+      135deg,
+      hsl(222 47% 11%) 0%,
+      hsl(199 89% 35%) 100%
+    );
+  }
+
+  .gradient-tech-bg-animated {
+    background: linear-gradient(
+      135deg,
+      hsl(222 47% 11%) 0%,
+      hsl(199 89% 35%) 50%,
+      hsl(222 47% 11%) 100%
+    );
+    background-size: 200% 200%;
+    animation: gradient-wave 8s ease-in-out infinite;
+  }
+
+  @keyframes gradient-wave {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* ========================================
+     BUTTON VARIANTS
+     ======================================== */
   .btn-primary {
     @apply relative overflow-hidden px-6 py-3 rounded-xl font-semibold text-sm;
     @apply bg-gradient-to-r from-primary to-secondary text-primary-foreground;
@@ -174,7 +449,16 @@
     @apply hover:shadow-[0_0_20px_hsl(var(--neon-cyan)/0.15)];
   }
 
-  /* Node styles for pipeline */
+  /* Light theme button adjustments */
+  .theme-light-enterprise .btn-secondary,
+  .theme-neumorphism .btn-secondary,
+  .theme-material .btn-secondary {
+    @apply hover:shadow-[0_4px_16px_hsl(var(--primary)/0.15)];
+  }
+
+  /* ========================================
+     PIPELINE & NODE STYLES
+     ======================================== */
   .pipeline-node {
     @apply glass-card p-3 rounded-xl flex items-center justify-center;
     @apply transition-all duration-500 ease-out;
@@ -185,7 +469,9 @@
     box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.3);
   }
 
-  /* Animated gradient border */
+  /* ========================================
+     ANIMATED GRADIENT BORDER
+     ======================================== */
   .animated-border {
     position: relative;
     background: hsl(var(--card));
@@ -223,18 +509,22 @@
     initial-value: 0deg;
   }
 
-  /* Section padding */
+  /* ========================================
+     LAYOUT UTILITIES
+     ======================================== */
   .section-padding {
     @apply py-24 md:py-32 px-4 md:px-8;
   }
 
-  /* Timeline connector */
   .timeline-connector {
     @apply h-0.5 flex-1 bg-gradient-to-r from-border via-primary/50 to-border;
   }
 }
 
 @layer utilities {
+  /* ========================================
+     ANIMATIONS
+     ======================================== */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -268,6 +558,7 @@
     100% { transform: translateX(100%); }
   }
 
+  /* Animation delays */
   .delay-100 { animation-delay: 100ms; }
   .delay-200 { animation-delay: 200ms; }
   .delay-300 { animation-delay: 300ms; }
