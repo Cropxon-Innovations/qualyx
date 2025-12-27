@@ -775,7 +775,7 @@ export const HeroLiveDemo = ({ isFullscreen = false, onClose }: HeroLiveDemoProp
       
       {/* Maximize Modal */}
       <Dialog open={isMaximized} onOpenChange={setIsMaximized}>
-        <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] p-0 overflow-hidden">
+        <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] p-0 overflow-hidden" hideCloseButton>
           <HeroLiveDemo isFullscreen onClose={() => setIsMaximized(false)} />
         </DialogContent>
       </Dialog>
