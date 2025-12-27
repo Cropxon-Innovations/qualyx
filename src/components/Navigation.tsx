@@ -11,6 +11,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { QualyxLogo } from "./QualyxLogo";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 const productItems = [
   { title: "UI Automation", description: "Record and playback user interactions", href: "/product/ui-automation" },
@@ -120,7 +121,8 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-4">
+            <ThemeSwitcher compact />
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               Login
             </Button>
