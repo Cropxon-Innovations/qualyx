@@ -6,6 +6,7 @@ import { HybridSection } from "@/components/HybridSection";
 import { CapabilitiesSection } from "@/components/CapabilitiesSection";
 import { QaAsServiceSection } from "@/components/QaAsServiceSection";
 import { TestPreviewSimulation } from "@/components/TestPreviewSimulation";
+import { ComparisonSection } from "@/components/ComparisonSection";
 import { PricingSection } from "@/components/PricingSection";
 import { WaitlistSection } from "@/components/WaitlistSection";
 import { Footer } from "@/components/Footer";
@@ -38,6 +39,7 @@ const Index = () => {
           <CapabilitiesSection />
           <QaAsServiceSection />
           <TestPreviewSimulation />
+          <ComparisonSection />
           <PricingSection />
           <WaitlistSection />
         </main>
