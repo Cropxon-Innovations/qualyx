@@ -123,9 +123,11 @@ export const Navigation = () => {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
             <ThemeSwitcher />
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              Login
-            </Button>
+            <Link to="/console">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                Login
+              </Button>
+            </Link>
             <Button variant="default" size="sm">
               Join Waitlist
             </Button>
@@ -175,9 +177,11 @@ export const Navigation = () => {
               </details>
             ))}
             <div className="pt-4 flex flex-col gap-2 border-t border-border/30">
-              <Button variant="outline" className="w-full">
-                Login
-              </Button>
+              <Link to="/console" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="outline" className="w-full">
+                  Login
+                </Button>
+              </Link>
               <Button variant="default" className="w-full">
                 Join Waitlist
               </Button>

@@ -47,6 +47,21 @@ import Careers from "./pages/company/Careers";
 import Contact from "./pages/company/Contact";
 import Partners from "./pages/company/Partners";
 
+// Console pages
+import ConsoleDashboard from "./pages/console/ConsoleDashboard";
+import RecordUITest from "./pages/console/create/RecordUITest";
+import CreateAPITest from "./pages/console/create/CreateAPITest";
+import SessionReplayPage from "./pages/console/analyze/SessionReplay";
+import RunCenter from "./pages/console/execute/RunCenter";
+import RunnersPage from "./pages/console/execute/RunnersPage";
+import AccessControl from "./pages/console/govern/AccessControl";
+import IntegrationsPage from "./pages/console/IntegrationsPage";
+import ReportsPage from "./pages/console/analyze/ReportsPage";
+import FlakinessExplorer from "./pages/console/analyze/FlakinessExplorer";
+import AuditLogs from "./pages/console/govern/AuditLogs";
+import SuitesPage from "./pages/console/organize/SuitesPage";
+import ProjectsPage from "./pages/console/organize/ProjectsPage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -99,6 +114,21 @@ const App = () => (
             <Route path="/company/careers" element={<Careers />} />
             <Route path="/company/contact" element={<Contact />} />
             <Route path="/company/partners" element={<Partners />} />
+            
+            {/* Console */}
+            <Route path="/console" element={<ConsoleDashboard />} />
+            <Route path="/console/create/record-ui" element={<RecordUITest />} />
+            <Route path="/console/create/api-test" element={<CreateAPITest />} />
+            <Route path="/console/analyze/session-replay" element={<SessionReplayPage />} />
+            <Route path="/console/analyze/reports" element={<ReportsPage />} />
+            <Route path="/console/analyze/flakiness" element={<FlakinessExplorer />} />
+            <Route path="/console/execute/run-center" element={<RunCenter />} />
+            <Route path="/console/execute/runners" element={<RunnersPage />} />
+            <Route path="/console/organize/suites" element={<SuitesPage />} />
+            <Route path="/console/organize/projects" element={<ProjectsPage />} />
+            <Route path="/console/govern/access" element={<AccessControl />} />
+            <Route path="/console/govern/audit-logs" element={<AuditLogs />} />
+            <Route path="/console/integrations" element={<IntegrationsPage />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
