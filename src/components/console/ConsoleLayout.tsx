@@ -1,10 +1,13 @@
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useState, ReactNode } from "react";
 import { ConsoleTopNav } from "./ConsoleTopNav";
 import { ConsoleSidebar } from "./ConsoleSidebar";
 import { cn } from "@/lib/utils";
 
-export const ConsoleLayout = () => {
+interface ConsoleLayoutProps {
+  children: ReactNode;
+}
+
+export const ConsoleLayout = ({ children }: ConsoleLayoutProps) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -21,7 +24,7 @@ export const ConsoleLayout = () => {
         )}
       >
         <div className="p-6">
-          <Outlet />
+          {children}
         </div>
       </main>
     </div>
