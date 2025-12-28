@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   Play,
@@ -22,6 +22,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConsoleLayout } from "@/components/console/ConsoleLayout";
+import { FileUpload } from "@/components/console/FileUpload";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
 import {
   AreaChart,
   Area,
@@ -39,6 +42,8 @@ import {
   LineChart,
   Line
 } from "recharts";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // Mock data
 const kpiData = {
@@ -157,11 +162,20 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const ConsoleDashboard = () => {
   const [time, setTime] = useState(new Date());
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 60000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleImportData = (data: any[], fileName: string) => {
+    toast({
+      title: "Data Imported Successfully",
+      description: `Imported ${data.length} records from ${fileName}`,
+    });
+    setImportDialogOpen(false);
+  };
 
   const handleExportExcel = () => {
     // Create CSV data
@@ -188,35 +202,263 @@ export const ConsoleDashboard = () => {
     link.href = URL.createObjectURL(blob);
     link.download = `qualyx-dashboard-report-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
+    
+    toast({
+      title: "Excel Export Complete",
+      description: "Dashboard report exported successfully",
+    });
   };
 
   const handleExportPDF = () => {
-    // For PDF export, we'll create a printable view
-    const printContent = `
-      QUALYX Dashboard Report
-      Generated: ${new Date().toLocaleString()}
-      
-      === Key Metrics ===
-      Total Tests: ${kpiData.totalTests}
-      Passed: ${kpiData.passed} (${((kpiData.passed / kpiData.totalTests) * 100).toFixed(1)}%)
-      Failed: ${kpiData.failed}
-      Flaky: ${kpiData.flaky}
-      
-      === Stability Trend ===
-      ${stabilityData.map(d => `${d.day}: ${d.passRate}% (${d.tests} tests)`).join('\n')}
-      
-      === Failures by Component ===
-      ${failuresByComponent.map(d => `${d.name}: ${d.failures} failures`).join('\n')}
-      
-      === Coverage Breakdown ===
-      ${coverageData.map(d => `${d.name}: ${d.value} tests`).join('\n')}
-    `;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    let yPos = margin;
+
+    // Helper function to add page header
+    const addHeader = () => {
+      doc.setFillColor(37, 99, 235); // Primary blue
+      doc.rect(0, 0, pageWidth, 35, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("QUALYX", margin, 18);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text("Test Automation Dashboard Report", margin, 27);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, pageWidth - margin - 60, 27);
+      yPos = 50;
+    };
+
+    // Helper to check page break
+    const checkPageBreak = (neededSpace: number) => {
+      if (yPos + neededSpace > pageHeight - margin) {
+        doc.addPage();
+        addHeader();
+      }
+    };
+
+    // Page 1: Summary
+    addHeader();
     
-    const blob = new Blob([printContent], { type: "text/plain" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `qualyx-dashboard-report-${new Date().toISOString().split('T')[0]}.txt`;
-    link.click();
+    // Executive Summary Section
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Executive Summary", margin, yPos);
+    yPos += 10;
+
+    doc.setDrawColor(37, 99, 235);
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+
+    // KPI Cards
+    const passRate = ((kpiData.passed / kpiData.totalTests) * 100).toFixed(1);
+    const kpis = [
+      { label: "Total Tests", value: kpiData.totalTests.toString(), color: [37, 99, 235] },
+      { label: "Passed", value: `${kpiData.passed} (${passRate}%)`, color: [34, 197, 94] },
+      { label: "Failed", value: kpiData.failed.toString(), color: [239, 68, 68] },
+      { label: "Flaky", value: kpiData.flaky.toString(), color: [245, 158, 11] },
+    ];
+
+    const cardWidth = (pageWidth - margin * 2 - 15) / 4;
+    kpis.forEach((kpi, index) => {
+      const x = margin + index * (cardWidth + 5);
+      doc.setFillColor(kpi.color[0], kpi.color[1], kpi.color[2]);
+      doc.roundedRect(x, yPos, cardWidth, 25, 3, 3, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.text(kpi.label, x + 5, yPos + 8);
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text(kpi.value, x + 5, yPos + 19);
+    });
+    yPos += 35;
+
+    // Stability Trend Table
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("7-Day Stability Trend", margin, yPos);
+    yPos += 8;
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Day', 'Pass Rate', 'Total Tests', 'Status']],
+      body: stabilityData.map(d => [
+        d.day,
+        `${d.passRate}%`,
+        d.tests.toString(),
+        d.passRate >= 95 ? '✓ Excellent' : d.passRate >= 90 ? '○ Good' : '✗ Needs Attention'
+      ]),
+      headStyles: { 
+        fillColor: [37, 99, 235],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: { fillColor: [245, 247, 250] },
+      styles: { fontSize: 9, cellPadding: 3 },
+      margin: { left: margin, right: margin },
+    });
+
+    yPos = (doc as any).lastAutoTable.finalY + 15;
+
+    // Failures by Component
+    checkPageBreak(80);
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Failures by Component", margin, yPos);
+    yPos += 8;
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Component', 'Failures', 'Priority', 'Trend']],
+      body: failuresByComponent.map((d, i) => [
+        d.name,
+        d.failures.toString(),
+        i < 2 ? 'High' : i < 3 ? 'Medium' : 'Low',
+        i < 2 ? '↑ Increasing' : '↓ Decreasing'
+      ]),
+      headStyles: { 
+        fillColor: [239, 68, 68],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      bodyStyles: { fontSize: 9 },
+      alternateRowStyles: { fillColor: [254, 242, 242] },
+      margin: { left: margin, right: margin },
+    });
+
+    yPos = (doc as any).lastAutoTable.finalY + 15;
+
+    // Test Coverage
+    checkPageBreak(80);
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Test Coverage Breakdown", margin, yPos);
+    yPos += 8;
+
+    const totalCoverage = coverageData.reduce((acc, d) => acc + d.value, 0);
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Test Type', 'Count', 'Percentage', 'Status']],
+      body: coverageData.map(d => [
+        d.name,
+        d.value.toString(),
+        `${((d.value / totalCoverage) * 100).toFixed(1)}%`,
+        '✓ Active'
+      ]),
+      headStyles: { 
+        fillColor: [34, 197, 94],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: { fillColor: [240, 253, 244] },
+      styles: { fontSize: 9 },
+      margin: { left: margin, right: margin },
+    });
+
+    yPos = (doc as any).lastAutoTable.finalY + 15;
+
+    // Weekly Trend
+    checkPageBreak(80);
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("6-Week Performance Trend", margin, yPos);
+    yPos += 8;
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Week', 'Passed', 'Failed', 'Flaky', 'Success Rate']],
+      body: trendData.map(d => [
+        d.week,
+        d.passed.toString(),
+        d.failed.toString(),
+        d.flaky.toString(),
+        `${((d.passed / (d.passed + d.failed + d.flaky)) * 100).toFixed(1)}%`
+      ]),
+      headStyles: { 
+        fillColor: [139, 92, 246],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: { fillColor: [245, 243, 255] },
+      styles: { fontSize: 9 },
+      margin: { left: margin, right: margin },
+    });
+
+    yPos = (doc as any).lastAutoTable.finalY + 15;
+
+    // Recent Runs
+    checkPageBreak(80);
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Recent Test Runs", margin, yPos);
+    yPos += 8;
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Suite', 'Status', 'Tests', 'Duration', 'Time']],
+      body: recentRuns.map(run => [
+        run.suite,
+        run.status.charAt(0).toUpperCase() + run.status.slice(1),
+        run.tests.toString(),
+        run.duration,
+        run.time
+      ]),
+      headStyles: { 
+        fillColor: [37, 99, 235],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      bodyStyles: { fontSize: 9 },
+      alternateRowStyles: { fillColor: [245, 247, 250] },
+      margin: { left: margin, right: margin },
+      didParseCell: (data) => {
+        if (data.section === 'body' && data.column.index === 1) {
+          const value = data.cell.raw as string;
+          if (value === 'Passed') {
+            data.cell.styles.textColor = [34, 197, 94];
+          } else if (value === 'Failed') {
+            data.cell.styles.textColor = [239, 68, 68];
+          } else if (value === 'Flaky') {
+            data.cell.styles.textColor = [245, 158, 11];
+          }
+        }
+      }
+    });
+
+    // Footer
+    const addFooter = (pageNum: number) => {
+      doc.setFontSize(8);
+      doc.setTextColor(128, 128, 128);
+      doc.text(
+        `Page ${pageNum} | QUALYX Test Automation Platform | Confidential`,
+        pageWidth / 2,
+        pageHeight - 10,
+        { align: 'center' }
+      );
+    };
+
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      addFooter(i);
+    }
+
+    doc.save(`qualyx-dashboard-report-${new Date().toISOString().split('T')[0]}.pdf`);
+    
+    toast({
+      title: "PDF Export Complete",
+      description: "Professional report generated successfully",
+    });
   };
 
   return (
@@ -239,10 +481,20 @@ export const ConsoleDashboard = () => {
               <Download className="w-4 h-4 mr-2" />
               Export PDF
             </Button>
-            <Button variant="outline" size="sm">
-              <Upload className="w-4 h-4 mr-2" />
-              Import Data
-            </Button>
+            <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Import Data
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Import Test Data</DialogTitle>
+                </DialogHeader>
+                <FileUpload onUpload={handleImportData} />
+              </DialogContent>
+            </Dialog>
             <Button size="sm" className="bg-primary hover:bg-primary/90">
               <Play className="w-4 h-4 mr-2" />
               Run All Tests
@@ -425,7 +677,7 @@ export const ConsoleDashboard = () => {
               <CardTitle className="text-lg">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Link to="/console/create/record-ui">
+              <Link to="/console/create/record">
                 <Button variant="outline" className="w-full justify-start gap-3 h-12">
                   <div className="p-1.5 rounded bg-primary/10">
                     <Circle className="w-4 h-4 text-primary" />
@@ -434,7 +686,7 @@ export const ConsoleDashboard = () => {
                   <ArrowRight className="w-4 h-4 ml-auto" />
                 </Button>
               </Link>
-              <Link to="/console/create/api-test">
+              <Link to="/console/create/api">
                 <Button variant="outline" className="w-full justify-start gap-3 h-12">
                   <div className="p-1.5 rounded bg-green-500/10">
                     <Code2 className="w-4 h-4 text-green-400" />
@@ -443,13 +695,15 @@ export const ConsoleDashboard = () => {
                   <ArrowRight className="w-4 h-4 ml-auto" />
                 </Button>
               </Link>
-              <Button variant="outline" className="w-full justify-start gap-3 h-12">
-                <div className="p-1.5 rounded bg-amber-500/10">
-                  <Import className="w-4 h-4 text-amber-400" />
-                </div>
-                <span>Import Suite</span>
-                <ArrowRight className="w-4 h-4 ml-auto" />
-              </Button>
+              <Link to="/console/create/import">
+                <Button variant="outline" className="w-full justify-start gap-3 h-12">
+                  <div className="p-1.5 rounded bg-amber-500/10">
+                    <Import className="w-4 h-4 text-amber-400" />
+                  </div>
+                  <span>Import Suite</span>
+                  <ArrowRight className="w-4 h-4 ml-auto" />
+                </Button>
+              </Link>
               <Link to="/console/execute/cicd">
                 <Button variant="outline" className="w-full justify-start gap-3 h-12">
                   <div className="p-1.5 rounded bg-muted">
@@ -467,7 +721,7 @@ export const ConsoleDashboard = () => {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Recent Runs</CardTitle>
-                <Link to="/console/execute/run-center">
+                <Link to="/console/execute/runs">
                   <Button variant="ghost" size="sm">View All</Button>
                 </Link>
               </div>

@@ -25,6 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ConsoleLayout } from "@/components/console/ConsoleLayout";
+import { toast } from "@/hooks/use-toast";
 
 const methods = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
 
@@ -67,7 +69,22 @@ export const CreateAPITest = () => {
     OPTIONS: "bg-muted text-muted-foreground",
   };
 
+  const handleSave = () => {
+    toast({
+      title: "API Test Saved",
+      description: `${method} ${url} saved successfully`,
+    });
+  };
+
+  const handleSend = () => {
+    toast({
+      title: "Request Sent",
+      description: "Response received in 156ms",
+    });
+  };
+
   return (
+    <ConsoleLayout>
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -78,11 +95,11 @@ export const CreateAPITest = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => toast({ title: "Duplicated", description: "Test duplicated successfully" })}>
             <Copy className="w-4 h-4 mr-2" />
             Duplicate
           </Button>
-          <Button className="bg-primary">
+          <Button className="bg-primary" onClick={handleSave}>
             <Save className="w-4 h-4 mr-2" />
             Save Test
           </Button>
@@ -109,7 +126,7 @@ export const CreateAPITest = () => {
               className="flex-1 font-mono text-sm"
               placeholder="https://api.example.com/endpoint"
             />
-            <Button className="bg-primary">
+            <Button className="bg-primary" onClick={handleSend}>
               <Send className="w-4 h-4 mr-2" />
               Send
             </Button>
@@ -312,6 +329,7 @@ export const CreateAPITest = () => {
         </Card>
       </div>
     </div>
+    </ConsoleLayout>
   );
 };
 
