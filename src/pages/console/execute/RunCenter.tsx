@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ConsoleLayout } from "@/components/console/ConsoleLayout";
+import { toast } from "@/hooks/use-toast";
 
 const runSteps = [
   { id: 1, name: "Navigate to /login", status: "passed", duration: "1.2s" },
@@ -49,7 +51,21 @@ export const RunCenter = () => {
   const [isRunning, setIsRunning] = useState(true);
   const [progress, setProgress] = useState(52);
 
+  const handleExportLogs = () => {
+    const logContent = consoleOutput.map(log => `[${log.time}] ${log.message}`).join('\n');
+    const blob = new Blob([logContent], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `run-logs-${new Date().toISOString().split('T')[0]}.txt`;
+    link.click();
+    toast({
+      title: "Logs Exported",
+      description: "Console logs downloaded successfully",
+    });
+  };
+
   return (
+    <ConsoleLayout>
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -64,7 +80,7 @@ export const RunCenter = () => {
             <Filter className="w-4 h-4 mr-2" />
             Filter
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleExportLogs}>
             <Download className="w-4 h-4 mr-2" />
             Export Logs
           </Button>
@@ -259,6 +275,7 @@ export const RunCenter = () => {
         </div>
       </div>
     </div>
+    </ConsoleLayout>
   );
 };
 

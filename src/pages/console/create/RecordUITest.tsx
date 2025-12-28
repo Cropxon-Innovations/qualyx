@@ -24,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ConsoleLayout } from "@/components/console/ConsoleLayout";
+import { toast } from "@/hooks/use-toast";
 
 const recordedSteps = [
   { id: 1, action: "Navigate", target: "https://app.example.com/login", selector: null },
@@ -41,8 +43,35 @@ export const RecordUITest = () => {
   const [baseUrl, setBaseUrl] = useState("https://app.example.com");
   const [environment, setEnvironment] = useState("development");
   const [steps, setSteps] = useState(recordedSteps);
+  const [testName, setTestName] = useState("");
+
+  const handleSaveTest = () => {
+    if (!testName.trim()) {
+      toast({
+        title: "Test name required",
+        description: "Please enter a name for your test",
+        variant: "destructive"
+      });
+      return;
+    }
+    toast({
+      title: "Test Saved",
+      description: `"${testName}" has been saved with ${steps.length} steps`,
+    });
+  };
+
+  const handleReset = () => {
+    setSteps([]);
+    setTestName("");
+    setIsRecording(false);
+    toast({
+      title: "Test Reset",
+      description: "All recorded steps have been cleared",
+    });
+  };
 
   return (
+    <ConsoleLayout>
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -53,11 +82,11 @@ export const RecordUITest = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleReset}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Reset
           </Button>
-          <Button className="bg-primary">
+          <Button className="bg-primary" onClick={handleSaveTest}>
             <CheckCircle2 className="w-4 h-4 mr-2" />
             Save Test
           </Button>
@@ -100,7 +129,11 @@ export const RecordUITest = () => {
             </div>
             <div>
               <label className="text-sm text-muted-foreground mb-2 block">Test Name</label>
-              <Input placeholder="e.g., Login Flow Test" />
+              <Input 
+                placeholder="e.g., Login Flow Test" 
+                value={testName}
+                onChange={(e) => setTestName(e.target.value)}
+              />
             </div>
           </div>
         </CardContent>
@@ -241,6 +274,7 @@ export const RecordUITest = () => {
         </div>
       </div>
     </div>
+    </ConsoleLayout>
   );
 };
 
