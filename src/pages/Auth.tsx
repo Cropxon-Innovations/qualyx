@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, useSpring, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,13 +12,15 @@ import {
   Play, 
   CheckCircle2,
   Sparkles,
-  Lock
+  Lock,
+  Users
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { QualyxLogo } from "@/components/QualyxLogo";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { supabase } from "@/integrations/supabase/client";
 
 const waitlistSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -61,11 +63,39 @@ const features = [
   "SOC 2 certified",
 ];
 
+// Animated counter component
+function AnimatedCounter({ value }: { value: number }) {
+  const spring = useSpring(0, { mass: 0.8, stiffness: 75, damping: 15 });
+  const display = useTransform(spring, (current) => Math.round(current).toLocaleString());
+
+  useEffect(() => {
+    spring.set(value);
+  }, [spring, value]);
+
+  return <motion.span>{display}</motion.span>;
+}
+
 export default function Auth() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [waitlistCount, setWaitlistCount] = useState(0);
   const { toast } = useToast();
+
+  // Fetch waitlist count on mount
+  useEffect(() => {
+    const fetchCount = async () => {
+      const { count, error } = await supabase
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!error && count !== null) {
+        // Add a base number for social proof
+        setWaitlistCount(count + 847);
+      }
+    };
+    fetchCount();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,16 +125,48 @@ export default function Auth() {
 
     setIsSubmitting(true);
     
-    // Simulate submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    toast({
-      title: "You're on the waitlist!",
-      description: "We'll reach out when your spot is ready.",
-    });
+    try {
+      const { error } = await supabase.from('waitlist').insert({
+        name: data.name,
+        email: data.email,
+        company: data.company,
+        role: data.role || null,
+        team_size: data.teamSize || null,
+        notes: data.notes || null,
+      });
+
+      if (error) {
+        if (error.code === '23505') {
+          // Duplicate email
+          toast({
+            title: "Already on the list!",
+            description: "This email is already registered for the waitlist.",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast({
+        title: "You're on the waitlist!",
+        description: "We'll reach out when your spot is ready.",
+      });
+      
+      setWaitlistCount((prev) => prev + 1);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Error joining waitlist:', error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
     
     setIsSubmitting(false);
-    setIsSubmitted(true);
   };
 
   return (
@@ -222,10 +284,28 @@ export default function Auth() {
 
           <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 bg-background">
             <div className="w-full max-w-md">
+              {/* Social Proof Counter */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 flex items-center gap-4"
+              >
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    <AnimatedCounter value={waitlistCount} />+
+                  </p>
+                  <p className="text-sm text-muted-foreground">engineers on the waitlist</p>
+                </div>
+              </motion.div>
+
               {/* Login Disabled Badge */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
                 className="mb-6 p-3 rounded-xl bg-muted/50 border border-border/50 flex items-center gap-3"
               >
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -241,7 +321,7 @@ export default function Auth() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
                 className="mb-8"
               >
                 <div className="flex items-center gap-2 mb-4">
@@ -280,7 +360,7 @@ export default function Auth() {
                 <motion.form
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
                   onSubmit={handleSubmit}
                   className="space-y-5"
                 >
