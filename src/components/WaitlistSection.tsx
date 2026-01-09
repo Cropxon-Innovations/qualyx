@@ -61,7 +61,7 @@ export const WaitlistSection = () => {
   };
 
   return (
-    <section id="waitlist" className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
+    <section id="waitlist-section" className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 grid-bg-subtle opacity-10" />
