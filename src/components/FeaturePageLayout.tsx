@@ -2,18 +2,21 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 interface FeaturePageLayoutProps {
   children: ReactNode;
+  showBreadcrumbs?: boolean;
 }
 
-export const FeaturePageLayout = ({ children }: FeaturePageLayoutProps) => {
+export const FeaturePageLayout = ({ children, showBreadcrumbs = true }: FeaturePageLayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
+      {showBreadcrumbs && <Breadcrumbs />}
       <main>{children}</main>
       <Footer />
     </div>
