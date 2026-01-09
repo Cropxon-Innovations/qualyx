@@ -38,7 +38,10 @@ export const Footer = () => {
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-2.5 mb-4">
               <QualyxLogo size="small" />
-              <span className="text-foreground font-semibold text-lg tracking-tight">QUALYX</span>
+              <div className="flex flex-col">
+                <span className="text-foreground font-semibold text-lg tracking-tight leading-tight">QUALYX</span>
+                <span className="text-[10px] text-muted-foreground leading-tight">BY CROPXON</span>
+              </div>
             </Link>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs">
               Autonomous QA-as-a-Service. AI-powered testing for modern engineering teams.
@@ -79,7 +82,16 @@ export const Footer = () => {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} QUALYX by Cropxon Innovations Pvt. Ltd. All rights reserved.
+            © {new Date().getFullYear()} QUALYX by{" "}
+            <a
+              href="https://cropxon.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 transition-colors"
+            >
+              Cropxon Innovations Pvt. Ltd.
+            </a>{" "}
+            All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

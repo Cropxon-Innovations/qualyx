@@ -103,7 +103,10 @@ export const Navigation = () => {
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2.5">
               <QualyxLogo size="small" />
-              <span className="text-foreground font-semibold text-lg tracking-tight">QUALYX</span>
+              <div className="flex flex-col">
+                <span className="text-foreground font-semibold text-lg tracking-tight leading-tight">QUALYX</span>
+                <span className="text-[10px] text-muted-foreground leading-tight hidden sm:block">BY CROPXON</span>
+              </div>
             </Link>
           </div>
 

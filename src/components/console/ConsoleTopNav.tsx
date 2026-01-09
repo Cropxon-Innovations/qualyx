@@ -62,8 +62,10 @@ export const ConsoleTopNav = ({ onToggleSidebar, sidebarCollapsed }: ConsoleTopN
 
           <Link to="/console" className="flex items-center gap-2">
             <QualyxLogo size="small" />
-            <span className="font-semibold text-foreground hidden sm:block">QUALYX</span>
-            <span className="text-xs text-muted-foreground hidden sm:block">by Cropxon</span>
+            <div className="hidden sm:flex flex-col">
+              <span className="font-semibold text-foreground leading-tight">QUALYX</span>
+              <span className="text-[10px] text-muted-foreground leading-tight">BY CROPXON</span>
+            </div>
           </Link>
 
           <div className="h-6 w-px bg-border/50 hidden md:block" />
