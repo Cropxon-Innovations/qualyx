@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { DocsSidebar } from "./DocsSidebar";
 import { DocsNavigation } from "./DocsNavigation";
+import { DocTableOfContents } from "./DocTableOfContents";
 
 interface DocsLayoutProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ export const DocsLayout = ({ children }: DocsLayoutProps) => {
         <main className="flex-1 min-w-0">
           {children}
         </main>
+        <DocTableOfContents />
       </div>
     </div>
   );

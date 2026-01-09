@@ -36,7 +36,7 @@ export const VideoModal = ({ isOpen, onClose, videoUrl = DEFAULT_VIDEO_URL }: Vi
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogOverlay className="bg-background/95 backdrop-blur-md" />
-      <DialogContent className="max-w-5xl w-[95vw] p-0 bg-card/95 border-border/50 overflow-hidden">
+      <DialogContent className="max-w-5xl w-[95vw] p-0 bg-card/95 border-border/50 overflow-hidden" hideCloseButton>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/30">
           <div className="flex items-center gap-2">

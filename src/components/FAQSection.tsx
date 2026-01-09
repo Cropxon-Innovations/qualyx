@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useContactModal } from "@/contexts/ContactModalContext";
 
 interface FAQItem {
   question: string;
@@ -113,6 +114,7 @@ const FAQItemComponent = ({ item, isOpen, onToggle, index }: FAQItemComponentPro
 
 export const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { openContactModal } = useContactModal();
 
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -160,12 +162,12 @@ export const FAQSection = () => {
         <div className="mt-10 text-center">
           <p className="text-sm text-muted-foreground">
             Still have questions?{" "}
-            <a 
-              href="/company/contact" 
+            <button 
+              onClick={openContactModal}
               className="text-primary hover:text-primary/80 transition-colors font-medium"
             >
               Contact our team
-            </a>
+            </button>
           </p>
         </div>
       </div>
