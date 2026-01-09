@@ -1,5 +1,15 @@
 import { Helmet } from "react-helmet";
 
+// OG Images for different page categories
+export const categoryOgImages: Record<string, string> = {
+  product: "/og-product.png",
+  platform: "/og-platform.png",
+  docs: "/og-docs.png",
+  resources: "/og-resources.png",
+  company: "/og-company.png",
+  default: "/og-image.png",
+};
+
 interface SEOHeadProps {
   title?: string;
   description?: string;
@@ -9,6 +19,7 @@ interface SEOHeadProps {
   ogImage?: string;
   noIndex?: boolean;
   structuredData?: object;
+  category?: keyof typeof categoryOgImages;
 }
 
 const defaultKeywords = [
@@ -112,13 +123,17 @@ export const SEOHead = ({
   keywords = defaultKeywords,
   canonicalPath = "",
   ogType = "website",
-  ogImage = "/og-image.png",
+  ogImage,
   noIndex = false,
   structuredData,
+  category,
 }: SEOHeadProps) => {
   const baseUrl = "https://qualyx.com";
   const canonicalUrl = `${baseUrl}${canonicalPath}`;
-  const fullOgImage = ogImage.startsWith("http") ? ogImage : `${baseUrl}${ogImage}`;
+  
+  // Determine OG image based on category or explicit ogImage prop
+  const resolvedOgImage = ogImage || (category ? categoryOgImages[category] : categoryOgImages.default);
+  const fullOgImage = resolvedOgImage.startsWith("http") ? resolvedOgImage : `${baseUrl}${resolvedOgImage}`;
 
   const combinedStructuredData = structuredData || [organizationSchema, softwareSchema];
 
