@@ -30,9 +30,6 @@ export const InfographicSection = () => {
               className="w-full h-auto object-contain"
               loading="lazy"
             />
-            {/* Overlay to hide NotebookLM watermark in bottom right */}
-            <div className="absolute bottom-0 right-0 w-32 h-8 bg-gradient-to-l from-background via-background to-transparent" />
-            <div className="absolute bottom-0 right-0 w-28 h-6 bg-background" />
           </div>
         </div>
       </div>
