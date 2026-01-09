@@ -39,52 +39,52 @@ const Index = () => {
         <main>
           <HeroSection />
           
-          <ScrollReveal>
+          <ScrollReveal direction="up" duration={800}>
             <TimelineSection />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="up" duration={800}>
             <TrustSection />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="up" duration={800} parallax parallaxSpeed={0.15}>
             <HybridSection />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="scale" duration={900}>
             <CapabilitiesSection />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="up" duration={800} parallax parallaxSpeed={0.1}>
             <QaAsServiceSection />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="up" duration={800}>
             <TestPreviewSimulation />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="up" duration={800}>
             <ComparisonSection />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="scale" duration={900}>
             <PricingSection />
           </ScrollReveal>
 
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="up" duration={800} parallax parallaxSpeed={0.12}>
             <BrandMotionSection />
           </ScrollReveal>
 
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="fade" duration={1000}>
             <InfographicSection />
           </ScrollReveal>
           
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={50} direction="up" duration={800}>
             <WaitlistSection />
           </ScrollReveal>
         </main>
         
-        <ScrollReveal>
+        <ScrollReveal direction="fade" duration={600}>
           <Footer />
         </ScrollReveal>
       </div>

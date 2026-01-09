@@ -12,7 +12,10 @@ interface VideoModalProps {
   videoUrl?: string;
 }
 
-export const VideoModal = ({ isOpen, onClose, videoUrl }: VideoModalProps) => {
+// Default video URL from Supabase storage
+const DEFAULT_VIDEO_URL = "https://dkksytupaserkyxyxklw.supabase.co/storage/v1/object/public/qualyx/QUALYX__Quality_Engineering.mp4";
+
+export const VideoModal = ({ isOpen, onClose, videoUrl = DEFAULT_VIDEO_URL }: VideoModalProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -32,8 +35,8 @@ export const VideoModal = ({ isOpen, onClose, videoUrl }: VideoModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogOverlay className="bg-background/90 backdrop-blur-md" />
-      <DialogContent className="max-w-4xl w-[95vw] p-0 bg-card/95 border-border/50 overflow-hidden">
+      <DialogOverlay className="bg-background/95 backdrop-blur-md" />
+      <DialogContent className="max-w-5xl w-[95vw] p-0 bg-card/95 border-border/50 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/30">
           <div className="flex items-center gap-2">
@@ -49,48 +52,18 @@ export const VideoModal = ({ isOpen, onClose, videoUrl }: VideoModalProps) => {
         </div>
         
         {/* Video container */}
-        <div className="relative aspect-video bg-background/50">
-          {videoUrl ? (
-            <video
-              ref={videoRef}
-              src={videoUrl}
-              className="absolute inset-0 w-full h-full object-contain"
-              controls
-              autoPlay
-              playsInline
-            />
-          ) : (
-            /* Placeholder when no video is uploaded yet */
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-              <div className="w-20 h-20 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center">
-                <Play className="w-8 h-8 text-secondary ml-1" />
-              </div>
-              <div className="text-center">
-                <p className="text-lg font-medium text-foreground mb-1">Product Walkthrough</p>
-                <p className="text-sm text-muted-foreground">See QUALYX in action</p>
-              </div>
-              
-              {/* Demo content preview */}
-              <div className="mt-6 grid grid-cols-3 gap-4 max-w-md">
-                <div className="text-center p-3 rounded-lg bg-card/50 border border-border/30">
-                  <p className="text-xs font-medium text-foreground">Record</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Capture user flows</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-card/50 border border-border/30">
-                  <p className="text-xs font-medium text-foreground">Generate</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">AI creates tests</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-card/50 border border-border/30">
-                  <p className="text-xs font-medium text-foreground">Execute</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Run anywhere</p>
-                </div>
-              </div>
-              
-              <p className="text-xs text-muted-foreground/50 mt-4">
-                Video coming soon — join the waitlist for early access
-              </p>
-            </div>
-          )}
+        <div className="relative aspect-video bg-background">
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            className="absolute inset-0 w-full h-full object-contain bg-background"
+            controls
+            autoPlay
+            playsInline
+          />
+          {/* Overlay to hide NotebookLM watermark in bottom right corner */}
+          <div className="absolute bottom-0 right-0 w-40 h-12 bg-gradient-to-l from-background via-background/95 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-36 h-10 bg-background pointer-events-none" />
         </div>
       </DialogContent>
     </Dialog>
