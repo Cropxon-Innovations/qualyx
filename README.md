@@ -15,7 +15,7 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
-- Supabase (via Lovable Cloud)
+- Supabase (Cloud Backend)
 
 ## Development
 
