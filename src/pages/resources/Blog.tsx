@@ -3,6 +3,7 @@ import { FeaturePageLayout, FeatureHero, FeatureSection, StatCard } from "@/comp
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { SEOHead, generateArticleSchema } from "@/components/SEOHead";
+import { NewsletterSubscribe } from "@/components/NewsletterSubscribe";
 
 // Comprehensive blog posts with SEO-optimized content
 const blogPosts = [
@@ -338,6 +339,12 @@ const Blog = () => {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Get the latest articles on QA automation, AI testing, and software quality delivered to your inbox weekly.
           </p>
+          
+          {/* Newsletter Form with Database Storage */}
+          <div className="max-w-md mx-auto mb-8">
+            <NewsletterSubscribe source="blog" />
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/auth">
               <Button variant="hero" size="lg" className="group">
