@@ -11,7 +11,10 @@ export const DocsNavigation = () => {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">Q</span>
           </div>
-          <span className="text-foreground font-semibold text-lg">QUALYX</span>
+          <div className="flex flex-col">
+            <span className="text-foreground font-semibold text-lg leading-tight">QUALYX</span>
+            <span className="text-[10px] text-muted-foreground leading-tight">BY CROPXON</span>
+          </div>
           <span className="text-muted-foreground text-sm ml-2">Docs</span>
         </Link>
 

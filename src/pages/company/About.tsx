@@ -92,9 +92,27 @@ const About = () => {
         <div className="max-w-4xl mx-auto">
           <div className="p-8 rounded-2xl border border-border/40 bg-card/30 text-center">
             <Globe className="w-12 h-12 text-primary mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-foreground mb-4">Cropxon Innovations Pvt. Ltd.</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-4">
+              <a
+                href="https://cropxon.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                Cropxon Innovations Pvt. Ltd.
+              </a>
+            </h3>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-              QUALYX is a product of Cropxon Innovations, focused on building next-generation 
+              QUALYX is a product of{" "}
+              <a
+                href="https://cropxon.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 transition-colors"
+              >
+                Cropxon Innovations
+              </a>
+              , focused on building next-generation 
               developer tools powered by AI. We're backed by a passionate team of engineers 
               who've experienced the pain of test maintenance firsthand.
             </p>
