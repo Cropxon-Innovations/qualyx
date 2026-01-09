@@ -61,7 +61,7 @@ export const WaitlistSection = () => {
   };
 
   return (
-    <section id="waitlist-section" className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
+    <section id="waitlist-section" className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 grid-bg-subtle opacity-10" />
@@ -72,11 +72,11 @@ export const WaitlistSection = () => {
       
       <div className="relative z-10 max-w-xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 tracking-tight">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
             <span className="gradient-text">Join the Waitlist</span>
           </h2>
-          <p className="text-base text-muted-foreground/70">
+          <p className="text-sm text-muted-foreground/70">
             Be among the first to experience autonomous QA
           </p>
         </div>
@@ -84,10 +84,10 @@ export const WaitlistSection = () => {
         {/* Form Card with animated glow border */}
         <div className="relative">
           {/* Animated glow border */}
-          <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-secondary/40 via-transparent to-primary/40 opacity-60" />
-          <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-secondary/20 via-transparent to-primary/20 blur-sm" />
+          <div className="absolute -inset-px rounded-xl bg-gradient-to-br from-secondary/40 via-transparent to-primary/40 opacity-60" />
+          <div className="absolute -inset-[2px] rounded-xl bg-gradient-to-br from-secondary/20 via-transparent to-primary/20 blur-sm" />
           
-          <div className="relative p-8 md:p-10 rounded-2xl bg-card/60 backdrop-blur-lg border border-border/30">
+          <div className="relative p-6 md:p-8 rounded-xl bg-card/60 backdrop-blur-lg border border-border/30">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>

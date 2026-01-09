@@ -54,7 +54,7 @@ export const ComparisonSection = () => {
     : "Great for large QA departments — harder for lean product teams.";
 
   return (
-    <section className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
+    <section className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 grid-bg-subtle opacity-10" />
@@ -64,17 +64,17 @@ export const ComparisonSection = () => {
       
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5 tracking-tight">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
             <span className="gradient-text-white">How QUALYX Compares</span>
           </h2>
-          <p className="text-base text-muted-foreground/70 max-w-xl mx-auto">
+          <p className="text-sm text-muted-foreground/70 max-w-xl mx-auto">
             See how QUALYX stacks up against traditional QA platforms
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-center mb-6">
           <div className="inline-flex p-1 rounded-xl bg-card/40 backdrop-blur-sm border border-border/30">
             <button
               onClick={() => setActiveTab("qualyx")}
