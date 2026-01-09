@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import { SEOHead } from "@/components/SEOHead";
 import { 
   Brain, 
   Sparkles, 
@@ -124,11 +124,14 @@ const AIGenerationDemo = () => {
 
 const AITestEngine = () => {
   return (
+    <>
+      <SEOHead
+        title="AI Test Engine | QUALYX - AI-Powered Test Generation"
+        description="AI-powered test generation that creates comprehensive test suites by analyzing your application. Automatic coverage optimization and intelligent test prioritization."
+        canonicalPath="/product/ai-test-engine"
+        keywords="AI testing, AI test generation, automated test creation, intelligent testing, machine learning QA, test coverage, QUALYX"
+      />
     <FeaturePageLayout>
-      <Helmet>
-        <title>AI Test Engine - QUALYX</title>
-        <meta name="description" content="AI-powered test generation that creates comprehensive test suites by analyzing your application." />
-      </Helmet>
 
       <FeatureHero
         badge="AI Powered"
@@ -279,6 +282,7 @@ const AITestEngine = () => {
         </div>
       </section>
     </FeaturePageLayout>
+    </>
   );
 };
 

@@ -13,15 +13,22 @@ import {
 import { UIDashboardPreview } from "@/components/docs/DashboardPreview";
 import { APIDashboardPreview } from "@/components/docs/APIDashboardPreview";
 import { Server, Code, FileCode, GitBranch, Zap, Shield, Sparkles, Terminal, BookOpen, Rocket } from "lucide-react";
-import { Helmet } from "react-helmet";
+import { SEOHead, generateBreadcrumbSchema } from "@/components/SEOHead";
 
 const GettingStarted = () => {
   return (
     <DocsLayout>
-      <Helmet>
-        <title>Getting Started - QUALYX Documentation</title>
-        <meta name="description" content="Get started with QUALYX autonomous QA platform. Learn how to set up UI and API automation testing in minutes." />
-      </Helmet>
+      <SEOHead
+        title="Getting Started Guide | QUALYX Documentation"
+        description="Get started with QUALYX autonomous QA platform. Learn how to set up UI and API automation testing in minutes with our comprehensive quickstart guide."
+        canonicalPath="/docs/getting-started"
+        keywords="QUALYX documentation, getting started, quickstart guide, test automation setup, QA tutorial, API testing guide"
+        structuredData={generateBreadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Documentation", url: "/docs/getting-started" },
+          { name: "Getting Started", url: "/docs/getting-started" }
+        ])}
+      />
 
       <DocPage
         title="Getting Started with QUALYX"

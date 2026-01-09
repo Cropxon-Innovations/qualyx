@@ -12,23 +12,25 @@ import { WaitlistSection } from "@/components/WaitlistSection";
 import { BrandMotionSection } from "@/components/BrandMotionSection";
 import { Footer } from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { Helmet } from "react-helmet";
+import { SEOHead, generateFAQSchema } from "@/components/SEOHead";
+
+const homeFAQs = [
+  { question: "What is QUALYX?", answer: "QUALYX is the world's first Autonomous QA-as-a-Service (QAAS) platform that provides AI-powered test automation with self-healing capabilities, session replay debugging, and hybrid execution for enterprise teams." },
+  { question: "How does QUALYX self-healing work?", answer: "QUALYX uses AI to automatically detect and fix broken test selectors when your application changes, eliminating flaky tests and reducing maintenance by up to 90%." },
+  { question: "Can I export tests to Playwright or Selenium?", answer: "Yes, QUALYX allows you to export your tests as clean, maintainable Playwright or Selenium scripts that you can run anywhere." },
+  { question: "What is hybrid execution?", answer: "Hybrid execution means you can run tests both in the cloud and on-premise, giving you flexibility for security-sensitive applications while maintaining speed." },
+  { question: "Who created QUALYX?", answer: "QUALYX is built by Cropxon Innovations Pvt. Ltd., a company focused on next-generation developer tools powered by AI." },
+];
 
 const Index = () => {
   return (
     <>
-      <Helmet>
-        <title>QUALYX — Autonomous QA-as-a-Service | AI-Powered Test Automation</title>
-        <meta 
-          name="description" 
-          content="QUALYX delivers autonomous QA with AI-powered self-healing automation, session replay, hybrid execution, and enterprise security. Join the waitlist today." 
-        />
-        <meta name="keywords" content="QA automation, test automation, AI testing, self-healing tests, session replay, enterprise QA" />
-        <meta property="og:title" content="QUALYX — Autonomous QA-as-a-Service" />
-        <meta property="og:description" content="AI-powered, self-healing automation with session replay, hybrid execution, and enterprise security." />
-        <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://qualyx.com" />
-      </Helmet>
+      <SEOHead 
+        title="QUALYX — Autonomous QA-as-a-Service | AI-Powered Test Automation Platform"
+        description="QUALYX is the world's first Autonomous QA-as-a-Service (QAAS) platform. AI-powered self-healing test automation, session replay debugging, Playwright/Selenium export, and hybrid execution. Built by Cropxon Innovations."
+        canonicalPath="/"
+        structuredData={generateFAQSchema(homeFAQs)}
+      />
 
       <div className="min-h-screen bg-background overflow-x-hidden">
         <Navigation />
