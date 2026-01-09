@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { SplashScreen } from "@/components/SplashScreen";
+import { SplashWrapper } from "@/components/SplashWrapper";
 import Index from "./pages/Index";
 import Demo from "./pages/Demo";
 import Auth from "./pages/Auth";
@@ -85,26 +84,15 @@ import IntegrationsPage from "./pages/console/IntegrationsPage";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [showSplash, setShowSplash] = useState(true);
-
-  // Show splash screen on every page load/refresh
-  useEffect(() => {
-    // Small delay to ensure smooth animation
-    const timer = setTimeout(() => {
-      // Splash will auto-hide after its animation completes
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
-          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
           <Toaster />
           <Sonner />
           <BrowserRouter>
-          <Routes>
+            <SplashWrapper>
+              <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/auth" element={<Auth />} />
@@ -194,12 +182,13 @@ const App = () => {
             
             <Route path="/console/integrations" element={<IntegrationsPage />} />
             
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+              <Route path="*" element={<NotFound />} />
+              </Routes>
+            </SplashWrapper>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 
