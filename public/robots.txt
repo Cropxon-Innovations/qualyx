@@ -1,14 +1,57 @@
+# QUALYX - Autonomous QA-as-a-Service Platform
+# https://qualyx.com
+# By Cropxon Innovations Pvt. Ltd.
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+Disallow: /console/
+Disallow: /api/
+
+# Google
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
+# Bing
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
+# Social Media Bots
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: LinkedInBot
 Allow: /
+
+# AI Search Engines
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemap
+Sitemap: https://qualyx.com/sitemap.xml
+
+# Host
+Host: https://qualyx.com

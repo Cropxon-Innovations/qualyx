@@ -85,16 +85,16 @@ import IntegrationsPage from "./pages/console/IntegrationsPage";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [showSplash, setShowSplash] = useState(() => {
-    // Only show splash on initial page load, not on navigation
-    const hasSeenSplash = sessionStorage.getItem("hasSeenSplash");
-    return !hasSeenSplash;
-  });
+  const [showSplash, setShowSplash] = useState(true);
 
+  // Show splash screen on every page load/refresh
   useEffect(() => {
-    if (!showSplash) return;
-    sessionStorage.setItem("hasSeenSplash", "true");
-  }, [showSplash]);
+    // Small delay to ensure smooth animation
+    const timer = setTimeout(() => {
+      // Splash will auto-hide after its animation completes
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

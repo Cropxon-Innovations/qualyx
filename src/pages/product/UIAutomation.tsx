@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import { SEOHead } from "@/components/SEOHead";
 import { 
   MonitorPlay, 
   MousePointer, 
@@ -144,10 +144,12 @@ const UITestDemo = () => {
 const UIAutomation = () => {
   return (
     <FeaturePageLayout>
-      <Helmet>
-        <title>UI Automation - QUALYX</title>
-        <meta name="description" content="Autonomous UI testing with AI-powered recording, self-healing selectors, and visual validation." />
-      </Helmet>
+      <SEOHead
+        title="UI Automation Testing | QUALYX - Self-Healing Test Automation"
+        description="Autonomous UI testing with AI-powered recording, self-healing selectors, and visual validation. Create tests 10x faster with zero maintenance. Export to Playwright or Selenium."
+        canonicalPath="/product/ui-automation"
+        keywords="UI automation, UI testing, self-healing tests, visual testing, Playwright, Selenium, web testing, browser automation, test recording, QUALYX"
+      />
 
       <FeatureHero
         badge="Most Popular"

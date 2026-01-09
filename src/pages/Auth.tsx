@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { QualyxLogo } from "@/components/QualyxLogo";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 
 const waitlistSchema = z.object({
@@ -171,10 +171,12 @@ export default function Auth() {
 
   return (
     <>
-      <Helmet>
-        <title>Join Beta Waitlist | QUALYX</title>
-        <meta name="description" content="Join the QUALYX beta waitlist and be among the first to experience autonomous AI-powered QA testing." />
-      </Helmet>
+      <SEOHead
+        title="Join Beta Waitlist | QUALYX - Autonomous QA-as-a-Service"
+        description="Join the QUALYX beta waitlist and be among the first to experience autonomous AI-powered QA testing. Get early access to self-healing tests, session replay, and more."
+        canonicalPath="/auth"
+        keywords="QUALYX waitlist, beta access, QA automation trial, test automation signup, AI testing early access"
+      />
 
       <div className="min-h-screen flex flex-col lg:flex-row">
         {/* Left Panel - Animated Info */}
