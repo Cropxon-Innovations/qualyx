@@ -95,7 +95,7 @@ export const TimelineSection = () => {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <section ref={sectionRef} className="py-28 md:py-36 px-4 md:px-8 relative overflow-hidden">
+      <section ref={sectionRef} className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-background" />
         <div 
@@ -118,11 +118,11 @@ export const TimelineSection = () => {
         
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-16 md:mb-20">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5 tracking-tight">
+          <div className="text-center mb-10 md:mb-14">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
               <span className="gradient-text-white">The Complete QA Lifecycle</span>
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground/60 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-muted-foreground/60 max-w-2xl mx-auto">
               From recording to deployment — QUALYX automates every step of your testing pipeline.
             </p>
           </div>

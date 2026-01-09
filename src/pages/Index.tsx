@@ -10,6 +10,7 @@ import { ComparisonSection } from "@/components/ComparisonSection";
 import { PricingSection } from "@/components/PricingSection";
 import { WaitlistSection } from "@/components/WaitlistSection";
 import { BrandMotionSection } from "@/components/BrandMotionSection";
+import { InfographicSection } from "@/components/InfographicSection";
 import { Footer } from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { SEOHead, generateFAQSchema } from "@/components/SEOHead";
@@ -72,6 +73,10 @@ const Index = () => {
 
           <ScrollReveal delay={100}>
             <BrandMotionSection />
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
+            <InfographicSection />
           </ScrollReveal>
           
           <ScrollReveal delay={100}>
