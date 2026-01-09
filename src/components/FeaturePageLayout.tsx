@@ -16,7 +16,13 @@ export const FeaturePageLayout = ({ children, showBreadcrumbs = true }: FeatureP
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      {showBreadcrumbs && <Breadcrumbs />}
+      {/* Spacer for fixed header */}
+      <div className="h-16" />
+      {showBreadcrumbs && (
+        <div className="border-b border-border/40 bg-muted/30">
+          <Breadcrumbs />
+        </div>
+      )}
       <main>{children}</main>
       <Footer />
     </div>
@@ -43,7 +49,7 @@ export const FeatureHero = ({
   children,
 }: FeatureHeroProps) => {
   return (
-    <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
+    <section className="relative pt-12 pb-16 lg:pt-20 lg:pb-24 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-background" />
       <div 

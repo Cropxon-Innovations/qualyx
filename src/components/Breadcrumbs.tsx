@@ -139,28 +139,30 @@ const BreadcrumbNav = ({ items }: BreadcrumbNavProps) => {
   return (
     <nav 
       aria-label="Breadcrumb" 
-      className="flex items-center gap-1 text-sm text-muted-foreground py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
+      className="flex items-center gap-2 text-sm text-muted-foreground py-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
     >
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         const isFirst = index === 0;
         
         return (
-          <div key={item.url} className="flex items-center gap-1">
+          <div key={item.url} className="flex items-center gap-2">
             {index > 0 && (
-              <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+              <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/40" />
             )}
             {isLast ? (
-              <span className="text-foreground font-medium truncate max-w-[200px]">
+              <span className="text-foreground font-medium truncate max-w-[200px] flex items-center gap-1.5">
                 {item.name}
               </span>
             ) : (
               <Link 
                 to={item.url}
-                className="hover:text-primary transition-colors flex items-center gap-1"
+                className="hover:text-primary transition-colors flex items-center gap-1.5"
               >
-                {isFirst && <Home className="w-3.5 h-3.5" />}
-                <span className="truncate max-w-[150px]">{!isFirst && item.name}</span>
+                {isFirst && <Home className="w-4 h-4" />}
+                <span className={`truncate max-w-[150px] ${isFirst ? 'sr-only sm:not-sr-only' : ''}`}>
+                  {isFirst ? 'Home' : item.name}
+                </span>
               </Link>
             )}
           </div>
