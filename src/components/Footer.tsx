@@ -29,6 +29,14 @@ const footerLinks = {
   ],
 };
 
+const legalLinks = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "Cookie Policy", href: "/cookie-policy" },
+  { label: "Data Policy", href: "/data-policy" },
+  { label: "Refund Policy", href: "/refund-policy" },
+];
+
 export const Footer = () => {
   return (
     <footer className="relative border-t border-border bg-card/30">
@@ -47,13 +55,31 @@ export const Footer = () => {
               Autonomous QA-as-a-Service. AI-powered testing for modern engineering teams.
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a 
+                href="https://twitter.com/qualyx" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Twitter"
+              >
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a 
+                href="https://github.com/qualyx" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="GitHub"
+              >
                 <Github className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a 
+                href="https://linkedin.com/company/qualyx" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="LinkedIn"
+              >
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
@@ -79,27 +105,34 @@ export const Footer = () => {
           ))}
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} QUALYX by{" "}
-            <a
-              href="https://cropxon.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-            >
-              Cropxon Innovations Pvt. Ltd.
-            </a>{" "}
-            All rights reserved.
-          </p>
-          <div className="flex items-center gap-6">
-            <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Privacy Policy
-            </Link>
-            <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Terms of Service
-            </Link>
+        {/* Legal Links */}
+        <div className="mt-12 pt-8 border-t border-border">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-6">
+            {legalLinks.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          
+          {/* Copyright */}
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} QUALYX by{" "}
+              <a
+                href="https://cropxon.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 transition-colors"
+              >
+                Cropxon Innovations Pvt. Ltd.
+              </a>{" "}
+              All rights reserved.
+            </p>
           </div>
         </div>
       </div>

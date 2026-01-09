@@ -38,10 +38,18 @@ import Observability from "./pages/platform/Observability";
 
 // Resource pages
 import Blog from "./pages/resources/Blog";
+import BlogArticle from "./pages/resources/BlogArticle";
 import CaseStudies from "./pages/resources/CaseStudies";
 import Roadmap from "./pages/resources/Roadmap";
 import Changelog from "./pages/resources/Changelog";
 import ReleaseNotes from "./pages/resources/ReleaseNotes";
+
+// Legal pages
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import TermsOfService from "./pages/legal/TermsOfService";
+import RefundPolicy from "./pages/legal/RefundPolicy";
+import CookiePolicy from "./pages/legal/CookiePolicy";
+import DataPolicy from "./pages/legal/DataPolicy";
 
 // Company pages
 import About from "./pages/company/About";
@@ -128,10 +136,18 @@ const App = () => {
             
             {/* Resources */}
             <Route path="/resources/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogArticle />} />
             <Route path="/resources/case-studies" element={<CaseStudies />} />
             <Route path="/resources/roadmap" element={<Roadmap />} />
             <Route path="/resources/changelog" element={<Changelog />} />
             <Route path="/resources/release-notes" element={<ReleaseNotes />} />
+            
+            {/* Legal */}
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/data-policy" element={<DataPolicy />} />
             
             {/* Company */}
             <Route path="/company/about" element={<About />} />
