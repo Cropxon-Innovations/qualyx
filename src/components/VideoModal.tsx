@@ -61,9 +61,6 @@ export const VideoModal = ({ isOpen, onClose, videoUrl = DEFAULT_VIDEO_URL }: Vi
             autoPlay
             playsInline
           />
-          {/* Overlay to hide NotebookLM watermark in bottom right corner */}
-          <div className="absolute bottom-0 right-0 w-40 h-12 bg-gradient-to-l from-background via-background/95 to-transparent pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-36 h-10 bg-background pointer-events-none" />
         </div>
       </DialogContent>
     </Dialog>
