@@ -1,24 +1,104 @@
 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="qualyxPrimaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3B82F6" />
-      <stop offset="50%" stop-color="#06B6D4" />
-      <stop offset="100%" stop-color="#14B8A6" />
+    <!-- Primary metallic gradient - dark to light silver -->
+    <linearGradient id="metallicMain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8E8E8" />
+      <stop offset="30%" stop-color="#B8B8B8" />
+      <stop offset="60%" stop-color="#888888" />
+      <stop offset="100%" stop-color="#4A4A4A" />
     </linearGradient>
-    <linearGradient id="qualyxSecondaryGradient" x1="100%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#2563EB" />
-      <stop offset="100%" stop-color="#1D4ED8" />
+    
+    <!-- Secondary gradient for depth/shadow -->
+    <linearGradient id="metallicShadow" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#707070" />
+      <stop offset="50%" stop-color="#505050" />
+      <stop offset="100%" stop-color="#303030" />
     </linearGradient>
-    <radialGradient id="qualyxCoreGlow" cx="50%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#67E8F9" stop-opacity="1" />
-      <stop offset="50%" stop-color="#22D3EE" stop-opacity="0.8" />
-      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.3" />
-    </radialGradient>
+    
+    <!-- Highlight gradient -->
+    <linearGradient id="metallicHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.6" />
+      <stop offset="40%" stop-color="#CCCCCC" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#888888" stop-opacity="0.1" />
+    </linearGradient>
+    
+    <!-- Inner shadow for 3D effect -->
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feComponentTransfer in="SourceAlpha">
+        <feFuncA type="table" tableValues="1 0" />
+      </feComponentTransfer>
+      <feGaussianBlur stdDeviation="1" />
+      <feOffset dx="1" dy="2" result="offsetblur" />
+      <feFlood flood-color="#000000" flood-opacity="0.3" result="color" />
+      <feComposite in2="offsetblur" operator="in" />
+      <feComposite in2="SourceAlpha" operator="in" />
+      <feMerge>
+        <feMergeNode in="SourceGraphic" />
+        <feMergeNode />
+      </feMerge>
+    </filter>
   </defs>
-  <circle cx="32" cy="32" r="28" fill="url(#qualyxSecondaryGradient)" />
-  <circle cx="32" cy="32" r="24" fill="url(#qualyxPrimaryGradient)" opacity="0.9" />
-  <circle cx="32" cy="30" r="12" stroke="white" stroke-width="3.5" fill="none" opacity="0.95" />
-  <path d="M38 36 L48 48" stroke="white" stroke-width="3.5" stroke-linecap="round" opacity="0.95" />
-  <circle cx="32" cy="30" r="3" fill="url(#qualyxCoreGlow)" />
-  <path d="M18 22 Q24 14 40 16" stroke="white" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.3" />
+
+  <!-- 3D Hexagonal Q shape - Main body -->
+  <g transform="translate(8, 6)">
+    <!-- Back face / shadow layer -->
+    <path 
+      d="M24 4 L40 14 L40 34 L24 44 L8 34 L8 14 Z" 
+      fill="url(#metallicShadow)" 
+      transform="translate(2, 2)"
+    />
+    
+    <!-- Main hexagon face -->
+    <path 
+      d="M24 4 L40 14 L40 34 L24 44 L8 34 L8 14 Z" 
+      fill="url(#metallicMain)" 
+      stroke="url(#metallicHighlight)"
+      stroke-width="0.5"
+    />
+    
+    <!-- Inner cutout for hollow Q effect -->
+    <path 
+      d="M24 12 L33 18 L33 30 L24 36 L15 30 L15 18 Z" 
+      fill="none"
+      stroke="url(#metallicShadow)"
+      stroke-width="3"
+    />
+    
+    <!-- Q tail - diagonal element -->
+    <path 
+      d="M30 32 L44 48" 
+      stroke="url(#metallicMain)"
+      stroke-width="6"
+      stroke-linecap="round"
+    />
+    
+    <!-- Q tail shadow -->
+    <path 
+      d="M32 34 L46 50" 
+      stroke="url(#metallicShadow)"
+      stroke-width="4"
+      stroke-linecap="round"
+      opacity="0.5"
+    />
+    
+    <!-- Top highlight edge -->
+    <path 
+      d="M10 15 L24 6 L38 15" 
+      stroke="url(#metallicHighlight)"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      fill="none"
+      opacity="0.7"
+    />
+    
+    <!-- Left highlight edge -->
+    <path 
+      d="M10 16 L10 32" 
+      stroke="url(#metallicHighlight)"
+      stroke-width="1"
+      stroke-linecap="round"
+      fill="none"
+      opacity="0.5"
+    />
+  </g>
 </svg>

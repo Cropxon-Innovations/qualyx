@@ -17,99 +17,91 @@ export const QualyxLogo = ({ className = "", size = "default" }: { className?: s
       className={className}
     >
       <defs>
-        {/* Premium gradient */}
-        <linearGradient id="qualyxPrimaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="hsl(217, 91%, 60%)" />
-          <stop offset="50%" stopColor="hsl(200, 100%, 50%)" />
-          <stop offset="100%" stopColor="hsl(180, 100%, 45%)" />
+        {/* Primary metallic gradient - dark to light silver */}
+        <linearGradient id="metallicMain" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#E8E8E8" />
+          <stop offset="30%" stopColor="#B8B8B8" />
+          <stop offset="60%" stopColor="#888888" />
+          <stop offset="100%" stopColor="#4A4A4A" />
         </linearGradient>
         
-        {/* Dark gradient for depth */}
-        <linearGradient id="qualyxSecondaryGradient" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="hsl(217, 91%, 50%)" />
-          <stop offset="100%" stopColor="hsl(217, 91%, 35%)" />
+        {/* Secondary gradient for depth/shadow */}
+        <linearGradient id="metallicShadow" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#707070" />
+          <stop offset="50%" stopColor="#505050" />
+          <stop offset="100%" stopColor="#303030" />
         </linearGradient>
-
-        {/* Inner glow */}
-        <radialGradient id="qualyxCoreGlow" cx="50%" cy="30%" r="60%">
-          <stop offset="0%" stopColor="hsl(190, 100%, 70%)" stopOpacity="1" />
-          <stop offset="50%" stopColor="hsl(200, 100%, 55%)" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="hsl(217, 91%, 50%)" stopOpacity="0.3" />
-        </radialGradient>
-
-        {/* Subtle shadow */}
-        <filter id="qualyxShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="hsl(217, 91%, 40%)" floodOpacity="0.3" />
-        </filter>
-
-        {/* Inner shadow for depth */}
-        <filter id="qualyxInnerGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="2" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
+        
+        {/* Highlight gradient */}
+        <linearGradient id="metallicHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.6" />
+          <stop offset="40%" stopColor="#CCCCCC" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="#888888" stopOpacity="0.1" />
+        </linearGradient>
       </defs>
 
-      {/* Background circle with premium feel */}
-      <circle
-        cx="32"
-        cy="32"
-        r="28"
-        fill="url(#qualyxSecondaryGradient)"
-        filter="url(#qualyxShadow)"
-      />
-      
-      {/* Inner circle for depth */}
-      <circle
-        cx="32"
-        cy="32"
-        r="24"
-        fill="url(#qualyxPrimaryGradient)"
-        opacity="0.9"
-      />
-
-      {/* Q letter - stylized and modern */}
-      <g filter="url(#qualyxInnerGlow)">
-        {/* Main Q circle */}
-        <circle
-          cx="32"
-          cy="30"
-          r="12"
-          stroke="white"
-          strokeWidth="3.5"
+      {/* 3D Hexagonal Q shape */}
+      <g transform="translate(8, 6)">
+        {/* Back face / shadow layer */}
+        <path 
+          d="M24 4 L40 14 L40 34 L24 44 L8 34 L8 14 Z" 
+          fill="url(#metallicShadow)" 
+          transform="translate(2, 2)"
+        />
+        
+        {/* Main hexagon face */}
+        <path 
+          d="M24 4 L40 14 L40 34 L24 44 L8 34 L8 14 Z" 
+          fill="url(#metallicMain)" 
+          stroke="url(#metallicHighlight)"
+          strokeWidth="0.5"
+        />
+        
+        {/* Inner cutout for hollow Q effect */}
+        <path 
+          d="M24 12 L33 18 L33 30 L24 36 L15 30 L15 18 Z" 
           fill="none"
-          opacity="0.95"
+          stroke="url(#metallicShadow)"
+          strokeWidth="3"
         />
         
-        {/* Q tail - diagonal slash representing forward momentum */}
-        <path
-          d="M38 36 L48 48"
-          stroke="white"
-          strokeWidth="3.5"
+        {/* Q tail - diagonal element */}
+        <path 
+          d="M30 32 L44 48" 
+          stroke="url(#metallicMain)"
+          strokeWidth="6"
           strokeLinecap="round"
-          opacity="0.95"
         />
         
-        {/* Accent dot - represents precision/AI */}
-        <circle
-          cx="32"
-          cy="30"
-          r="3"
-          fill="url(#qualyxCoreGlow)"
+        {/* Q tail shadow */}
+        <path 
+          d="M32 34 L46 50" 
+          stroke="url(#metallicShadow)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+        
+        {/* Top highlight edge */}
+        <path 
+          d="M10 15 L24 6 L38 15" 
+          stroke="url(#metallicHighlight)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.7"
+        />
+        
+        {/* Left highlight edge */}
+        <path 
+          d="M10 16 L10 32" 
+          stroke="url(#metallicHighlight)"
+          strokeWidth="1"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.5"
         />
       </g>
-
-      {/* Subtle highlight arc */}
-      <path
-        d="M18 22 Q24 14 40 16"
-        stroke="white"
-        strokeWidth="1"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.3"
-      />
     </svg>
   );
 };
